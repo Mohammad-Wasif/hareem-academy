@@ -20,7 +20,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative bg-background overflow-hidden min-h-[90vh] flex items-center">
         <div className="absolute inset-0 z-0">
-          <img src="/hero-bg.png" alt="Quran Study" className="w-full h-full object-cover opacity-20" />
+          <img src="/hero-bg.png" alt="Quran Study" className="w-full h-full object-cover opacity-10" />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/50"></div>
         </div>
         
