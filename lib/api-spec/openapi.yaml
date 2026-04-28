@@ -3,13 +3,25 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Hareem Academy API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: courses
+    description: Course catalog
+  - name: enrollments
+    description: Course enrollment
+  - name: contact
+    description: Contact form messages
+  - name: leads
+    description: Lead capture (free PDF, newsletter, etc.)
+  - name: testimonials
+    description: Student testimonials
+  - name: stats
+    description: Public site statistics
 paths:
   /healthz:
     get:
@@ -24,6 +36,164 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /courses:
+    get:
+      operationId: listCourses
+      tags: [courses]
+      summary: List all courses
+      responses:
+        "200":
+          description: List of courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Course"
+  /courses/{slug}:
+    get:
+      operationId: getCourse
+      tags: [courses]
+      summary: Get a course by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Course details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Course"
+        "404":
+          description: Course not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /enrollments:
+    post:
+      operationId: createEnrollment
+      tags: [enrollments]
+      summary: Submit a course enrollment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEnrollmentRequest"
+      responses:
+        "201":
+          description: Enrollment created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Enrollment"
+        "400":
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /contact:
+    post:
+      operationId: createContactMessage
+      tags: [contact]
+      summary: Submit a contact form message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateContactMessageRequest"
+      responses:
+        "201":
+          description: Message submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactMessage"
+        "400":
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /leads:
+    post:
+      operationId: createLead
+      tags: [leads]
+      summary: Capture a lead (e.g. free Arabic alphabet PDF)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateLeadRequest"
+      responses:
+        "201":
+          description: Lead captured
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lead"
+        "400":
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /testimonials:
+    get:
+      operationId: listTestimonials
+      tags: [testimonials]
+      summary: List student testimonials
+      responses:
+        "200":
+          description: List of testimonials
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Testimonial"
+
+  /stats:
+    get:
+      operationId: getSiteStats
+      tags: [stats]
+      summary: Get public site statistics
+      responses:
+        "200":
+          description: Site statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SiteStats"
+
+  /faqs:
+    get:
+      operationId: listFaqs
+      tags: [stats]
+      summary: List frequently asked questions
+      responses:
+        "200":
+          description: List of FAQs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Faq"
+
 components:
   schemas:
     HealthStatus:
@@ -31,6 +201,254 @@ components:
       properties:
         status:
           type: string
-      required:
-        - status
+      required: [status]
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        details:
+          type: array
+          items:
+            type: string
+      required: [error]
+
+    Course:
+      type: object
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        title:
+          type: string
+        language:
+          type: string
+          enum: [arabic, urdu]
+        level:
+          type: string
+        durationMonths:
+          type: integer
+        timings:
+          type: string
+        platform:
+          type: string
+        feeMonthly:
+          type: integer
+          description: Monthly fee in INR
+        currency:
+          type: string
+        startDate:
+          type: string
+        summary:
+          type: string
+        highlights:
+          type: array
+          items:
+            type: string
+        curriculum:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              description:
+                type: string
+            required: [title]
+        forWhom:
+          type: string
+        seatsRemaining:
+          type: integer
+        featured:
+          type: boolean
+      required:
+        - id
+        - slug
+        - title
+        - language
+        - level
+        - durationMonths
+        - timings
+        - platform
+        - feeMonthly
+        - currency
+        - summary
+        - highlights
+        - curriculum
+        - featured
+
+    CreateEnrollmentRequest:
+      type: object
+      properties:
+        fullName:
+          type: string
+          minLength: 2
+        age:
+          type: integer
+          minimum: 6
+          maximum: 99
+        whatsappNumber:
+          type: string
+          minLength: 7
+        city:
+          type: string
+          minLength: 2
+        country:
+          type: string
+        courseSlug:
+          type: string
+        notes:
+          type: string
+      required:
+        - fullName
+        - age
+        - whatsappNumber
+        - city
+        - courseSlug
+
+    Enrollment:
+      type: object
+      properties:
+        id:
+          type: integer
+        fullName:
+          type: string
+        age:
+          type: integer
+        whatsappNumber:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        courseSlug:
+          type: string
+        notes:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - fullName
+        - age
+        - whatsappNumber
+        - city
+        - courseSlug
+        - createdAt
+
+    CreateContactMessageRequest:
+      type: object
+      properties:
+        fullName:
+          type: string
+          minLength: 2
+        email:
+          type: string
+        whatsappNumber:
+          type: string
+        subject:
+          type: string
+        message:
+          type: string
+          minLength: 5
+      required: [fullName, message]
+
+    ContactMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+        fullName:
+          type: string
+        email:
+          type: string
+        whatsappNumber:
+          type: string
+        subject:
+          type: string
+        message:
+          type: string
+        createdAt:
+          type: string
+      required: [id, fullName, message, createdAt]
+
+    CreateLeadRequest:
+      type: object
+      properties:
+        fullName:
+          type: string
+        whatsappNumber:
+          type: string
+          minLength: 7
+        email:
+          type: string
+        source:
+          type: string
+          description: e.g. "alphabet-pdf", "newsletter"
+      required: [whatsappNumber, source]
+
+    Lead:
+      type: object
+      properties:
+        id:
+          type: integer
+        fullName:
+          type: string
+        whatsappNumber:
+          type: string
+        email:
+          type: string
+        source:
+          type: string
+        createdAt:
+          type: string
+      required: [id, whatsappNumber, source, createdAt]
+
+    Testimonial:
+      type: object
+      properties:
+        id:
+          type: integer
+        studentName:
+          type: string
+        location:
+          type: string
+        course:
+          type: string
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        quote:
+          type: string
+        featured:
+          type: boolean
+      required: [id, studentName, quote, rating, featured]
+
+    SiteStats:
+      type: object
+      properties:
+        totalStudents:
+          type: integer
+        activeBatches:
+          type: integer
+        countriesReached:
+          type: integer
+        averageRating:
+          type: number
+      required: [totalStudents, activeBatches, countriesReached, averageRating]
+
+    Faq:
+      type: object
+      properties:
+        id:
+          type: integer
+        question:
+          type: string
+        answer:
+          type: string
+        category:
+          type: string
+      required: [id, question, answer]
