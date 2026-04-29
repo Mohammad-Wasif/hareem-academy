@@ -1,5 +1,4 @@
 uploads = []
-outputs = []
 
 [[generated]]
 id = "Mnl0k6YD_rpbzQtLw8wqt"
@@ -42,3 +41,9 @@ id = "-TCzWDnfmWDlkxWPd7oMk"
 uri = "file://artifacts/hareem-academy/public/course-urdu.png"
 type = "image"
 title = "Course Urdu beads"
+
+[[outputs]]
+id = "h0LlUjO42gOnjODZjWHnT"
+uri = "file://SETUP.md"
+type = "text"
+title = "Hareem Academy — Local Setup Guide"
