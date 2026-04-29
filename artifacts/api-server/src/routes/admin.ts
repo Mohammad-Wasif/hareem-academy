@@ -7,6 +7,7 @@ import {
   enrollmentsTable,
   contactMessagesTable,
   leadsTable,
+  formFieldsTable,
 } from "@workspace/db";
 import { desc, asc, eq } from "drizzle-orm";
 import { requireAdmin } from "../lib/adminAuth";
@@ -95,6 +96,7 @@ router.get("/admin/enrollments", requireAdmin, async (req, res) => {
         country: r.country ?? null,
         courseSlug: r.courseSlug,
         notes: r.notes ?? null,
+        customData: r.customData ?? {},
         createdAt: r.createdAt.toISOString(),
       })),
     );
@@ -476,6 +478,113 @@ router.put("/admin/faqs/:id", requireAdmin, async (req, res) => {
 router.delete("/admin/faqs/:id", requireAdmin, async (req, res) => {
   try {
     await db.delete(faqsTable).where(eq(faqsTable.id, Number(req.params.id)));
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: "Failed" });
+  }
+});
+
+const ALLOWED_FIELD_TYPES = new Set([
+  "text",
+  "email",
+  "tel",
+  "number",
+  "textarea",
+  "select",
+]);
+
+function serializeField(f: typeof formFieldsTable.$inferSelect) {
+  return {
+    id: f.id,
+    formKey: f.formKey,
+    fieldKey: f.fieldKey,
+    label: f.label,
+    fieldType: f.fieldType,
+    placeholder: f.placeholder ?? null,
+    helpText: f.helpText ?? null,
+    required: f.required,
+    options: f.options ?? [],
+    sortOrder: f.sortOrder,
+    enabled: f.enabled,
+  };
+}
+
+router.get("/admin/form-fields", requireAdmin, async (req, res) => {
+  try {
+    const rows = await db
+      .select()
+      .from(formFieldsTable)
+      .orderBy(asc(formFieldsTable.formKey), asc(formFieldsTable.sortOrder));
+    res.json(rows.map(serializeField));
+  } catch (err) {
+    req.log.error({ err }, "Failed to list form fields");
+    res.status(500).json({ error: "Failed" });
+  }
+});
+
+router.post("/admin/form-fields", requireAdmin, async (req, res) => {
+  try {
+    const b = req.body ?? {};
+    const fieldType = ALLOWED_FIELD_TYPES.has(b.fieldType)
+      ? b.fieldType
+      : "text";
+    const [row] = await db
+      .insert(formFieldsTable)
+      .values({
+        formKey: b.formKey || "enrollment",
+        fieldKey: b.fieldKey,
+        label: b.label,
+        fieldType,
+        placeholder: b.placeholder || null,
+        helpText: b.helpText || null,
+        required: !!b.required,
+        options: Array.isArray(b.options) ? b.options : [],
+        sortOrder: Number(b.sortOrder ?? 0),
+        enabled: b.enabled === undefined ? true : !!b.enabled,
+      })
+      .returning();
+    res.status(201).json(serializeField(row!));
+  } catch (err) {
+    req.log.error({ err }, "Failed to create form field");
+    res.status(500).json({ error: "Failed to create form field" });
+  }
+});
+
+router.put("/admin/form-fields/:id", requireAdmin, async (req, res) => {
+  try {
+    const b = req.body ?? {};
+    const fieldType = ALLOWED_FIELD_TYPES.has(b.fieldType)
+      ? b.fieldType
+      : "text";
+    const [row] = await db
+      .update(formFieldsTable)
+      .set({
+        formKey: b.formKey || "enrollment",
+        fieldKey: b.fieldKey,
+        label: b.label,
+        fieldType,
+        placeholder: b.placeholder || null,
+        helpText: b.helpText || null,
+        required: !!b.required,
+        options: Array.isArray(b.options) ? b.options : [],
+        sortOrder: Number(b.sortOrder ?? 0),
+        enabled: b.enabled === undefined ? true : !!b.enabled,
+      })
+      .where(eq(formFieldsTable.id, Number(req.params.id)))
+      .returning();
+    if (!row) return res.status(404).json({ error: "Not found" });
+    res.json(serializeField(row));
+  } catch (err) {
+    req.log.error({ err }, "Failed to update form field");
+    res.status(500).json({ error: "Failed to update form field" });
+  }
+});
+
+router.delete("/admin/form-fields/:id", requireAdmin, async (req, res) => {
+  try {
+    await db
+      .delete(formFieldsTable)
+      .where(eq(formFieldsTable.id, Number(req.params.id)));
     res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: "Failed" });

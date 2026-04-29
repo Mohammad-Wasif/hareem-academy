@@ -3,6 +3,7 @@ import {
   serial,
   text,
   integer,
+  jsonb,
   timestamp,
 } from "drizzle-orm/pg-core";
 
@@ -15,6 +16,10 @@ export const enrollmentsTable = pgTable("enrollments", {
   country: text("country"),
   courseSlug: text("course_slug").notNull(),
   notes: text("notes"),
+  customData: jsonb("custom_data")
+    .$type<Record<string, string>>()
+    .notNull()
+    .default({}),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

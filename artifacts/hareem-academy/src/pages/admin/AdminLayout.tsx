@@ -13,12 +13,14 @@ import {
   HelpCircle,
   LogOut,
   Loader2,
+  ListChecks,
 } from "lucide-react";
 
 const NAV = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/courses", label: "Courses", icon: BookOpen },
   { href: "/admin/enrollments", label: "Enrollments", icon: Users },
+  { href: "/admin/form-fields", label: "Form Fields", icon: ListChecks },
   { href: "/admin/contacts", label: "Messages", icon: MessageSquare },
   { href: "/admin/leads", label: "Leads", icon: Mail },
   { href: "/admin/testimonials", label: "Testimonials", icon: Star },

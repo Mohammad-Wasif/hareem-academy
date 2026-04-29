@@ -7,6 +7,7 @@ import leadsRouter from "./leads";
 import testimonialsRouter from "./testimonials";
 import statsRouter from "./stats";
 import faqsRouter from "./faqs";
+import formFieldsRouter from "./formFields";
 import adminRouter from "./admin";
 
 const router: IRouter = Router();
@@ -19,6 +20,7 @@ router.use(leadsRouter);
 router.use(testimonialsRouter);
 router.use(statsRouter);
 router.use(faqsRouter);
+router.use(formFieldsRouter);
 router.use(adminRouter);
 
 export default router;

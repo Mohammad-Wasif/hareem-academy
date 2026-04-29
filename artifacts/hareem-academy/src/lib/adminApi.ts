@@ -106,7 +106,45 @@ export const adminApi = {
     }),
   deleteFaq: (id: number) =>
     request<{ ok: true }>(`/admin/faqs/${id}`, { method: "DELETE" }),
+
+  listFormFields: () => request<AdminFormField[]>("/admin/form-fields"),
+  createFormField: (data: AdminFormFieldInput) =>
+    request<AdminFormField>("/admin/form-fields", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  updateFormField: (id: number, data: AdminFormFieldInput) =>
+    request<AdminFormField>(`/admin/form-fields/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    }),
+  deleteFormField: (id: number) =>
+    request<{ ok: true }>(`/admin/form-fields/${id}`, { method: "DELETE" }),
 };
+
+export type FormFieldType =
+  | "text"
+  | "email"
+  | "tel"
+  | "number"
+  | "textarea"
+  | "select";
+
+export type AdminFormField = {
+  id: number;
+  formKey: string;
+  fieldKey: string;
+  label: string;
+  fieldType: FormFieldType;
+  placeholder: string | null;
+  helpText: string | null;
+  required: boolean;
+  options: string[];
+  sortOrder: number;
+  enabled: boolean;
+};
+
+export type AdminFormFieldInput = Omit<AdminFormField, "id">;
 
 export type AdminEnrollment = {
   id: number;
@@ -117,6 +155,7 @@ export type AdminEnrollment = {
   country: string | null;
   courseSlug: string;
   notes: string | null;
+  customData: Record<string, string>;
   createdAt: string;
 };
 

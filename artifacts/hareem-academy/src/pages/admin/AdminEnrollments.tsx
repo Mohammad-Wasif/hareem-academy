@@ -49,48 +49,75 @@ export default function AdminEnrollments() {
               </tr>
             </thead>
             <tbody>
-              {data.map((e) => (
-                <tr key={e.id} className="border-t border-border/50">
-                  <td className="px-4 py-3 font-medium">{e.fullName}</td>
-                  <td className="px-4 py-3">{e.age}</td>
-                  <td className="px-4 py-3">
-                    <a
-                      href={`https://wa.me/${e.whatsappNumber.replace(/\D/g, "")}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline inline-flex items-center gap-1"
-                    >
-                      {e.whatsappNumber}
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </td>
-                  <td className="px-4 py-3">
-                    {e.city}
-                    {e.country ? `, ${e.country}` : ""}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="px-2 py-0.5 bg-accent/20 text-foreground/80 rounded text-xs">
-                      {e.courseSlug}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-muted-foreground">
-                    {new Date(e.createdAt).toLocaleDateString()}
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="text-destructive hover:text-destructive"
-                      onClick={() => {
-                        if (confirm(`Delete enrollment from ${e.fullName}?`))
-                          delMut.mutate(e.id);
-                      }}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </td>
-                </tr>
-              ))}
+              {data.map((e) => {
+                const customEntries = Object.entries(e.customData ?? {}).filter(
+                  ([, v]) => v !== "" && v != null,
+                );
+                return (
+                  <tr key={e.id} className="border-t border-border/50 align-top">
+                    <td className="px-4 py-3 font-medium">
+                      {e.fullName}
+                      {(e.notes || customEntries.length > 0) && (
+                        <div className="mt-1 space-y-1">
+                          {e.notes && (
+                            <div className="text-xs text-muted-foreground italic max-w-xs">
+                              "{e.notes}"
+                            </div>
+                          )}
+                          {customEntries.map(([k, v]) => (
+                            <div
+                              key={k}
+                              className="text-xs text-muted-foreground max-w-xs"
+                            >
+                              <span className="font-medium text-foreground/70">
+                                {k}:
+                              </span>{" "}
+                              {v}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-4 py-3">{e.age}</td>
+                    <td className="px-4 py-3">
+                      <a
+                        href={`https://wa.me/${e.whatsappNumber.replace(/\D/g, "")}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline inline-flex items-center gap-1"
+                      >
+                        {e.whatsappNumber}
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </td>
+                    <td className="px-4 py-3">
+                      {e.city}
+                      {e.country ? `, ${e.country}` : ""}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="px-2 py-0.5 bg-accent/20 text-foreground/80 rounded text-xs">
+                        {e.courseSlug}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      {new Date(e.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-destructive hover:text-destructive"
+                        onClick={() => {
+                          if (confirm(`Delete enrollment from ${e.fullName}?`))
+                            delMut.mutate(e.id);
+                        }}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

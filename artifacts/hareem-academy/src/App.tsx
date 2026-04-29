@@ -25,6 +25,7 @@ import AdminContacts from "@/pages/admin/AdminContacts";
 import AdminLeads from "@/pages/admin/AdminLeads";
 import AdminTestimonials from "@/pages/admin/AdminTestimonials";
 import AdminFaqs from "@/pages/admin/AdminFaqs";
+import AdminFormFields from "@/pages/admin/AdminFormFields";
 
 const queryClient = new QueryClient();
 
@@ -61,6 +62,7 @@ function AdminRoutes() {
         <Route path="/admin/leads" component={AdminLeads} />
         <Route path="/admin/testimonials" component={AdminTestimonials} />
         <Route path="/admin/faqs" component={AdminFaqs} />
+        <Route path="/admin/form-fields" component={AdminFormFields} />
       </Switch>
     </AdminLayout>
   );

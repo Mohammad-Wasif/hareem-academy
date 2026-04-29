@@ -13,6 +13,18 @@ router.post("/enrollments", async (req, res) => {
     });
   }
   try {
+    const customData =
+      req.body &&
+      typeof req.body === "object" &&
+      req.body.customData &&
+      typeof req.body.customData === "object" &&
+      !Array.isArray(req.body.customData)
+        ? Object.fromEntries(
+            Object.entries(req.body.customData as Record<string, unknown>).map(
+              ([k, v]) => [k, String(v ?? "")],
+            ),
+          )
+        : {};
     const [row] = await db
       .insert(enrollmentsTable)
       .values({
@@ -23,6 +35,7 @@ router.post("/enrollments", async (req, res) => {
         country: parsed.data.country ?? null,
         courseSlug: parsed.data.courseSlug,
         notes: parsed.data.notes ?? null,
+        customData,
       })
       .returning();
     res.status(201).json({
