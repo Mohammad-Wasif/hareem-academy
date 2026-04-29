@@ -15,9 +15,20 @@ import Privacy from "@/pages/legal/Privacy";
 import Terms from "@/pages/legal/Terms";
 import Refund from "@/pages/legal/Refund";
 
+import AdminLayout from "@/pages/admin/AdminLayout";
+import AdminLogin from "@/pages/admin/AdminLogin";
+import AdminDashboard from "@/pages/admin/AdminDashboard";
+import AdminCourses from "@/pages/admin/AdminCourses";
+import AdminCourseEdit from "@/pages/admin/AdminCourseEdit";
+import AdminEnrollments from "@/pages/admin/AdminEnrollments";
+import AdminContacts from "@/pages/admin/AdminContacts";
+import AdminLeads from "@/pages/admin/AdminLeads";
+import AdminTestimonials from "@/pages/admin/AdminTestimonials";
+import AdminFaqs from "@/pages/admin/AdminFaqs";
+
 const queryClient = new QueryClient();
 
-function Router() {
+function PublicRoutes() {
   return (
     <Layout>
       <Switch>
@@ -33,6 +44,34 @@ function Router() {
         <Route component={NotFound} />
       </Switch>
     </Layout>
+  );
+}
+
+function AdminRoutes() {
+  return (
+    <AdminLayout>
+      <Switch>
+        <Route path="/admin/login" component={AdminLogin} />
+        <Route path="/admin" component={AdminDashboard} />
+        <Route path="/admin/courses" component={AdminCourses} />
+        <Route path="/admin/courses/new" component={AdminCourseEdit} />
+        <Route path="/admin/courses/:id/edit" component={AdminCourseEdit} />
+        <Route path="/admin/enrollments" component={AdminEnrollments} />
+        <Route path="/admin/contacts" component={AdminContacts} />
+        <Route path="/admin/leads" component={AdminLeads} />
+        <Route path="/admin/testimonials" component={AdminTestimonials} />
+        <Route path="/admin/faqs" component={AdminFaqs} />
+      </Switch>
+    </AdminLayout>
+  );
+}
+
+function Router() {
+  return (
+    <Switch>
+      <Route path="/admin/:rest*" component={AdminRoutes} />
+      <Route component={PublicRoutes} />
+    </Switch>
   );
 }
 
