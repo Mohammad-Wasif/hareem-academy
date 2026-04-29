@@ -28,6 +28,7 @@ export const formFieldsTable = pgTable("form_fields", {
   options: jsonb("options").$type<string[]>().notNull().default([]),
   sortOrder: integer("sort_order").notNull().default(0),
   enabled: boolean("enabled").notNull().default(true),
+  isBuiltIn: boolean("is_built_in").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

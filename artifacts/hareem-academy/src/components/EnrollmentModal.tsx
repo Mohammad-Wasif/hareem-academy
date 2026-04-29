@@ -35,9 +35,20 @@ type PublicFormField = {
   required: boolean;
   options: string[];
   sortOrder: number;
+  isBuiltIn: boolean;
 };
 
 const BASE = `${import.meta.env.BASE_URL}api`;
+
+const BUILT_IN_KEYS = new Set([
+  "courseSlug",
+  "fullName",
+  "age",
+  "whatsappNumber",
+  "city",
+  "country",
+  "notes",
+]);
 
 async function fetchEnrollmentFields(): Promise<PublicFormField[]> {
   const res = await fetch(`${BASE}/form-fields/enrollment`);
@@ -66,11 +77,36 @@ export default function EnrollmentModal({
   });
 
   const { data: courses = [] } = useListCourses();
-  const { data: customFields = [] } = useQuery({
+  const { data: allFields = [] } = useQuery({
     queryKey: ["form-fields", "enrollment"],
     queryFn: fetchEnrollmentFields,
   });
   const createEnrollment = useCreateEnrollment();
+
+  // Map fieldKey -> field config (only enabled fields are returned by the API)
+  const fieldMap = new Map(allFields.map((f) => [f.fieldKey, f]));
+  const customFields = allFields
+    .filter((f) => !BUILT_IN_KEYS.has(f.fieldKey))
+    .sort((a, b) => a.sortOrder - b.sortOrder);
+
+  function getBuiltIn(key: string, fallbackLabel: string) {
+    const f = fieldMap.get(key);
+    return {
+      visible: !!f,
+      label: f?.label ?? fallbackLabel,
+      placeholder: f?.placeholder ?? null,
+      helpText: f?.helpText ?? null,
+      required: f?.required ?? true,
+    };
+  }
+
+  const courseField = getBuiltIn("courseSlug", "Select Course");
+  const nameField = getBuiltIn("fullName", "Full Name");
+  const ageField = getBuiltIn("age", "Age");
+  const whatsappField = getBuiltIn("whatsappNumber", "WhatsApp Number");
+  const cityField = getBuiltIn("city", "City");
+  const countryField = getBuiltIn("country", "Country");
+  const notesField = getBuiltIn("notes", "Any questions or notes? (Optional)");
 
   function setField(key: string, value: string) {
     setValues((v) => ({ ...v, [key]: value }));
@@ -90,6 +126,10 @@ export default function EnrollmentModal({
     if (!values.whatsappNumber.trim()) next.whatsappNumber = "Required";
     if (!values.city.trim()) next.city = "Required";
     if (!values.courseSlug) next.courseSlug = "Choose a course";
+    if (countryField.visible && countryField.required && !values.country.trim())
+      next.country = "Required";
+    if (notesField.visible && notesField.required && !values.notes.trim())
+      next.notes = "Required";
     for (const f of customFields) {
       if (f.required && !(values[f.fieldKey] ?? "").trim()) {
         next[f.fieldKey] = "Required";
@@ -112,9 +152,9 @@ export default function EnrollmentModal({
       age: Number(values.age),
       whatsappNumber: values.whatsappNumber,
       city: values.city,
-      country: values.country || undefined,
+      country: countryField.visible && values.country ? values.country : undefined,
       courseSlug: values.courseSlug,
-      notes: values.notes || undefined,
+      notes: notesField.visible && values.notes ? values.notes : undefined,
       ...(Object.keys(customData).length ? { customData } : {}),
     };
     createEnrollment.mutate(
@@ -130,19 +170,17 @@ export default function EnrollmentModal({
   function renderCustom(f: PublicFormField) {
     const value = values[f.fieldKey] ?? "";
     const err = errors[f.fieldKey];
-    const common = {
-      id: `cf_${f.fieldKey}`,
-      placeholder: f.placeholder ?? undefined,
-    };
+    const id = `cf_${f.fieldKey}`;
     return (
       <div className="space-y-2" key={f.id}>
-        <Label htmlFor={common.id}>
+        <Label htmlFor={id}>
           {f.label}
           {f.required && <span className="text-destructive"> *</span>}
         </Label>
         {f.fieldType === "textarea" ? (
           <Textarea
-            {...common}
+            id={id}
+            placeholder={f.placeholder ?? undefined}
             value={value}
             onChange={(e) => setField(f.fieldKey, e.target.value)}
           />
@@ -151,7 +189,7 @@ export default function EnrollmentModal({
             value={value}
             onValueChange={(v) => setField(f.fieldKey, v)}
           >
-            <SelectTrigger id={common.id}>
+            <SelectTrigger id={id}>
               <SelectValue placeholder={f.placeholder ?? "Choose..."} />
             </SelectTrigger>
             <SelectContent>
@@ -164,7 +202,8 @@ export default function EnrollmentModal({
           </Select>
         ) : (
           <Input
-            {...common}
+            id={id}
+            placeholder={f.placeholder ?? undefined}
             type={
               f.fieldType === "email"
                 ? "email"
@@ -245,14 +284,17 @@ export default function EnrollmentModal({
             <form onSubmit={onSubmit} className="space-y-4 pt-4">
               <div className="space-y-2">
                 <Label htmlFor="courseSlug">
-                  Select Course <span className="text-destructive">*</span>
+                  {courseField.label}{" "}
+                  <span className="text-destructive">*</span>
                 </Label>
                 <Select
                   value={values.courseSlug}
                   onValueChange={(v) => setField("courseSlug", v)}
                 >
                   <SelectTrigger id="courseSlug">
-                    <SelectValue placeholder="Choose a course" />
+                    <SelectValue
+                      placeholder={courseField.placeholder ?? "Choose a course"}
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     {courses.map((c) => (
@@ -262,6 +304,11 @@ export default function EnrollmentModal({
                     ))}
                   </SelectContent>
                 </Select>
+                {courseField.helpText && (
+                  <p className="text-xs text-muted-foreground">
+                    {courseField.helpText}
+                  </p>
+                )}
                 {errors.courseSlug && (
                   <p className="text-xs text-destructive">{errors.courseSlug}</p>
                 )}
@@ -269,14 +316,20 @@ export default function EnrollmentModal({
 
               <div className="space-y-2">
                 <Label htmlFor="fullName">
-                  Full Name <span className="text-destructive">*</span>
+                  {nameField.label}{" "}
+                  <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="fullName"
                   value={values.fullName}
                   onChange={(e) => setField("fullName", e.target.value)}
-                  placeholder="Enter your full name"
+                  placeholder={nameField.placeholder ?? "Enter your full name"}
                 />
+                {nameField.helpText && (
+                  <p className="text-xs text-muted-foreground">
+                    {nameField.helpText}
+                  </p>
+                )}
                 {errors.fullName && (
                   <p className="text-xs text-destructive">{errors.fullName}</p>
                 )}
@@ -285,13 +338,15 @@ export default function EnrollmentModal({
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="age">
-                    Age <span className="text-destructive">*</span>
+                    {ageField.label}{" "}
+                    <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="age"
                     type="number"
                     value={values.age}
                     onChange={(e) => setField("age", e.target.value)}
+                    placeholder={ageField.placeholder ?? undefined}
                   />
                   {errors.age && (
                     <p className="text-xs text-destructive">{errors.age}</p>
@@ -299,7 +354,8 @@ export default function EnrollmentModal({
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="whatsappNumber">
-                    WhatsApp Number <span className="text-destructive">*</span>
+                    {whatsappField.label}{" "}
+                    <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="whatsappNumber"
@@ -307,7 +363,7 @@ export default function EnrollmentModal({
                     onChange={(e) =>
                       setField("whatsappNumber", e.target.value)
                     }
-                    placeholder="+91..."
+                    placeholder={whatsappField.placeholder ?? "+91..."}
                   />
                   {errors.whatsappNumber && (
                     <p className="text-xs text-destructive">
@@ -320,42 +376,63 @@ export default function EnrollmentModal({
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="city">
-                    City <span className="text-destructive">*</span>
+                    {cityField.label}{" "}
+                    <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="city"
                     value={values.city}
                     onChange={(e) => setField("city", e.target.value)}
-                    placeholder="Your city"
+                    placeholder={cityField.placeholder ?? "Your city"}
                   />
                   {errors.city && (
                     <p className="text-xs text-destructive">{errors.city}</p>
                   )}
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="country">Country</Label>
-                  <Input
-                    id="country"
-                    value={values.country}
-                    onChange={(e) => setField("country", e.target.value)}
-                    placeholder="Your country"
-                  />
-                </div>
+                {countryField.visible && (
+                  <div className="space-y-2">
+                    <Label htmlFor="country">
+                      {countryField.label}
+                      {countryField.required && (
+                        <span className="text-destructive"> *</span>
+                      )}
+                    </Label>
+                    <Input
+                      id="country"
+                      value={values.country}
+                      onChange={(e) => setField("country", e.target.value)}
+                      placeholder={countryField.placeholder ?? "Your country"}
+                    />
+                    {errors.country && (
+                      <p className="text-xs text-destructive">
+                        {errors.country}
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
 
               {customFields.map(renderCustom)}
 
-              <div className="space-y-2">
-                <Label htmlFor="notes">
-                  Any questions or notes? (Optional)
-                </Label>
-                <Textarea
-                  id="notes"
-                  value={values.notes}
-                  onChange={(e) => setField("notes", e.target.value)}
-                  placeholder="Let us know..."
-                />
-              </div>
+              {notesField.visible && (
+                <div className="space-y-2">
+                  <Label htmlFor="notes">
+                    {notesField.label}
+                    {notesField.required && (
+                      <span className="text-destructive"> *</span>
+                    )}
+                  </Label>
+                  <Textarea
+                    id="notes"
+                    value={values.notes}
+                    onChange={(e) => setField("notes", e.target.value)}
+                    placeholder={notesField.placeholder ?? "Let us know..."}
+                  />
+                  {errors.notes && (
+                    <p className="text-xs text-destructive">{errors.notes}</p>
+                  )}
+                </div>
+              )}
 
               <div className="pt-4 flex flex-col gap-3">
                 <Button

@@ -1,11 +1,15 @@
 import { Router, type IRouter } from "express";
 import { db, formFieldsTable } from "@workspace/db";
 import { asc, eq, and } from "drizzle-orm";
+import { ensureBuiltInEnrollmentFields } from "../lib/formFieldsSeed";
 
 const router: IRouter = Router();
 
 router.get("/form-fields/:formKey", async (req, res) => {
   try {
+    if (req.params.formKey === "enrollment") {
+      await ensureBuiltInEnrollmentFields();
+    }
     const rows = await db
       .select()
       .from(formFieldsTable)
@@ -28,6 +32,7 @@ router.get("/form-fields/:formKey", async (req, res) => {
         required: f.required,
         options: f.options ?? [],
         sortOrder: f.sortOrder,
+        isBuiltIn: f.isBuiltIn,
       })),
     );
   } catch (err) {

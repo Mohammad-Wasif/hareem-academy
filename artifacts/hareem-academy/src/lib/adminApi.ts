@@ -142,6 +142,7 @@ export type AdminFormField = {
   options: string[];
   sortOrder: number;
   enabled: boolean;
+  isBuiltIn: boolean;
 };
 
 export type AdminFormFieldInput = Omit<AdminFormField, "id">;

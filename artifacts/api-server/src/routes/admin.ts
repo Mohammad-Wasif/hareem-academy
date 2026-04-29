@@ -9,8 +9,12 @@ import {
   leadsTable,
   formFieldsTable,
 } from "@workspace/db";
-import { desc, asc, eq } from "drizzle-orm";
+import { desc, asc, eq, and } from "drizzle-orm";
 import { requireAdmin } from "../lib/adminAuth";
+import {
+  ensureBuiltInEnrollmentFields,
+  ALWAYS_REQUIRED_BUILTINS,
+} from "../lib/formFieldsSeed";
 
 const router: IRouter = Router();
 
@@ -506,11 +510,13 @@ function serializeField(f: typeof formFieldsTable.$inferSelect) {
     options: f.options ?? [],
     sortOrder: f.sortOrder,
     enabled: f.enabled,
+    isBuiltIn: f.isBuiltIn,
   };
 }
 
 router.get("/admin/form-fields", requireAdmin, async (req, res) => {
   try {
+    await ensureBuiltInEnrollmentFields();
     const rows = await db
       .select()
       .from(formFieldsTable)
@@ -552,28 +558,45 @@ router.post("/admin/form-fields", requireAdmin, async (req, res) => {
 
 router.put("/admin/form-fields/:id", requireAdmin, async (req, res) => {
   try {
+    const id = Number(req.params.id);
+    const [existing] = await db
+      .select()
+      .from(formFieldsTable)
+      .where(eq(formFieldsTable.id, id));
+    if (!existing) return res.status(404).json({ error: "Not found" });
     const b = req.body ?? {};
-    const fieldType = ALLOWED_FIELD_TYPES.has(b.fieldType)
-      ? b.fieldType
-      : "text";
+    const fieldType = existing.isBuiltIn
+      ? existing.fieldType
+      : ALLOWED_FIELD_TYPES.has(b.fieldType)
+        ? b.fieldType
+        : "text";
+    const fieldKey = existing.isBuiltIn ? existing.fieldKey : b.fieldKey;
+    const formKey = existing.isBuiltIn ? existing.formKey : (b.formKey || "enrollment");
+    const required = ALWAYS_REQUIRED_BUILTINS.has(existing.fieldKey)
+      ? true
+      : !!b.required;
+    const enabled = ALWAYS_REQUIRED_BUILTINS.has(existing.fieldKey)
+      ? true
+      : b.enabled === undefined
+        ? true
+        : !!b.enabled;
     const [row] = await db
       .update(formFieldsTable)
       .set({
-        formKey: b.formKey || "enrollment",
-        fieldKey: b.fieldKey,
+        formKey,
+        fieldKey,
         label: b.label,
         fieldType,
         placeholder: b.placeholder || null,
         helpText: b.helpText || null,
-        required: !!b.required,
+        required,
         options: Array.isArray(b.options) ? b.options : [],
-        sortOrder: Number(b.sortOrder ?? 0),
-        enabled: b.enabled === undefined ? true : !!b.enabled,
+        sortOrder: Number(b.sortOrder ?? existing.sortOrder),
+        enabled,
       })
-      .where(eq(formFieldsTable.id, Number(req.params.id)))
+      .where(eq(formFieldsTable.id, id))
       .returning();
-    if (!row) return res.status(404).json({ error: "Not found" });
-    res.json(serializeField(row));
+    res.json(serializeField(row!));
   } catch (err) {
     req.log.error({ err }, "Failed to update form field");
     res.status(500).json({ error: "Failed to update form field" });
@@ -582,9 +605,17 @@ router.put("/admin/form-fields/:id", requireAdmin, async (req, res) => {
 
 router.delete("/admin/form-fields/:id", requireAdmin, async (req, res) => {
   try {
-    await db
-      .delete(formFieldsTable)
-      .where(eq(formFieldsTable.id, Number(req.params.id)));
+    const id = Number(req.params.id);
+    const [existing] = await db
+      .select()
+      .from(formFieldsTable)
+      .where(eq(formFieldsTable.id, id));
+    if (existing?.isBuiltIn) {
+      return res.status(400).json({
+        error: "Built-in fields cannot be deleted. You can hide optional ones instead.",
+      });
+    }
+    await db.delete(formFieldsTable).where(eq(formFieldsTable.id, id));
     res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: "Failed" });
