@@ -9,8 +9,8 @@ they use.
 
 ```
 artifacts/
-  hareem-academy/   The public website + admin panel (React + Vite)
-  api-server/       The backend API (Express)
+  frontend/         The public website + admin panel (React + Vite)
+  backend/          The API server (Express + Drizzle + PostgreSQL)
   mockup-sandbox/   Optional design sandbox (not needed to run the site)
 
 lib/
@@ -84,7 +84,7 @@ postgres://hareem:changeme@localhost:5432/hareem_academy
 
 You need two `.env` files — one for the API server and one for the website.
 
-### `artifacts/api-server/.env`
+### `artifacts/backend/.env`
 
 ```env
 # Database
@@ -101,7 +101,7 @@ SESSION_SECRET=replace-with-a-long-random-string
 ADMIN_PASSWORD=pick-a-strong-password
 ```
 
-### `artifacts/hareem-academy/.env`
+### `artifacts/frontend/.env`
 
 ```env
 PORT=5173
@@ -136,7 +136,7 @@ When running on Replit, both the website and API are served through the same
 host on `/` and `/api`. Locally they run on different ports, so add a small
 proxy to the Vite config so that API calls keep working without code changes.
 
-Open `artifacts/hareem-academy/vite.config.ts` and add a `server.proxy` block:
+Open `artifacts/frontend/vite.config.ts` and add a `server.proxy` block:
 
 ```ts
 export default defineConfig({
@@ -164,7 +164,7 @@ Open two terminals.
 **Terminal 1 — API server:**
 
 ```bash
-pnpm --filter @workspace/api-server run dev
+pnpm --filter @workspace/backend run dev
 ```
 
 You should see something like `Server listening on port 8080`.
@@ -172,7 +172,7 @@ You should see something like `Server listening on port 8080`.
 **Terminal 2 — Website:**
 
 ```bash
-pnpm --filter @workspace/hareem-academy run dev
+pnpm --filter @workspace/frontend run dev
 ```
 
 Open the URL it prints (usually http://localhost:5173).
@@ -193,29 +193,29 @@ Run from the project root.
 | Command                                                          | What it does                              |
 | ---------------------------------------------------------------- | ----------------------------------------- |
 | `pnpm install`                                                   | Install all dependencies                  |
-| `pnpm --filter @workspace/api-server run dev`                    | Start the API in dev mode                 |
-| `pnpm --filter @workspace/hareem-academy run dev`                | Start the website in dev mode             |
+| `pnpm --filter @workspace/backend run dev`                    | Start the API in dev mode                 |
+| `pnpm --filter @workspace/frontend run dev`                | Start the website in dev mode             |
 | `pnpm --filter @workspace/db run push`                           | Sync the database schema                  |
 | `pnpm --filter @workspace/api-spec run codegen`                  | Regenerate API hooks/Zod from OpenAPI     |
 | `pnpm run typecheck`                                             | TypeScript check across every package     |
-| `pnpm --filter @workspace/api-server run build`                  | Build the production API bundle           |
-| `pnpm --filter @workspace/hareem-academy run build`              | Build the production website              |
+| `pnpm --filter @workspace/backend run build`                  | Build the production API bundle           |
+| `pnpm --filter @workspace/frontend run build`              | Build the production website              |
 
 ## Building for production
 
 ```bash
 # Build the website (static files)
-pnpm --filter @workspace/hareem-academy run build
+pnpm --filter @workspace/frontend run build
 
 # Build the API server
-pnpm --filter @workspace/api-server run build
+pnpm --filter @workspace/backend run build
 
 # Run the production API
-node artifacts/api-server/dist/index.mjs
+node artifacts/backend/dist/index.mjs
 ```
 
 The website's built static files end up in
-`artifacts/hareem-academy/dist/public/` and can be served by any static host
+`artifacts/frontend/dist/public/` and can be served by any static host
 (Nginx, Vercel, Netlify, S3, etc.). Make sure the host points all `/api/*`
 requests to the running API server.
 
@@ -300,8 +300,8 @@ git push -u origin main
    | Region              | Pick the same region as your Neon database                         |
    | Branch              | `main`                                                             |
    | Runtime             | `Node`                                                             |
-   | Build Command       | `corepack enable && pnpm install --frozen-lockfile && pnpm --filter @workspace/api-server run build` |
-   | Start Command       | `node artifacts/api-server/dist/index.mjs`                         |
+   | Build Command       | `corepack enable && pnpm install --frozen-lockfile && pnpm --filter @workspace/backend run build` |
+   | Start Command       | `node artifacts/backend/dist/index.mjs`                         |
    | Instance Type       | Free is fine to start                                              |
 
 3. Open the **Environment** tab and add these variables:
@@ -330,8 +330,8 @@ git push -u origin main
    | ------------------- | ------------------------------------------------------------------ |
    | Name                | `hareem-academy`                                                   |
    | Branch              | `main`                                                             |
-   | Build Command       | `corepack enable && pnpm install --frozen-lockfile && pnpm --filter @workspace/hareem-academy run build` |
-   | Publish Directory   | `artifacts/hareem-academy/dist/public`                             |
+   | Build Command       | `corepack enable && pnpm install --frozen-lockfile && pnpm --filter @workspace/frontend run build` |
+   | Publish Directory   | `artifacts/frontend/dist/public`                             |
 
 3. Open the **Redirects/Rewrites** tab and add **two** rules in this order:
 
@@ -419,7 +419,7 @@ When the site outgrows the free tier:
 The site currently shows a "we'll contact you" confirmation. To send automatic
 emails (for example, an admission confirmation), you'll add an email provider
 (Resend, SendGrid, or Postmark) and call it from the enrollment route in
-`artifacts/api-server/src/routes/enrollments.ts`. Treat the API key the same
+`artifacts/backend/src/routes/enrollments.ts`. Treat the API key the same
 way as `ADMIN_PASSWORD` — store it as a Render environment variable.
 
 ### Adding new admin users
@@ -444,11 +444,11 @@ Double-check `DATABASE_URL` and that PostgreSQL is running. On macOS:
 `brew services start postgresql`. On Linux: `sudo systemctl start postgresql`.
 
 **`SESSION_SECRET environment variable is required`**
-Make sure `artifacts/api-server/.env` exists and contains `SESSION_SECRET`.
+Make sure `artifacts/backend/.env` exists and contains `SESSION_SECRET`.
 
 **Admin login returns "Invalid credentials"**
 Username must be exactly `admin` (lowercase). The password must match
-`ADMIN_PASSWORD` in `artifacts/api-server/.env`. Restart the API server after
+`ADMIN_PASSWORD` in `artifacts/backend/.env`. Restart the API server after
 changing the value.
 
 **Website loads but API calls fail with HTML / 404**

@@ -15,11 +15,11 @@ paths = [ "/" ]
 localPort = 19925
 
 [services.development]
-run = "pnpm --filter @workspace/hareem-academy run dev"
+run = "pnpm --filter @workspace/frontend run dev"
 
 [services.production]
-build = [ "pnpm", "--filter", "@workspace/hareem-academy", "run", "build" ]
-publicDir = "artifacts/hareem-academy/dist/public"
+build = [ "pnpm", "--filter", "@workspace/frontend", "run", "build" ]
+publicDir = "artifacts/frontend/dist/public"
 serve = "static"
 
 [[services.production.rewrites]]

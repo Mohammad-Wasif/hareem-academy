@@ -19,8 +19,8 @@ WhatsApp.
 
 ## Artifacts
 
-- `artifacts/hareem-academy` — public marketing + enrollment website (root path `/`)
-- `artifacts/api-server` — Express API at `/api`
+- `artifacts/frontend` — public marketing + enrollment website (root path `/`)
+- `artifacts/backend` — Express API at `/api`
 - `artifacts/mockup-sandbox` — design sandbox (not used for the live site)
 
 ## API surface (`/api`)
