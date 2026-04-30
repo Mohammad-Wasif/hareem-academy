@@ -1,74 +1,265 @@
-import { ShieldCheck, Video, Heart, BookOpen } from "lucide-react";
+import {
+  ShieldCheck,
+  Video,
+  Heart,
+  BookOpen,
+  HeartCrack,
+  Clock,
+  Users,
+  Sparkles,
+  CheckCircle2,
+  Award,
+} from "lucide-react";
+import CTAGroup from "@/components/CTAGroup";
+import { useGetSiteStats } from "@workspace/api-client-react";
 
 export default function About() {
+  const { data: stats } = useGetSiteStats();
+
   return (
-    <div className="min-h-screen bg-background pt-8 pb-24">
-      {/* Hero */}
-      <section className="container mx-auto px-4 py-16 text-center max-w-4xl">
-        <h1 className="font-serif font-bold text-5xl md:text-6xl text-primary mb-6">Our Story</h1>
-        <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-          Hareem Academy was founded with a simple vision: to provide a safe, high-quality, and deeply respectful environment for Muslim women to learn the languages of our faith and heritage.
-        </p>
-      </section>
-
-      {/* Image & Mission */}
-      <section className="container mx-auto px-4 mb-24">
-        <div className="grid md:grid-cols-2 gap-12 items-center bg-card rounded-3xl border border-primary/10 overflow-hidden shadow-sm">
-          <div className="h-full min-h-[400px] relative">
-            <img src="/about-bg.png" alt="Studying" className="absolute inset-0 w-full h-full object-cover" />
-          </div>
-          <div className="p-8 md:p-12 space-y-6">
-            <h2 className="font-serif font-bold text-3xl text-primary">Mission & Vision</h2>
-            <p className="text-foreground/80 text-lg leading-relaxed">
-              We believe that every sister should have access to authentic knowledge without compromising her privacy or values. Our mission is to break down the barriers of distance and time by bringing expert female educators directly to your home.
-            </p>
-            <p className="text-foreground/80 text-lg leading-relaxed">
-              We envision a world where mothers, daughters, and professionals can confidently read the Quran, understand Islamic texts in Arabic, and connect with Urdu literature, all while maintaining their modest lifestyle.
-            </p>
+    <div className="min-h-screen bg-background pb-24 pt-24">
+      {/* HERO with above-fold CTA */}
+      <section className="container mx-auto px-4 py-12 max-w-5xl">
+        <div className="text-center max-w-3xl mx-auto space-y-6">
+          <span className="inline-block text-xs font-bold tracking-widest text-primary uppercase">
+            Our Promise
+          </span>
+          <h1 className="font-serif font-bold text-4xl md:text-6xl text-foreground leading-tight">
+            A safe space for sisters
+            <br />
+            to fall in love with the Quran.
+          </h1>
+          <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+            No mixed classes. No judgment. Just qualified female teachers and a
+            global community of sisters learning together — from your living room.
+          </p>
+          <div className="flex justify-center pt-2">
+            <CTAGroup variant="hero" align="center" trialMode />
           </div>
         </div>
       </section>
 
-      {/* Values */}
-      <section className="container mx-auto px-4 mb-24">
-        <h2 className="font-serif font-bold text-4xl text-center text-primary mb-16">Our Core Values</h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      {/* PAIN — Why we exist */}
+      <section className="container mx-auto px-4 mt-16 mb-20 max-w-5xl">
+        <div className="bg-card rounded-3xl border border-border p-8 md:p-12">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <HeartCrack className="w-10 h-10 text-rose-500 mx-auto mb-4" />
+            <h2 className="font-serif font-bold text-3xl md:text-4xl text-foreground mb-3">
+              We know how it feels.
+            </h2>
+            <p className="text-muted-foreground">
+              Most sisters who join us were stuck in one of these places:
+            </p>
+          </div>
+          <ul className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+            {[
+              "You can recite the Quran but don't understand a word.",
+              "Local madrasas have fixed timings that clash with work or family.",
+              "Mixed-gender online classes feel uncomfortable and rushed.",
+              "You started learning years ago, then life got in the way.",
+            ].map((pain, i) => (
+              <li
+                key={i}
+                className="flex items-start gap-3 bg-background p-4 rounded-xl border border-border"
+              >
+                <span className="w-6 h-6 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-sm shrink-0 mt-0.5">
+                  ✕
+                </span>
+                <span className="text-foreground/90 text-sm">{pain}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="text-center text-foreground font-serif italic text-lg mt-8">
+            Hareem Academy was built so none of that has to stop you anymore.
+          </p>
+        </div>
+      </section>
+
+      {/* TRANSFORMATION — What you get */}
+      <section className="container mx-auto px-4 mb-20 max-w-5xl">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <Sparkles className="w-10 h-10 text-primary mx-auto mb-4" />
+          <h2 className="font-serif font-bold text-3xl md:text-4xl text-foreground mb-3">
+            Here's what you walk away with.
+          </h2>
+          <p className="text-muted-foreground">
+            Not just lessons — a real change in how you connect with your deen.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-5">
           {[
-            { icon: ShieldCheck, title: "Privacy First", desc: "100% female-only classes. Safe environment to open your camera." },
-            { icon: Heart, title: "Modesty", desc: "A culture that respects and upholds Islamic values of Haya." },
-            { icon: BookOpen, title: "Quality", desc: "Structured learning paths with qualified, experienced educators." },
-            { icon: Video, title: "Flexibility", desc: "Learn from anywhere. Zoom classes designed for busy lives." }
-          ].map((val, i) => (
-            <div key={i} className="text-center space-y-4">
-              <div className="w-16 h-16 mx-auto bg-primary/10 rounded-full flex items-center justify-center text-primary">
-                <val.icon className="w-8 h-8" />
+            {
+              icon: BookOpen,
+              title: "Read the Quran with understanding",
+              desc: "Move from sounding out words to understanding their meaning, in shaa Allah.",
+            },
+            {
+              icon: Heart,
+              title: "Pray with khushu",
+              desc: "Know what you're saying in Salah and feel it deeply.",
+            },
+            {
+              icon: Users,
+              title: "A circle of sisters",
+              desc: "Make friends with women from 12+ countries on the same path.",
+            },
+            {
+              icon: Award,
+              title: "Confidence to teach your children",
+              desc: "Pass on what you've learned to the next generation at home.",
+            },
+          ].map((item, i) => (
+            <div
+              key={i}
+              className="bg-card border border-border rounded-2xl p-6 flex gap-4"
+            >
+              <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                <item.icon className="w-6 h-6" />
               </div>
-              <h3 className="font-serif font-bold text-xl">{val.title}</h3>
-              <p className="text-muted-foreground">{val.desc}</p>
+              <div>
+                <h3 className="font-bold text-foreground mb-1">{item.title}</h3>
+                <p className="text-sm text-muted-foreground">{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex justify-center mt-10">
+          <CTAGroup variant="hero" align="center" trialMode />
+        </div>
+      </section>
+
+      {/* TRUST — Values */}
+      <section className="container mx-auto px-4 mb-20 max-w-5xl">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <span className="inline-block text-xs font-bold tracking-widest text-primary uppercase mb-3">
+            What we stand for
+          </span>
+          <h2 className="font-serif font-bold text-3xl md:text-4xl text-foreground">
+            Four promises — every class, every batch.
+          </h2>
+        </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            { icon: ShieldCheck, title: "Privacy First", desc: "100% sisters only." },
+            { icon: Heart, title: "Modesty", desc: "Islamic adab in every class." },
+            { icon: BookOpen, title: "Quality", desc: "Qualified, experienced female educators." },
+            { icon: Video, title: "Flexibility", desc: "Evening & weekend batches." },
+          ].map((val, i) => (
+            <div
+              key={i}
+              className="text-center space-y-3 bg-card p-6 rounded-2xl border border-border"
+            >
+              <div className="w-12 h-12 mx-auto bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                <val.icon className="w-6 h-6" />
+              </div>
+              <h3 className="font-serif font-bold text-lg">{val.title}</h3>
+              <p className="text-sm text-muted-foreground">{val.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Teachers */}
-      <section className="container mx-auto px-4">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="font-serif font-bold text-4xl text-primary mb-4">Meet Our Teachers</h2>
-          <p className="text-muted-foreground text-lg">Dedicated, passionate, and qualified sisters ready to guide you.</p>
+      {/* TRUST — Stats */}
+      <section className="container mx-auto px-4 mb-20 max-w-5xl">
+        <div className="bg-primary text-primary-foreground rounded-3xl p-10 md:p-14 text-center">
+          <h2 className="font-serif font-bold text-2xl md:text-3xl text-white mb-8">
+            A growing community of sisters worldwide.
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              { value: `${stats?.totalStudents || 500}+`, label: "Students taught" },
+              { value: `${stats?.countriesReached || 12}+`, label: "Countries" },
+              { value: `${stats?.activeBatches || 8}+`, label: "Active batches" },
+              { value: `${(stats?.averageRating ?? 4.9).toFixed(1)}★`, label: "Average rating" },
+            ].map((stat, i) => (
+              <div key={i}>
+                <div className="font-serif font-bold text-3xl md:text-5xl text-accent mb-1">
+                  {stat.value}
+                </div>
+                <div className="text-sm text-primary-foreground/80 uppercase tracking-wider">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      </section>
+
+      {/* TRUST — Teachers */}
+      <section className="container mx-auto px-4 mb-16 max-w-5xl">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <span className="inline-block text-xs font-bold tracking-widest text-primary uppercase mb-3">
+            Your teachers
+          </span>
+          <h2 className="font-serif font-bold text-3xl md:text-4xl text-foreground mb-3">
+            Sisters teaching sisters.
+          </h2>
+          <p className="text-muted-foreground">
+            Qualified, patient, and dedicated to your journey.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6">
           {[
-            { name: "Ustadha Fatima", role: "Head of Arabic", img: "/teacher-1.png" },
-            { name: "Ustadha Ayesha", role: "Senior Urdu Instructor", img: "/teacher-2.png" },
-            { name: "Ustadha Zainab", role: "Arabic & Tajweed", img: "/teacher-3.png" },
+            {
+              name: "Ustadha Fatima",
+              role: "Head of Arabic",
+              img: "/teacher-1.png",
+              bio: "8+ years teaching Quranic Arabic to sisters worldwide.",
+            },
+            {
+              name: "Ustadha Ayesha",
+              role: "Senior Urdu Instructor",
+              img: "/teacher-2.png",
+              bio: "Specialist in Urdu literature and Islamic studies.",
+            },
+            {
+              name: "Ustadha Zainab",
+              role: "Arabic & Tajweed",
+              img: "/teacher-3.png",
+              bio: "Ijazah in Tajweed, focused on beginner sisters.",
+            },
           ].map((teacher, i) => (
-            <div key={i} className="bg-card rounded-2xl p-6 border border-border text-center hover:border-primary/30 transition-colors">
-              <img src={teacher.img} alt={teacher.name} className="w-32 h-32 rounded-full mx-auto object-cover border-4 border-primary/10 mb-6" />
+            <div
+              key={i}
+              className="bg-card rounded-2xl p-6 border border-border text-center hover:border-primary/30 hover:shadow-lg transition-all"
+            >
+              <img
+                src={teacher.img}
+                alt={teacher.name}
+                className="w-28 h-28 rounded-full mx-auto object-cover border-4 border-primary/10 mb-5"
+              />
               <h3 className="font-serif font-bold text-xl text-foreground">{teacher.name}</h3>
-              <p className="text-primary font-medium mt-1">{teacher.role}</p>
+              <p className="text-primary font-medium text-sm mt-1">{teacher.role}</p>
+              <p className="text-sm text-muted-foreground mt-3">{teacher.bio}</p>
+              <div className="flex items-center justify-center gap-1 mt-4 text-xs text-foreground/70">
+                <CheckCircle2 className="w-3.5 h-3.5 text-primary" />
+                Verified Female Teacher
+              </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
+      <section className="container mx-auto px-4 max-w-4xl">
+        <div className="bg-primary rounded-3xl p-10 md:p-14 text-center text-primary-foreground space-y-5">
+          <h2 className="font-serif font-bold text-3xl md:text-4xl text-white">
+            Ready to take the first step?
+          </h2>
+          <p className="text-lg text-primary-foreground/85 max-w-xl mx-auto">
+            Book a free trial class. Meet your teacher. See for yourself if this is
+            what you've been looking for.
+          </p>
+          <div className="flex justify-center pt-2">
+            <CTAGroup variant="hero" align="center" theme="dark" trialMode />
+          </div>
+          <p className="text-sm text-primary-foreground/70 flex items-center justify-center gap-2">
+            <Clock className="w-4 h-4" />
+            We reply on WhatsApp within minutes.
+          </p>
         </div>
       </section>
     </div>

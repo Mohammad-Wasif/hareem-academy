@@ -59,10 +59,13 @@ async function fetchEnrollmentFields(): Promise<PublicFormField[]> {
 export default function EnrollmentModal({
   children,
   defaultCourseSlug = "",
+  mode = "enroll",
 }: {
   children: React.ReactNode;
   defaultCourseSlug?: string;
+  mode?: "enroll" | "trial";
 }) {
+  const isTrial = mode === "trial";
   const [isOpen, setIsOpen] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -147,6 +150,7 @@ export default function EnrollmentModal({
       const v = values[f.fieldKey] ?? "";
       if (v !== "") customData[f.fieldKey] = v;
     }
+    if (isTrial) customData.requestType = "free_trial";
     const payload = {
       fullName: values.fullName,
       age: Number(values.age),
@@ -250,8 +254,9 @@ export default function EnrollmentModal({
                 Alhamdulillah!
               </h2>
               <p className="text-muted-foreground">
-                Your enrollment request has been received. Our team will
-                contact you on WhatsApp shortly to confirm your admission.
+                {isTrial
+                  ? "Your free trial request is in. A sister from our team will WhatsApp you within minutes to schedule your trial class."
+                  : "Your enrollment request has been received. Our team will WhatsApp you within minutes to confirm your admission."}
               </p>
             </div>
             <Button
@@ -265,7 +270,7 @@ export default function EnrollmentModal({
                 className="flex items-center gap-2"
               >
                 <FaWhatsapp className="w-5 h-5" />
-                Message Us on WhatsApp
+                Message Us on WhatsApp Now
               </a>
             </Button>
           </div>
@@ -273,13 +278,22 @@ export default function EnrollmentModal({
           <>
             <DialogHeader>
               <DialogTitle className="font-serif text-2xl text-primary">
-                Enroll Now
+                {isTrial ? "Book Your Free Trial Class" : "Enroll Now"}
               </DialogTitle>
               <DialogDescription>
-                Fill out this form to register. We will contact you on WhatsApp
-                to complete the process.
+                {isTrial
+                  ? "Try one class for free, no payment required. Takes 30 seconds."
+                  : "Quick form, no payment now. Takes 30 seconds."}
               </DialogDescription>
             </DialogHeader>
+
+            <div className="flex items-center gap-2 mt-3 px-3 py-2 rounded-lg bg-[#25D366]/10 border border-[#25D366]/20">
+              <FaWhatsapp className="w-4 h-4 text-[#25D366] shrink-0" />
+              <p className="text-xs text-foreground/80">
+                We'll contact you on <strong>WhatsApp within minutes</strong> — no
+                spam calls.
+              </p>
+            </div>
 
             <form onSubmit={onSubmit} className="space-y-4 pt-4">
               <div className="space-y-2">
@@ -441,12 +455,13 @@ export default function EnrollmentModal({
                   disabled={createEnrollment.isPending}
                 >
                   {createEnrollment.isPending
-                    ? "Submitting..."
-                    : "Submit Application"}
+                    ? "Sending..."
+                    : isTrial
+                      ? "Book My Free Trial"
+                      : "Confirm Enrollment"}
                 </Button>
                 <p className="text-xs text-center text-muted-foreground">
-                  By submitting, you agree to our terms. For girls and women
-                  only.
+                  Free for girls & women only. No spam, no payment until you're sure.
                 </p>
               </div>
             </form>

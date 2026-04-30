@@ -2,6 +2,9 @@ import { Link, useLocation } from "wouter";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { FaWhatsapp } from "react-icons/fa";
+import EnrollmentModal from "@/components/EnrollmentModal";
+import { WHATSAPP_URL } from "@/components/CTAGroup";
 import logo from "@assets/Untitled_design_1777409286493.png";
 
 const navItems = [
@@ -17,7 +20,7 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-b border-primary/10">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-primary/10">
       <div className="container mx-auto px-4 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <img src={logo} alt="Hareem Academy" className="h-12 w-auto object-contain rounded" />
@@ -30,21 +33,27 @@ export default function Header() {
             <Link
               key={item.href}
               href={item.href}
-              className={`text-sm font-medium transition-colors hover:text-accent ${
+              className={`text-sm font-medium transition-colors hover:text-primary ${
                 location === item.href ? "text-primary" : "text-muted-foreground"
               }`}
             >
               {item.label}
             </Link>
           ))}
-          <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90 font-serif text-lg tracking-wide rounded-full px-6">
-            <a href="https://wa.me/919315118289" target="_blank" rel="noopener noreferrer">
-              Enroll Now
+          <Button asChild variant="outline" className="rounded-full border-[#25D366]/30 text-[#25D366] hover:bg-[#25D366]/10 hover:text-[#128C7E] gap-2">
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+              <FaWhatsapp className="w-4 h-4" />
+              WhatsApp
             </a>
           </Button>
+          <EnrollmentModal mode="trial">
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90 font-serif text-base tracking-wide rounded-full px-6 shadow-md shadow-primary/20">
+              Book Free Trial
+            </Button>
+          </EnrollmentModal>
         </nav>
 
-        {/* Mobile Toggle */}
+        {/* Mobile Trigger */}
         <button
           className="md:hidden p-2 text-primary"
           onClick={() => setIsOpen(!isOpen)}
@@ -56,13 +65,13 @@ export default function Header() {
 
       {/* Mobile Nav */}
       {isOpen && (
-        <div className="md:hidden absolute top-20 left-0 right-0 bg-background border-b border-primary/10 shadow-lg p-4 flex flex-col gap-4">
+        <div className="md:hidden absolute top-20 left-0 right-0 bg-background border-b border-primary/10 shadow-lg p-4 flex flex-col gap-3">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               onClick={() => setIsOpen(false)}
-              className={`block px-4 py-2 text-lg font-medium rounded-md ${
+              className={`block px-4 py-2.5 text-base font-medium rounded-md ${
                 location === item.href
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:bg-muted"
@@ -71,11 +80,18 @@ export default function Header() {
               {item.label}
             </Link>
           ))}
-          <Button asChild className="w-full bg-primary text-primary-foreground mt-2 rounded-full">
-            <a href="https://wa.me/919315118289" target="_blank" rel="noopener noreferrer">
-              Enroll Now
-            </a>
-          </Button>
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            <Button asChild variant="outline" className="rounded-full border-[#25D366]/30 text-[#25D366] gap-1.5">
+              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+                <FaWhatsapp className="w-4 h-4" /> Chat
+              </a>
+            </Button>
+            <EnrollmentModal mode="trial">
+              <Button className="bg-primary text-primary-foreground rounded-full w-full" onClick={() => setIsOpen(false)}>
+                Free Trial
+              </Button>
+            </EnrollmentModal>
+          </div>
         </div>
       )}
     </header>

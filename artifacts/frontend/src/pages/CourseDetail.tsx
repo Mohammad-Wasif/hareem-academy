@@ -1,176 +1,386 @@
 import { useParams } from "wouter";
-import { useGetCourse } from "@workspace/api-client-react";
+import { useGetCourse, useListTestimonials } from "@workspace/api-client-react";
 import { getGetCourseQueryKey } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import EnrollmentModal from "@/components/EnrollmentModal";
+import CTAGroup, { WHATSAPP_URL } from "@/components/CTAGroup";
 import NotFound from "./not-found";
-import { Clock, GraduationCap, Video, Users, CheckCircle2, Calendar } from "lucide-react";
+import {
+  Clock,
+  GraduationCap,
+  Video,
+  Users,
+  CheckCircle2,
+  Calendar,
+  Flame,
+  Sparkles,
+  Award,
+  Heart,
+  ShieldCheck,
+  Star,
+} from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
+import { getFlag, getInitials, getAvatarColor } from "@/lib/country";
 
 export default function CourseDetail() {
   const params = useParams();
   const slug = params.slug || "";
-  
+
   const { data: course, isLoading, isError } = useGetCourse(slug, {
     query: {
       enabled: !!slug,
-      queryKey: getGetCourseQueryKey(slug)
-    }
+      queryKey: getGetCourseQueryKey(slug),
+    },
   });
+  const { data: testimonials = [] } = useListTestimonials();
 
-  if (isLoading) return (
-    <div className="container mx-auto px-4 py-20 space-y-8">
-      <Skeleton className="h-12 w-1/2" />
-      <Skeleton className="h-6 w-1/3" />
-      <Skeleton className="h-64 w-full rounded-3xl" />
-    </div>
-  );
+  if (isLoading)
+    return (
+      <div className="container mx-auto px-4 py-32 space-y-8 max-w-5xl">
+        <Skeleton className="h-12 w-1/2" />
+        <Skeleton className="h-6 w-1/3" />
+        <Skeleton className="h-64 w-full rounded-3xl" />
+      </div>
+    );
 
   if (isError || !course) return <NotFound />;
 
+  const lowSeats =
+    typeof course.seatsRemaining === "number" &&
+    course.seatsRemaining > 0 &&
+    course.seatsRemaining <= 8;
+
+  // Course-related testimonials, fallback to all
+  const courseTestimonials = testimonials
+    .filter(
+      (t) =>
+        t.course && t.course.toLowerCase().includes(course.title.toLowerCase().split(" ")[0]!),
+    )
+    .slice(0, 3);
+  const showTestimonials =
+    courseTestimonials.length > 0 ? courseTestimonials : testimonials.slice(0, 3);
+
+  // Generic transformations based on language
+  const isArabic = course.language === "arabic";
+  const transformations = isArabic
+    ? [
+        { icon: Heart, text: "Pray Salah understanding every word" },
+        { icon: Sparkles, text: "Read the Quran with Tajweed and meaning" },
+        { icon: Award, text: "Build a daily Arabic study habit" },
+        { icon: Users, text: "Join a global circle of sisters on the same path" },
+      ]
+    : [
+        { icon: Heart, text: "Read Urdu fluently and confidently" },
+        { icon: Sparkles, text: "Connect with Islamic literature and poetry" },
+        { icon: Award, text: "Speak and write Urdu in everyday life" },
+        { icon: Users, text: "Join a sisterhood that celebrates the language" },
+      ];
+
   return (
-    <div className="min-h-screen bg-background pb-24">
-      {/* Hero Header */}
-      <div className="bg-primary text-primary-foreground py-16 lg:py-24">
+    <div className="min-h-screen bg-background pb-32 pt-20">
+      {/* HERO */}
+      <div className="bg-primary text-primary-foreground py-12 lg:py-20">
         <div className="container mx-auto px-4 max-w-5xl">
-          <div className="inline-block px-3 py-1 bg-accent/20 text-accent font-bold text-xs uppercase tracking-widest rounded mb-6">
-            {course.language} COURSE
+          <div className="flex flex-wrap gap-2 mb-4">
+            <span className="inline-block px-3 py-1 bg-accent/20 text-accent font-bold text-xs uppercase tracking-widest rounded-full">
+              {course.language} • {course.level}
+            </span>
+            {course.featured && (
+              <span className="inline-flex items-center gap-1 px-3 py-1 bg-accent text-primary font-bold text-xs uppercase tracking-widest rounded-full">
+                <Sparkles className="w-3 h-3" /> Most Popular
+              </span>
+            )}
+            {lowSeats && (
+              <span className="inline-flex items-center gap-1 px-3 py-1 bg-rose-500 text-white font-bold text-xs uppercase tracking-widest rounded-full animate-pulse">
+                <Flame className="w-3 h-3" /> Only {course.seatsRemaining} seats left
+              </span>
+            )}
           </div>
-          <h1 className="font-serif font-bold text-4xl md:text-6xl mb-6 text-white">{course.title}</h1>
-          <p className="text-xl md:text-2xl text-primary-foreground/80 max-w-3xl leading-relaxed mb-8">
+
+          <h1 className="font-serif font-bold text-3xl md:text-5xl mb-5 text-white leading-tight">
+            {course.title}
+          </h1>
+          <p className="text-lg md:text-xl text-primary-foreground/80 max-w-3xl leading-relaxed mb-6">
             {course.summary}
           </p>
-          
-          <div className="flex flex-wrap gap-4 items-center border-t border-primary-foreground/10 pt-8 mt-8">
-            <EnrollmentModal defaultCourseSlug={course.slug}>
-              <Button className="h-14 px-8 text-lg font-serif rounded-full bg-accent text-primary hover:bg-accent/90">
-                Enroll Now
-              </Button>
-            </EnrollmentModal>
-            <div className="font-serif font-bold text-2xl ml-4">
-              {course.currency} {course.feeMonthly} <span className="text-sm font-sans font-normal opacity-70">/ month</span>
+
+          <div className="flex flex-wrap gap-4 items-center pt-6 border-t border-primary-foreground/10">
+            <CTAGroup
+              variant="hero"
+              theme="dark"
+              trialMode={false}
+              primaryLabel="Enroll Now"
+              defaultCourseSlug={course.slug}
+            />
+            <div className="font-serif font-bold text-2xl md:ml-2">
+              {course.currency} {course.feeMonthly}
+              <span className="text-sm font-sans font-normal opacity-70"> / month</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 max-w-5xl -mt-8 relative z-10">
+      <div className="container mx-auto px-4 max-w-5xl -mt-6 relative z-10">
         <div className="grid md:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="md:col-span-2 space-y-12 bg-card p-8 rounded-3xl border border-border shadow-sm">
-            
-            <section>
-              <h2 className="font-serif font-bold text-3xl text-primary mb-6">What You'll Learn</h2>
-              <ul className="space-y-4">
+          {/* MAIN */}
+          <div className="md:col-span-2 space-y-10">
+            {/* What you'll achieve */}
+            <section className="bg-card p-7 md:p-9 rounded-3xl border border-border shadow-sm">
+              <div className="flex items-center gap-2 mb-5">
+                <Sparkles className="w-5 h-5 text-accent" />
+                <h2 className="font-serif font-bold text-2xl md:text-3xl text-primary">
+                  What you'll achieve
+                </h2>
+              </div>
+              <p className="text-muted-foreground mb-5">
+                By the end of this course, in shaa Allah:
+              </p>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {transformations.map((t, i) => (
+                  <div
+                    key={i}
+                    className="flex items-start gap-3 bg-background p-4 rounded-xl border border-border"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                      <t.icon className="w-4 h-4" />
+                    </div>
+                    <span className="text-sm text-foreground/90">{t.text}</span>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* What you'll learn */}
+            <section className="bg-card p-7 md:p-9 rounded-3xl border border-border shadow-sm">
+              <h2 className="font-serif font-bold text-2xl md:text-3xl text-primary mb-5">
+                What you'll learn
+              </h2>
+              <ul className="space-y-3">
                 {course.highlights.map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
-                    <CheckCircle2 className="w-6 h-6 text-accent shrink-0 mt-0.5" />
-                    <span className="text-lg text-foreground/80 leading-relaxed">{item}</span>
+                    <CheckCircle2 className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                    <span className="text-foreground/85 leading-relaxed">{item}</span>
                   </li>
                 ))}
               </ul>
             </section>
 
-            <hr className="border-border" />
-
-            <section>
-              <h2 className="font-serif font-bold text-3xl text-primary mb-6">Curriculum</h2>
-              <div className="space-y-6">
+            {/* Curriculum */}
+            <section className="bg-card p-7 md:p-9 rounded-3xl border border-border shadow-sm">
+              <h2 className="font-serif font-bold text-2xl md:text-3xl text-primary mb-6">
+                The curriculum
+              </h2>
+              <div className="space-y-5">
                 {course.curriculum.map((module, i) => (
-                  <div key={i} className="flex gap-6">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold font-serif shrink-0">
+                  <div key={i} className="flex gap-5">
+                    <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold font-serif shrink-0">
                       {i + 1}
                     </div>
-                    <div>
-                      <h3 className="font-bold text-xl mb-2">{module.title}</h3>
+                    <div className="pt-1.5">
+                      <h3 className="font-bold text-lg mb-1.5">{module.title}</h3>
                       {module.description && (
-                        <p className="text-muted-foreground">{module.description}</p>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {module.description}
+                        </p>
                       )}
                     </div>
                   </div>
                 ))}
               </div>
+
+              {/* Mid-page CTA */}
+              <div className="mt-8 pt-8 border-t border-border">
+                <CTAGroup
+                  trialMode={false}
+                  primaryLabel="Enroll in This Course"
+                  defaultCourseSlug={course.slug}
+                />
+              </div>
             </section>
-            
+
+            {/* Testimonials */}
+            {showTestimonials.length > 0 && (
+              <section className="bg-card p-7 md:p-9 rounded-3xl border border-border shadow-sm">
+                <h2 className="font-serif font-bold text-2xl md:text-3xl text-primary mb-2">
+                  Sisters love this course.
+                </h2>
+                <p className="text-muted-foreground mb-6">
+                  Real words from sisters who took the leap.
+                </p>
+                <div className="space-y-4">
+                  {showTestimonials.map((t) => {
+                    const palette = getAvatarColor(t.studentName);
+                    return (
+                      <div
+                        key={t.id}
+                        className="bg-background p-5 rounded-2xl border border-border"
+                      >
+                        <div className="flex gap-1 mb-2 text-accent">
+                          {[...Array(t.rating)].map((_, i) => (
+                            <Star key={i} className="w-4 h-4 fill-current" />
+                          ))}
+                        </div>
+                        <p className="text-foreground/90 text-sm leading-relaxed mb-3">
+                          "{t.quote}"
+                        </p>
+                        <div className="flex items-center gap-2.5 text-xs">
+                          <div
+                            className={`w-9 h-9 rounded-full ${palette.bg} ${palette.text} flex items-center justify-center font-bold`}
+                          >
+                            {getInitials(t.studentName)}
+                          </div>
+                          <div>
+                            <div className="font-bold text-foreground">{t.studentName}</div>
+                            <div className="text-muted-foreground">
+                              <span className="mr-1">{getFlag(t.location)}</span>
+                              {t.location}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
+            {/* Final CTA on main column */}
+            <section className="bg-primary text-primary-foreground rounded-3xl p-8 text-center">
+              <Sparkles className="w-8 h-8 text-accent mx-auto mb-3" />
+              <h3 className="font-serif font-bold text-2xl text-white mb-2">
+                Ready to begin?
+              </h3>
+              <p className="text-primary-foreground/85 mb-6 text-sm">
+                Book a free trial first, or enroll directly. Either way — you'll be on
+                WhatsApp with us within minutes.
+              </p>
+              <div className="flex justify-center">
+                <CTAGroup
+                  variant="hero"
+                  align="center"
+                  theme="dark"
+                  trialMode
+                  defaultCourseSlug={course.slug}
+                />
+              </div>
+            </section>
           </div>
 
-          {/* Sidebar */}
+          {/* SIDEBAR */}
           <div className="space-y-6">
-            <div className="bg-card p-6 rounded-3xl border border-border shadow-sm space-y-6">
-              <h3 className="font-serif font-bold text-2xl text-primary mb-4">Course Details</h3>
-              
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                    <Clock className="w-5 h-5" />
+            {/* Sticky enroll card on desktop */}
+            <div className="md:sticky md:top-24 space-y-6">
+              <div className="bg-card p-6 rounded-3xl border border-border shadow-sm space-y-5">
+                <div className="text-center pb-4 border-b border-border">
+                  <div className="text-xs uppercase tracking-widest text-muted-foreground mb-1">
+                    Monthly Fee
                   </div>
-                  <div>
-                    <div className="font-bold text-sm">Duration</div>
-                    <div className="text-muted-foreground">{course.durationMonths} Months</div>
+                  <div className="font-serif font-bold text-3xl text-primary">
+                    {course.currency} {course.feeMonthly}
                   </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                    <Calendar className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="font-bold text-sm">Timings</div>
-                    <div className="text-muted-foreground">{course.timings}</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    Free trial — no payment to start
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                    <Video className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="font-bold text-sm">Platform</div>
-                    <div className="text-muted-foreground">Live on {course.platform}</div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                    <GraduationCap className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="font-bold text-sm">Level</div>
-                    <div className="text-muted-foreground">{course.level}</div>
-                  </div>
-                </div>
-
-                {course.forWhom && (
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                      <Users className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="font-bold text-sm">For Whom</div>
-                      <div className="text-muted-foreground">{course.forWhom}</div>
-                    </div>
+                {lowSeats && (
+                  <div className="bg-rose-50 border border-rose-200 text-rose-700 rounded-xl p-3 flex items-center gap-2 text-sm">
+                    <Flame className="w-4 h-4 shrink-0" />
+                    <span>
+                      Only <strong>{course.seatsRemaining} seats</strong> left this batch
+                    </span>
                   </div>
                 )}
-              </div>
 
-              <div className="pt-6 border-t border-border mt-6">
-                <div className="text-sm font-bold mb-2">Seats Remaining</div>
-                <div className="text-primary font-serif text-2xl">{course.seatsRemaining || "Limited"}</div>
-              </div>
-            </div>
+                <EnrollmentModal mode="trial" defaultCourseSlug={course.slug}>
+                  <Button className="w-full h-12 font-serif text-base rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
+                    <Sparkles className="w-4 h-4 mr-2" /> Book Free Trial
+                  </Button>
+                </EnrollmentModal>
 
-            <div className="bg-primary/5 p-6 rounded-3xl border border-primary/10 text-center">
-              <h3 className="font-bold mb-2">Have Questions?</h3>
-              <p className="text-sm text-muted-foreground mb-4">Speak directly with a teacher on WhatsApp to see if this course is right for you.</p>
-              <Button variant="outline" className="w-full rounded-full border-primary/20 text-primary bg-white" asChild>
-                <a href="https://wa.me/919315118289" target="_blank" rel="noopener noreferrer">
-                  <FaWhatsapp className="w-4 h-4 mr-2 text-[#25D366]" /> Chat With Us
-                </a>
-              </Button>
+                <EnrollmentModal defaultCourseSlug={course.slug}>
+                  <Button
+                    variant="outline"
+                    className="w-full h-12 font-serif text-base rounded-full border-primary/30 text-primary hover:bg-primary/5"
+                  >
+                    Enroll Now
+                  </Button>
+                </EnrollmentModal>
+
+                <Button
+                  asChild
+                  className="w-full h-12 font-serif text-base rounded-full bg-[#25D366] text-white hover:bg-[#128C7E]"
+                >
+                  <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+                    <FaWhatsapp className="w-4 h-4 mr-2" /> Chat on WhatsApp
+                  </a>
+                </Button>
+
+                <div className="pt-4 border-t border-border space-y-3 text-sm">
+                  <Detail icon={Clock} label="Duration" value={`${course.durationMonths} Months`} />
+                  <Detail icon={Calendar} label="Timings" value={course.timings} />
+                  <Detail icon={Video} label="Platform" value={`Live on ${course.platform}`} />
+                  <Detail icon={GraduationCap} label="Level" value={course.level} />
+                  {course.forWhom && (
+                    <Detail icon={Users} label="For" value={course.forWhom} />
+                  )}
+                </div>
+
+                <div className="pt-4 border-t border-border space-y-2 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck className="w-3.5 h-3.5 text-primary" />
+                    100% sisters-only classroom
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Award className="w-3.5 h-3.5 text-primary" />
+                    Money-back guarantee
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+      </div>
+
+      {/* MOBILE STICKY BAR */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-background/95 backdrop-blur border-t border-border p-3 flex gap-2 shadow-2xl">
+        <EnrollmentModal mode="trial" defaultCourseSlug={course.slug}>
+          <Button className="flex-1 h-12 rounded-full bg-primary text-primary-foreground font-serif">
+            <Sparkles className="w-4 h-4 mr-1.5" /> Free Trial
+          </Button>
+        </EnrollmentModal>
+        <Button
+          asChild
+          className="h-12 px-4 rounded-full bg-[#25D366] text-white"
+          aria-label="WhatsApp"
+        >
+          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+            <FaWhatsapp className="w-5 h-5" />
+          </a>
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function Detail({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: typeof Clock;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-center gap-3">
+      <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+        <Icon className="w-4 h-4" />
+      </div>
+      <div className="min-w-0">
+        <div className="font-bold text-xs text-foreground">{label}</div>
+        <div className="text-muted-foreground text-xs truncate">{value}</div>
       </div>
     </div>
   );
