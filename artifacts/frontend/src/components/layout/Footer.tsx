@@ -33,6 +33,7 @@ export default function Footer() {
             <li><Link href="/about" className="text-primary-foreground/80 hover:text-accent transition-colors">About Us</Link></li>
             <li><Link href="/courses" className="text-primary-foreground/80 hover:text-accent transition-colors">Our Courses</Link></li>
             <li><Link href="/testimonials" className="text-primary-foreground/80 hover:text-accent transition-colors">Testimonials</Link></li>
+            <li><Link href="/faqs" className="text-primary-foreground/80 hover:text-accent transition-colors">FAQs</Link></li>
             <li><Link href="/contact" className="text-primary-foreground/80 hover:text-accent transition-colors">Contact</Link></li>
           </ul>
         </div>

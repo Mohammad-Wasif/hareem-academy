@@ -11,6 +11,7 @@ import Courses from "@/pages/Courses";
 import CourseDetail from "@/pages/CourseDetail";
 import Testimonials from "@/pages/Testimonials";
 import Contact from "@/pages/Contact";
+import Faqs from "@/pages/Faqs";
 import Privacy from "@/pages/legal/Privacy";
 import Terms from "@/pages/legal/Terms";
 import Refund from "@/pages/legal/Refund";
@@ -38,6 +39,7 @@ function PublicRoutes() {
         <Route path="/courses" component={Courses} />
         <Route path="/courses/:slug" component={CourseDetail} />
         <Route path="/testimonials" component={Testimonials} />
+        <Route path="/faqs" component={Faqs} />
         <Route path="/contact" component={Contact} />
         <Route path="/privacy" component={Privacy} />
         <Route path="/terms" component={Terms} />
