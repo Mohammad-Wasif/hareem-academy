@@ -2,8 +2,15 @@ import { Switch, Route, Router as WouterRouter, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { setBaseUrl } from "@workspace/api-client-react";
 import NotFound from "@/pages/not-found";
 import Layout from "@/components/layout/Layout";
+
+// In production (Render), VITE_API_URL points to the backend service.
+// In local dev, the Vite proxy handles /api requests so no base URL is needed.
+if (import.meta.env.VITE_API_URL) {
+  setBaseUrl(import.meta.env.VITE_API_URL);
+}
 
 import Home from "@/pages/Home";
 import About from "@/pages/About";
