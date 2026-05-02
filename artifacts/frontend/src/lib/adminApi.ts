@@ -6,15 +6,20 @@ async function request<T>(
   path: string,
   init?: RequestInit,
 ): Promise<T> {
+  const adminPassword = localStorage.getItem("admin_password");
   const res = await fetch(`${BASE}${path}`, {
     credentials: "include",
+    ...init,
     headers: {
       "Content-Type": "application/json",
+      ...(adminPassword ? { "x-admin-password": adminPassword } : {}),
       ...(init?.headers || {}),
     },
-    ...init,
   });
   if (!res.ok) {
+    if (res.status === 401) {
+      localStorage.removeItem("admin_password");
+    }
     let msg = `Request failed (${res.status})`;
     try {
       const body = await res.json();
@@ -28,11 +33,16 @@ async function request<T>(
 
 export const adminApi = {
   me: () => request<{ isAdmin: boolean }>("/admin/me"),
-  login: (username: string, password: string) =>
-    request<{ ok: true }>("/admin/login", {
+  login: async (username: string, password: string) => {
+    const res = await request<{ ok: true }>("/admin/login", {
       method: "POST",
       body: JSON.stringify({ username, password }),
-    }),
+    });
+    if (res.ok) {
+      localStorage.setItem("admin_password", password);
+    }
+    return res;
+  },
   logout: () => request<{ ok: true }>("/admin/logout", { method: "POST" }),
 
   dashboard: () =>
