@@ -7,6 +7,7 @@ async function request<T>(
   init?: RequestInit,
 ): Promise<T> {
   const adminPassword = localStorage.getItem("admin_password");
+  console.log("Admin Request:", `${BASE}${path}`);
   const res = await fetch(`${BASE}${path}`, {
     credentials: "include",
     ...init,
