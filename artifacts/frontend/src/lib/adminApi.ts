@@ -1,4 +1,6 @@
-const BASE = `${import.meta.env.BASE_URL}api`;
+const BASE = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : `${import.meta.env.BASE_URL}api`;
 
 async function request<T>(
   path: string,
