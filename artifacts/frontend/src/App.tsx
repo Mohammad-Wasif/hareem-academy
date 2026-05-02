@@ -8,7 +8,9 @@ import Layout from "@/components/layout/Layout";
 
 // In production (Render), VITE_API_URL points to the backend service.
 // In local dev, the Vite proxy handles /api requests so no base URL is needed.
+console.log("Debug: VITE_API_URL is", import.meta.env.VITE_API_URL);
 if (import.meta.env.VITE_API_URL) {
+  console.log("Debug: Setting Base URL to", import.meta.env.VITE_API_URL);
   setBaseUrl(import.meta.env.VITE_API_URL);
 }
 
