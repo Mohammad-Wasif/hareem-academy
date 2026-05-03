@@ -1,14 +1,8 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateContactMessage, useListFaqs } from "@workspace/api-client-react";
+import { useCreateContactMessage } from "@workspace/api-client-react";
 import { CreateContactMessageBody } from "@workspace/api-client-react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -25,7 +19,6 @@ import { FaWhatsapp } from "react-icons/fa";
 import { WHATSAPP_URL } from "@/components/CTAGroup";
 
 export default function Contact() {
-  const { data: faqs = [] } = useListFaqs();
   const createContact = useCreateContactMessage();
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -280,35 +273,6 @@ export default function Contact() {
           </div>
         </div>
 
-        {/* FAQs */}
-        {faqs.length > 0 && (
-          <div className="max-w-3xl mx-auto">
-            <div className="text-center mb-8">
-              <span className="inline-block text-xs font-bold tracking-widest text-primary uppercase mb-2">
-                FAQ
-              </span>
-              <h2 className="font-serif font-bold text-3xl md:text-4xl text-foreground">
-                Quick answers to common questions.
-              </h2>
-            </div>
-            <Accordion type="single" collapsible className="w-full space-y-3">
-              {faqs.map((faq, index) => (
-                <AccordionItem
-                  key={faq.id}
-                  value={`item-${index}`}
-                  className="bg-card border border-border rounded-xl px-6"
-                >
-                  <AccordionTrigger className="hover:no-underline font-bold text-left py-4">
-                    {faq.question}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground pb-4 leading-relaxed">
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
-        )}
       </div>
     </div>
   );
