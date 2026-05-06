@@ -46,6 +46,12 @@ export interface Course {
   forWhom?: string;
   seatsRemaining?: number;
   featured: boolean;
+  title_ur?: string;
+  summary_ur?: string;
+  timings_ur?: string;
+  title_ar?: string;
+  summary_ar?: string;
+  timings_ar?: string;
 }
 
 export interface CreateEnrollmentRequest {
@@ -127,6 +133,8 @@ export interface Testimonial {
   rating: number;
   quote: string;
   featured: boolean;
+  quote_ur?: string;
+  quote_ar?: string;
 }
 
 export interface SiteStats {
@@ -142,3 +150,21 @@ export interface Faq {
   answer: string;
   category?: string;
 }
+
+export interface SiteContent {
+  id: number;
+  key: string;
+  en: string;
+  ur?: string | null;
+  ar?: string | null;
+  updatedAt: string;
+}
+
+export type UpdateSiteContentRequestItem = {
+  key: string;
+  en: string;
+  ur?: string | null;
+  ar?: string | null;
+};
+
+export type UpdateSiteContentRequest = UpdateSiteContentRequestItem[];

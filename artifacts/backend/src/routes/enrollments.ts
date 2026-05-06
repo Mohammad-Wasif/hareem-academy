@@ -38,7 +38,7 @@ router.post("/enrollments", async (req, res) => {
         customData,
       })
       .returning();
-    res.status(201).json({
+    return res.status(201).json({
       id: row!.id,
       fullName: row!.fullName,
       age: row!.age,
@@ -51,7 +51,7 @@ router.post("/enrollments", async (req, res) => {
     });
   } catch (err) {
     req.log.error({ err }, "Failed to create enrollment");
-    res.status(500).json({ error: "Failed to create enrollment" });
+    return res.status(500).json({ error: "Failed to create enrollment" });
   }
 });
 

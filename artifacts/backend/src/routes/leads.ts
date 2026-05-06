@@ -22,7 +22,7 @@ router.post("/leads", async (req, res) => {
         source: parsed.data.source,
       })
       .returning();
-    res.status(201).json({
+    return res.status(201).json({
       id: row!.id,
       fullName: row!.fullName ?? undefined,
       whatsappNumber: row!.whatsappNumber,
@@ -32,7 +32,7 @@ router.post("/leads", async (req, res) => {
     });
   } catch (err) {
     req.log.error({ err }, "Failed to create lead");
-    res.status(500).json({ error: "Failed to create lead" });
+    return res.status(500).json({ error: "Failed to create lead" });
   }
 });
 

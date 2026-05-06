@@ -18,5 +18,8 @@ export * from "./errorResponse";
 export * from "./faq";
 export * from "./healthStatus";
 export * from "./lead";
+export * from "./siteContent";
 export * from "./siteStats";
 export * from "./testimonial";
+export * from "./updateSiteContentRequest";
+export * from "./updateSiteContentRequestItem";

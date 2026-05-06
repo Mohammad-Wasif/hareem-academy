@@ -10,6 +10,8 @@ import faqsRouter from "./faqs";
 import formFieldsRouter from "./formFields";
 import adminRouter from "./admin";
 
+import siteContentRouter from "./siteContent";
+
 const router: IRouter = Router();
 
 router.use(healthRouter);
@@ -22,5 +24,6 @@ router.use(statsRouter);
 router.use(faqsRouter);
 router.use(formFieldsRouter);
 router.use(adminRouter);
+router.use(siteContentRouter);
 
 export default router;

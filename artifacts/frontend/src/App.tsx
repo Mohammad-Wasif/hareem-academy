@@ -37,6 +37,9 @@ import AdminLeads from "@/pages/admin/AdminLeads";
 import AdminTestimonials from "@/pages/admin/AdminTestimonials";
 import AdminFaqs from "@/pages/admin/AdminFaqs";
 import AdminFormFields from "@/pages/admin/AdminFormFields";
+import AdminSiteContent from "@/pages/admin/AdminSiteContent";
+
+import { I18nInitializer } from "@/components/I18nInitializer";
 
 const queryClient = new QueryClient();
 
@@ -69,6 +72,7 @@ function AdminRoutes() {
         <Route path="/admin/courses" component={AdminCourses} />
         <Route path="/admin/courses/new" component={AdminCourseEdit} />
         <Route path="/admin/courses/:id/edit" component={AdminCourseEdit} />
+        <Route path="/admin/site-content" component={AdminSiteContent} />
         <Route path="/admin/enrollments" component={AdminEnrollments} />
         <Route path="/admin/contacts" component={AdminContacts} />
         <Route path="/admin/leads" component={AdminLeads} />
@@ -91,12 +95,14 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <Router />
-        </WouterRouter>
-        <Toaster />
-      </TooltipProvider>
+      <I18nInitializer>
+        <TooltipProvider>
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+            <Router />
+          </WouterRouter>
+          <Toaster />
+        </TooltipProvider>
+      </I18nInitializer>
     </QueryClientProvider>
   );
 }

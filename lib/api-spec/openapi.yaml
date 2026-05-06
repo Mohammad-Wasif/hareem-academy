@@ -22,7 +22,44 @@ tags:
     description: Student testimonials
   - name: stats
     description: Public site statistics
+  - name: site-content
+    description: Dynamic site content overrides
 paths:
+  /site-content:
+    get:
+      operationId: getSiteContent
+      tags: [site-content]
+      summary: Get all dynamic site content overrides
+      responses:
+        "200":
+          description: List of site content overrides
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SiteContent"
+  /admin/site-content:
+    put:
+      operationId: updateSiteContent
+      tags: [site-content]
+      summary: Update multiple site content keys
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSiteContentRequest"
+      responses:
+        "200":
+          description: Site content updated successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SiteContent"
+
   /healthz:
     get:
       operationId: healthCheck
@@ -468,3 +505,39 @@ components:
         category:
           type: string
       required: [id, question, answer]
+
+    SiteContent:
+      type: object
+      properties:
+        id:
+          type: integer
+        key:
+          type: string
+        en:
+          type: string
+        ur:
+          type: string
+          nullable: true
+        ar:
+          type: string
+          nullable: true
+        updatedAt:
+          type: string
+      required: [id, key, en, updatedAt]
+
+    UpdateSiteContentRequest:
+      type: array
+      items:
+        type: object
+        properties:
+          key:
+            type: string
+          en:
+            type: string
+          ur:
+            type: string
+            nullable: true
+          ar:
+            type: string
+            nullable: true
+        required: [key, en]

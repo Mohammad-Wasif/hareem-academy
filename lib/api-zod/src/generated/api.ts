@@ -8,6 +8,42 @@
 import * as zod from "zod";
 
 /**
+ * @summary Get all dynamic site content overrides
+ */
+export const GetSiteContentResponseItem = zod.object({
+  id: zod.number(),
+  key: zod.string(),
+  en: zod.string(),
+  ur: zod.string().nullish(),
+  ar: zod.string().nullish(),
+  updatedAt: zod.string(),
+});
+export const GetSiteContentResponse = zod.array(GetSiteContentResponseItem);
+
+/**
+ * @summary Update multiple site content keys
+ */
+export const UpdateSiteContentBodyItem = zod.object({
+  key: zod.string(),
+  en: zod.string(),
+  ur: zod.string().nullish(),
+  ar: zod.string().nullish(),
+});
+export const UpdateSiteContentBody = zod.array(UpdateSiteContentBodyItem);
+
+export const UpdateSiteContentResponseItem = zod.object({
+  id: zod.number(),
+  key: zod.string(),
+  en: zod.string(),
+  ur: zod.string().nullish(),
+  ar: zod.string().nullish(),
+  updatedAt: zod.string(),
+});
+export const UpdateSiteContentResponse = zod.array(
+  UpdateSiteContentResponseItem,
+);
+
+/**
  * Returns server health status
  * @summary Health check
  */
@@ -41,6 +77,12 @@ export const ListCoursesResponseItem = zod.object({
   forWhom: zod.string().optional(),
   seatsRemaining: zod.number().optional(),
   featured: zod.boolean(),
+  title_ur: zod.string().optional(),
+  summary_ur: zod.string().optional(),
+  timings_ur: zod.string().optional(),
+  title_ar: zod.string().optional(),
+  summary_ar: zod.string().optional(),
+  timings_ar: zod.string().optional(),
 });
 export const ListCoursesResponse = zod.array(ListCoursesResponseItem);
 
@@ -74,6 +116,12 @@ export const GetCourseResponse = zod.object({
   forWhom: zod.string().optional(),
   seatsRemaining: zod.number().optional(),
   featured: zod.boolean(),
+  title_ur: zod.string().optional(),
+  summary_ur: zod.string().optional(),
+  timings_ur: zod.string().optional(),
+  title_ar: zod.string().optional(),
+  summary_ar: zod.string().optional(),
+  timings_ar: zod.string().optional(),
 });
 
 /**
@@ -141,6 +189,8 @@ export const ListTestimonialsResponseItem = zod.object({
   rating: zod.number().min(1).max(listTestimonialsResponseRatingMax),
   quote: zod.string(),
   featured: zod.boolean(),
+  quote_ur: zod.string().optional(),
+  quote_ar: zod.string().optional(),
 });
 export const ListTestimonialsResponse = zod.array(ListTestimonialsResponseItem);
 

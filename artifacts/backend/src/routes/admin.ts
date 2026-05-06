@@ -8,6 +8,7 @@ import {
   contactMessagesTable,
   leadsTable,
   formFieldsTable,
+  siteContentTable,
 } from "@workspace/db";
 import { desc, asc, eq, and } from "drizzle-orm";
 import { requireAdmin } from "../lib/adminAuth";
@@ -35,6 +36,7 @@ router.post("/admin/login", (req, res) => {
     }
     return res.json({ ok: true });
   });
+  return;
 });
 
 router.post("/admin/logout", (req, res) => {
@@ -48,6 +50,46 @@ router.get("/admin/me", (req, res) => {
   return res.json({ isAdmin: !!req.session?.isAdmin });
 });
 
+router.put("/admin/site-content", requireAdmin, async (req, res) => {
+  try {
+    const updates = req.body;
+    if (!Array.isArray(updates)) {
+      return res.status(400).json({ error: "Expected an array of updates" });
+    }
+
+    // Process each update sequentially or in parallel
+    for (const update of updates) {
+      if (!update.key || typeof update.en !== "string") {
+        continue;
+      }
+      await db
+        .insert(siteContentTable)
+        .values({
+          key: update.key,
+          en: update.en,
+          ur: update.ur || null,
+          ar: update.ar || null,
+          updatedAt: new Date(),
+        })
+        .onConflictDoUpdate({
+          target: siteContentTable.key,
+          set: {
+            en: update.en,
+            ur: update.ur || null,
+            ar: update.ar || null,
+            updatedAt: new Date(),
+          },
+        });
+    }
+
+    const allContent = await db.select().from(siteContentTable);
+    return res.json(allContent);
+  } catch (err) {
+    req.log.error({ err }, "Failed to update site content");
+    return res.status(500).json({ error: "Failed to update site content" });
+  }
+});
+
 router.get("/admin/dashboard", requireAdmin, async (req, res) => {
   try {
     const [c, e, m, l, t, f] = await Promise.all([
@@ -58,7 +100,7 @@ router.get("/admin/dashboard", requireAdmin, async (req, res) => {
       db.select().from(testimonialsTable),
       db.select().from(faqsTable),
     ]);
-    res.json({
+    return res.json({
       counts: {
         courses: c.length,
         enrollments: e.length,
@@ -90,7 +132,7 @@ router.get("/admin/enrollments", requireAdmin, async (req, res) => {
       .select()
       .from(enrollmentsTable)
       .orderBy(desc(enrollmentsTable.createdAt));
-    res.json(
+    return res.json(
       rows.map((r) => ({
         id: r.id,
         fullName: r.fullName,
@@ -128,7 +170,7 @@ router.get("/admin/contacts", requireAdmin, async (req, res) => {
       .select()
       .from(contactMessagesTable)
       .orderBy(desc(contactMessagesTable.createdAt));
-    res.json(
+    return res.json(
       rows.map((r) => ({
         id: r.id,
         fullName: r.fullName,
@@ -162,7 +204,7 @@ router.get("/admin/leads", requireAdmin, async (req, res) => {
       .select()
       .from(leadsTable)
       .orderBy(desc(leadsTable.createdAt));
-    res.json(
+    return res.json(
       rows.map((r) => ({
         id: r.id,
         fullName: r.fullName ?? null,
@@ -341,7 +383,7 @@ router.get("/admin/testimonials", requireAdmin, async (req, res) => {
       .select()
       .from(testimonialsTable)
       .orderBy(desc(testimonialsTable.featured), desc(testimonialsTable.id));
-    res.json(
+    return res.json(
       rows.map((t) => ({
         id: t.id,
         studentName: t.studentName,
@@ -375,7 +417,7 @@ router.post("/admin/testimonials", requireAdmin, async (req, res) => {
         quote_ar: b.quote_ar || null,
       })
       .returning();
-    res.status(201).json({
+    return res.status(201).json({
       id: row!.id,
       studentName: row!.studentName,
       location: row!.location ?? null,
@@ -410,7 +452,7 @@ router.put("/admin/testimonials/:id", requireAdmin, async (req, res) => {
       .where(eq(testimonialsTable.id, Number(req.params.id)))
       .returning();
     if (!row) return res.status(404).json({ error: "Not found" });
-    res.json({
+    return res.json({
       id: row.id,
       studentName: row.studentName,
       location: row.location ?? null,
@@ -443,7 +485,7 @@ router.get("/admin/faqs", requireAdmin, async (req, res) => {
       .select()
       .from(faqsTable)
       .orderBy(asc(faqsTable.sortOrder), asc(faqsTable.id));
-    res.json(
+    return res.json(
       rows.map((f) => ({
         id: f.id,
         question: f.question,
@@ -477,7 +519,7 @@ router.post("/admin/faqs", requireAdmin, async (req, res) => {
         sortOrder: Number(b.sortOrder ?? 0),
       })
       .returning();
-    res.status(201).json({
+    return res.status(201).json({
       id: row!.id,
       question: row!.question,
       question_ur: row!.question_ur ?? null,
@@ -511,7 +553,7 @@ router.put("/admin/faqs/:id", requireAdmin, async (req, res) => {
       .where(eq(faqsTable.id, Number(req.params.id)))
       .returning();
     if (!row) return res.status(404).json({ error: "Not found" });
-    res.json({
+    return res.json({
       id: row.id,
       question: row.question,
       question_ur: row.question_ur ?? null,

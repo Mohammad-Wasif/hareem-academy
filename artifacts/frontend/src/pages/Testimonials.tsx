@@ -47,7 +47,7 @@ export default function Testimonials() {
               const highlight = sentences[0]?.trim() || localizedQuote;
               const rest = sentences
                 .slice(1)
-                .map((s) => s.trim())
+                .map((s: string) => s.trim())
                 .filter(Boolean)
                 .join(". ");
 

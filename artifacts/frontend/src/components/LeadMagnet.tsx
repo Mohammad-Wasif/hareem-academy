@@ -31,12 +31,13 @@ export default function LeadMagnet() {
 
   useEffect(() => {
     const dismissed = localStorage.getItem("lead-magnet-dismissed");
-    if (!dismissed) {
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-      }, 15000); // 15 seconds
-      return () => clearTimeout(timer);
-    }
+    if (dismissed) return;
+
+    const timer = setTimeout(() => {
+      setIsOpen(true);
+    }, 15000); // 15 seconds
+    
+    return () => clearTimeout(timer);
   }, []);
 
   const handleDismiss = () => {

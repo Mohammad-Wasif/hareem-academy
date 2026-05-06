@@ -18,4 +18,6 @@ export interface Testimonial {
   rating: number;
   quote: string;
   featured: boolean;
+  quote_ur?: string;
+  quote_ar?: string;
 }

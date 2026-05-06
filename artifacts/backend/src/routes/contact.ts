@@ -23,7 +23,7 @@ router.post("/contact", async (req, res) => {
         message: parsed.data.message,
       })
       .returning();
-    res.status(201).json({
+    return res.status(201).json({
       id: row!.id,
       fullName: row!.fullName,
       email: row!.email ?? undefined,
@@ -34,7 +34,7 @@ router.post("/contact", async (req, res) => {
     });
   } catch (err) {
     req.log.error({ err }, "Failed to create contact message");
-    res.status(500).json({ error: "Failed to create contact message" });
+    return res.status(500).json({ error: "Failed to create contact message" });
   }
 });
 

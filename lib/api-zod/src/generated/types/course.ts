@@ -27,4 +27,10 @@ export interface Course {
   forWhom?: string;
   seatsRemaining?: number;
   featured: boolean;
+  title_ur?: string;
+  summary_ur?: string;
+  timings_ur?: string;
+  title_ar?: string;
+  summary_ar?: string;
+  timings_ar?: string;
 }

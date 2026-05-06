@@ -35,10 +35,10 @@ function serialize(c: typeof coursesTable.$inferSelect) {
 router.get("/courses", async (req, res) => {
   try {
     const rows = await db.select().from(coursesTable);
-    res.json(rows.map(serialize));
+    return res.json(rows.map(serialize));
   } catch (err) {
     req.log.error({ err }, "Failed to list courses");
-    res.status(500).json({ error: "Failed to list courses" });
+    return res.status(500).json({ error: "Failed to list courses" });
   }
 });
 
@@ -53,10 +53,10 @@ router.get("/courses/:slug", async (req, res) => {
     if (rows.length === 0) {
       return res.status(404).json({ error: "Course not found" });
     }
-    res.json(serialize(rows[0]!));
+    return res.json(serialize(rows[0]!));
   } catch (err) {
     req.log.error({ err }, "Failed to get course");
-    res.status(500).json({ error: "Failed to get course" });
+    return res.status(500).json({ error: "Failed to get course" });
   }
 });
 
