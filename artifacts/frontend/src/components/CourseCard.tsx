@@ -73,10 +73,12 @@ export default function CourseCard({ course }: { course: Course }) {
               <Clock className="w-3.5 h-3.5 text-primary" />
               <span>{course.durationMonths} {t("courses.months", "months")}</span>
             </div>
-            <div className="flex items-center gap-1.5 text-foreground/80">
-              <Video className="w-3.5 h-3.5 text-primary" />
-              <span>{t("courses.live_on", "Live on")} {course.platform}</span>
-            </div>
+            {course.platform && (
+              <div className="flex items-center gap-1.5 text-foreground/80">
+                <Video className="w-3.5 h-3.5 text-primary" />
+                <span>{t("courses.live_on", "Live on")} {course.platform}</span>
+              </div>
+            )}
             <div className="flex items-center gap-1.5 text-foreground/80">
               <GraduationCap className="w-3.5 h-3.5 text-primary" />
               <span className="line-clamp-1">{timings}</span>

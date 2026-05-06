@@ -327,7 +327,9 @@ export default function CourseDetail() {
                 <div className="pt-4 border-t border-border space-y-3 text-sm">
                   <Detail icon={Clock} label={t("courses.duration", "Duration")} value={`${course.durationMonths} ${t("courses.months", "Months")}`} />
                   <Detail icon={Calendar} label={t("courses.timings_label", "Timings")} value={timings} />
-                  <Detail icon={Video} label={t("courses.platform", "Platform")} value={`${t("courses.live_on", "Live on")} ${course.platform}`} />
+                  {course.platform && (
+                    <Detail icon={Video} label={t("courses.platform", "Platform")} value={`${t("courses.live_on", "Live on")} ${course.platform}`} />
+                  )}
                   <Detail icon={GraduationCap} label={t("courses.level_label", "Level")} value={course.level} />
                   {course.forWhom && (
                     <Detail icon={Users} label={t("courses.for_label", "For")} value={course.forWhom} />
