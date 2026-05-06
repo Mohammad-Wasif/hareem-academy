@@ -210,6 +210,12 @@ export type AdminCourse = {
   forWhom: string | null;
   seatsRemaining: number | null;
   featured: boolean;
+  title_ur?: string;
+  summary_ur?: string;
+  timings_ur?: string;
+  title_ar?: string;
+  summary_ar?: string;
+  timings_ar?: string;
 };
 
 export type AdminCourseInput = Omit<AdminCourse, "id">;
@@ -222,6 +228,8 @@ export type AdminTestimonial = {
   rating: number;
   quote: string;
   featured: boolean;
+  quote_ur?: string;
+  quote_ar?: string;
 };
 
 export type AdminTestimonialInput = Omit<AdminTestimonial, "id">;
@@ -229,7 +237,11 @@ export type AdminTestimonialInput = Omit<AdminTestimonial, "id">;
 export type AdminFaq = {
   id: number;
   question: string;
+  question_ur?: string | null;
+  question_ar?: string | null;
   answer: string;
+  answer_ur?: string | null;
+  answer_ar?: string | null;
   category: string | null;
   sortOrder: number;
 };

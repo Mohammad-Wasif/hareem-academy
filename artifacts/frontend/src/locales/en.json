@@ -18,5 +18,262 @@
     "links": "Quick Links",
     "legal": "Legal",
     "copyright": "© {{year}} Hareem Academy. For sisters only."
+  },
+  "courses": {
+    "seats_left": "seats left",
+    "months": "months",
+    "live_on": "Live on",
+    "sisters_only": "Sisters only",
+    "mo": "mo",
+    "free_trial": "Free trial available",
+    "see_curriculum": "See Full Curriculum",
+    "most_popular": "Most Popular",
+    "only": "Only",
+    "month": "month",
+    "monthly_fee": "Monthly Fee",
+    "free_trial_no_payment": "Free trial — no payment to start",
+    "seats": "seats",
+    "left_batch": "left this batch",
+    "duration": "Duration",
+    "timings_label": "Timings",
+    "level_label": "Level",
+    "for_label": "For",
+    "sisters_only_class": "100% sisters-only classroom",
+    "guarantee": "Money-back guarantee"
+  },
+  "course_detail": {
+    "what_achieve": "What you'll achieve",
+    "end_of_course": "By the end of this course, in shaa Allah:",
+    "what_learn": "What you'll learn",
+    "curriculum": "The curriculum",
+    "enroll_btn": "Enroll in This Course",
+    "testimonials_title": "Sisters love this course.",
+    "testimonials_subtitle": "Real words from sisters who took the leap.",
+    "ready_title": "Ready to begin?",
+    "ready_subtitle": "Book a free trial first, or enroll directly. Either way — you'll be on WhatsApp with us within minutes.",
+    "achieve": {
+      "salah": "Pray Salah understanding every word",
+      "tajweed": "Read the Quran with Tajweed and meaning",
+      "habit": "Build a daily Arabic study habit",
+      "sisterhood": "Join a global circle of sisters on the same path",
+      "urdu_fluent": "Read Urdu fluently and confidently",
+      "urdu_lit": "Connect with Islamic literature and poetry",
+      "urdu_life": "Speak and write Urdu in everyday life",
+      "urdu_sisterhood": "Join a sisterhood that celebrates the language"
+    }
+  },
+  "about": {
+    "hero": {
+      "label": "Our Promise",
+      "title_part1": "A safe space for sisters",
+      "title_part2": "to fall in love with the Quran.",
+      "subtitle": "No mixed classes. No judgment. Just qualified female teachers and a global community of sisters learning together — from your living room."
+    },
+    "pain": {
+      "title": "We know how it feels.",
+      "subtitle": "Most sisters who join us were stuck in one of these places:",
+      "item1": "You can recite the Quran but don't understand a word.",
+      "item2": "Local madrasas have fixed timings that clash with work or family.",
+      "item3": "Mixed-gender online classes feel uncomfortable and rushed.",
+      "item4": "You started learning years ago, then life got in the way.",
+      "footer": "Hareem Academy was built so none of that has to stop you anymore."
+    },
+    "transformation": {
+      "title": "Here's what you walk away with.",
+      "subtitle": "Not just lessons — a real change in how you connect with your deen.",
+      "item1": {
+        "title": "Read the Quran with understanding",
+        "desc": "Move from sounding out words to understanding their meaning, in shaa Allah."
+      },
+      "item2": {
+        "title": "Pray with khushu",
+        "desc": "Know what you're saying in Salah and feel it deeply."
+      },
+      "item3": {
+        "title": "A circle of sisters",
+        "desc": "Make friends with women who are on the same path."
+      },
+      "item4": {
+        "title": "Confidence to teach your children",
+        "desc": "Pass on what you've learned to the next generation at home."
+      }
+    },
+    "values": {
+      "label": "What we stand for",
+      "title": "Four promises — every class, every batch.",
+      "item1": { "title": "Privacy First", "desc": "100% sisters only." },
+      "item2": { "title": "Modesty", "desc": "Islamic adab in every class." },
+      "item3": { "title": "Quality", "desc": "Qualified, experienced female educators." },
+      "item4": { "title": "Flexibility", "desc": "Evening & weekend batches." }
+    },
+    "stats": {
+      "title": "A growing community of sisters worldwide.",
+      "students": "Students taught",
+      "countries": "Countries",
+      "batches": "Active batches",
+      "rating": "Average rating"
+    },
+    "teachers": {
+      "label": "Your teachers",
+      "title": "Sisters teaching sisters.",
+      "subtitle": "Qualified, patient, and dedicated to your journey.",
+      "verified": "Verified Female Teacher"
+    },
+    "final": {
+      "title": "Ready to take the first step?",
+      "subtitle": "Book a free trial class. Meet your teacher. See for yourself if this is what you've been looking for."
+    }
+  },
+  "contact": {
+    "hero": {
+      "label": "Talk to a sister",
+      "title_part1": "We're here. We listen.",
+      "title_part2": "No judgment.",
+      "subtitle": "Whether you're nervous to start, unsure which course fits, or just want to ask a sister — message us. We reply on WhatsApp within minutes."
+    },
+    "whatsapp_cta": {
+      "title": "Chat with us on WhatsApp",
+      "subtitle": "+91 9315118289 — fastest way to reach us. Most messages answered in under 5 minutes.",
+      "btn": "Open chat →"
+    },
+    "form": {
+      "title": "Or send a quick message",
+      "subtitle": "Prefer not to use WhatsApp? Drop us a line below.",
+      "btn": "Send Message",
+      "btn_sending": "Sending...",
+      "footer": "We reply within 24 hours. For girls & women only.",
+      "success": {
+        "title": "Message sent!",
+        "subtitle": "A sister from our team will get back to you shortly, in shaa Allah.",
+        "btn": "Send another"
+      },
+      "fields": {
+        "name": { "label": "Your name *", "placeholder": "Sister Aisha" },
+        "whatsapp": { "label": "WhatsApp number *", "placeholder": "+91 9315..." },
+        "email": { "label": "Email", "optional": "optional", "placeholder": "you@example.com" },
+        "message": { "label": "How can we help? *", "placeholder": "Type your question here..." }
+      }
+    },
+    "others": {
+      "title": "Other ways to reach us",
+      "fastest": "Fastest response",
+      "email": "Email",
+      "email_footer": "Reply within 24 hours",
+      "location": {
+        "title": "Where we are",
+        "desc": "Online worldwide. Based in India."
+      }
+    },
+    "hours": {
+      "title": "Working hours",
+      "desc": "Monday to Saturday, 9 AM – 6 PM (IST). WhatsApp messages outside hours get a reply first thing next morning."
+    }
+  },
+  "courses_page": {
+    "hero": {
+      "label": "Live online classes",
+      "title": "Find the right course for you.",
+      "subtitle": "From absolute beginner to fluent reader. All classes are live, sisters-only, and start with a free trial."
+    },
+    "filter": {
+      "all": "All Courses",
+      "arabic": "Arabic",
+      "urdu": "Urdu"
+    },
+    "no_results": "No courses found for this filter.",
+    "help": {
+      "title": "Not sure which to pick?",
+      "subtitle": "Tell us your goal on WhatsApp and we'll recommend the right batch — usually within a few minutes."
+    }
+  },
+  "home": {
+    "hero": {
+      "privacy": "100% Female-Only • Live on Zoom",
+      "title_part1": "Read the Quran with ",
+      "title_part2": "meaning",
+      "title_part3": "— from your living room.",
+      "subtitle": "Live Arabic & Urdu classes for sisters, taught by qualified female teachers. Flexible timings, no judgment, your camera on a safe space.",
+      "sisters_learning": "sisters learning",
+      "across": "across",
+      "countries": "countries"
+    },
+    "trust": {
+      "teachers": "Female teachers only",
+      "age": "No age limit",
+      "zoom": "Live on Zoom",
+      "trial": "Free trial class"
+    },
+    "pain": {
+      "label": "We get it",
+      "title": "Learning Quran shouldn't feel impossible.",
+      "item1": {
+        "title": "Mixed-gender classes feel uncomfortable",
+        "desc": "You hesitate to turn on your camera or ask questions."
+      },
+      "item2": {
+        "title": "Local madrasas don't fit your schedule",
+        "desc": "Between work, kids, and household — fixed timings just don't work."
+      },
+      "item3": {
+        "title": "You can read Arabic but don't understand it",
+        "desc": "Reading without meaning leaves you spiritually disconnected."
+      }
+    },
+    "transformation": {
+      "label": "Imagine",
+      "title": "Six months from now, in shaa Allah…",
+      "item1": "Reading the Quran with proper Tajweed, not just pronunciation",
+      "item2": "Understanding what you're reciting in Salah",
+      "item3": "Teaching basic Arabic to your children at home",
+      "item4": "A community of sisters from 12+ countries by your side"
+    },
+    "programs": {
+      "label": "Programs",
+      "title": "Pick what fits your level.",
+      "view_all": "View all courses →"
+    },
+    "why_us": {
+      "label": "Why us",
+      "title": "Built for sisters, by sisters.",
+      "item1": {
+        "title": "100% Privacy",
+        "desc": "Sisters-only classroom. Camera-on freely without a niqab."
+      },
+      "item2": {
+        "title": "Flexible Timings",
+        "desc": "Evening & weekend batches that work around your life."
+      },
+      "item3": {
+        "title": "Real Curriculum",
+        "desc": "Step-by-step from alphabet to fluency, with weekly checks."
+      }
+    },
+    "testimonials": {
+      "label": "Real stories",
+      "title": "Sisters who started where you are.",
+      "view_all": "Read all stories →"
+    },
+    "rtl_preview": {
+      "title": "Experience the beauty of the language.",
+      "label": "Arabic Script",
+      "bismillah": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+      "translation": "In the name of Allah, the Entirely Merciful, the Especially Merciful."
+    },
+    "final_cta": {
+      "title": "Your free trial is one click away.",
+      "subtitle": "Try a real class with our teacher. No payment, no commitment — see if it's right for you.",
+      "whatsapp": "We reply on WhatsApp within minutes."
+    }
+  },
+  "testimonials_page": {
+    "hero": {
+      "title_part1": "Sisters from around the world",
+      "title_part2": "who started where you are.",
+      "subtitle": "Alhamdulillah, hundreds of sisters have transformed their relationship with the Quran and Arabic through Hareem Academy."
+    },
+    "closing": {
+      "title": "Your story could be next.",
+      "subtitle": "Book a free trial and experience the difference for yourself."
+    }
   }
 }

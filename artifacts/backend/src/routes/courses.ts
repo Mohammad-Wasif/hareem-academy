@@ -23,6 +23,12 @@ function serialize(c: typeof coursesTable.$inferSelect) {
     forWhom: c.forWhom ?? undefined,
     seatsRemaining: c.seatsRemaining ?? undefined,
     featured: c.featured,
+    title_ur: c.title_ur ?? undefined,
+    summary_ur: c.summary_ur ?? undefined,
+    timings_ur: c.timings_ur ?? undefined,
+    title_ar: c.title_ar ?? undefined,
+    summary_ar: c.summary_ar ?? undefined,
+    timings_ar: c.timings_ar ?? undefined,
   };
 }
 

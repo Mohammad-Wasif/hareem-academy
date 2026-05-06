@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, Plus, X, ArrowLeft } from "lucide-react";
+import { Loader2, Plus, X, ArrowLeft, Globe } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const EMPTY: AdminCourseInput = {
   slug: "",
@@ -26,6 +27,12 @@ const EMPTY: AdminCourseInput = {
   forWhom: "",
   seatsRemaining: null,
   featured: false,
+  title_ur: "",
+  summary_ur: "",
+  timings_ur: "",
+  title_ar: "",
+  summary_ar: "",
+  timings_ar: "",
 };
 
 export default function AdminCourseEdit() {
@@ -98,31 +105,115 @@ export default function AdminCourseEdit() {
         }}
         className="space-y-6 bg-white rounded-xl border border-border/50 p-6"
       >
-        {saveMut.isError && (
-          <p className="text-sm text-destructive bg-destructive/10 px-3 py-2 rounded">
-            {(saveMut.error as Error)?.message ?? "Failed to save"}
-          </p>
-        )}
+        <Tabs defaultValue="en" className="w-full">
+          <TabsList className="mb-4">
+            <TabsTrigger value="en">English (Default)</TabsTrigger>
+            <TabsTrigger value="ur">Urdu (اردو)</TabsTrigger>
+            <TabsTrigger value="ar">Arabic (العربية)</TabsTrigger>
+          </TabsList>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>Title</Label>
-            <Input
-              value={form.title}
-              onChange={(e) => update("title", e.target.value)}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Slug (URL identifier)</Label>
-            <Input
-              value={form.slug}
-              onChange={(e) => update("slug", e.target.value)}
-              placeholder="basic-arabic"
-              required
-            />
-          </div>
-        </div>
+          <TabsContent value="en" className="space-y-6 mt-0">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Title</Label>
+                <Input
+                  value={form.title}
+                  onChange={(e) => update("title", e.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Slug (URL identifier)</Label>
+                <Input
+                  value={form.slug}
+                  onChange={(e) => update("slug", e.target.value)}
+                  placeholder="basic-arabic"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Summary</Label>
+              <Textarea
+                value={form.summary}
+                rows={3}
+                onChange={(e) => update("summary", e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Timings</Label>
+              <Input
+                value={form.timings}
+                onChange={(e) => update("timings", e.target.value)}
+              />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="ur" className="space-y-6 mt-0" dir="rtl">
+            <div className="space-y-2">
+              <Label>کورس کا نام (Title in Urdu)</Label>
+              <Input
+                value={form.title_ur || ""}
+                onChange={(e) => update("title_ur", e.target.value)}
+                className="font-arabic text-right"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>مختصر تعارف (Summary in Urdu)</Label>
+              <Textarea
+                value={form.summary_ur || ""}
+                rows={3}
+                onChange={(e) => update("summary_ur", e.target.value)}
+                className="font-arabic text-right"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>اوقات (Timings in Urdu)</Label>
+              <Input
+                value={form.timings_ur || ""}
+                onChange={(e) => update("timings_ur", e.target.value)}
+                className="font-arabic text-right"
+              />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="ar" className="space-y-6 mt-0" dir="rtl">
+            <div className="space-y-2">
+              <Label>اسم الدورة (Title in Arabic)</Label>
+              <Input
+                value={form.title_ar || ""}
+                onChange={(e) => update("title_ar", e.target.value)}
+                className="font-arabic text-right"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>ملخص الدورة (Summary in Arabic)</Label>
+              <Textarea
+                value={form.summary_ar || ""}
+                rows={3}
+                onChange={(e) => update("summary_ar", e.target.value)}
+                className="font-arabic text-right"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>الأوقات (Timings in Arabic)</Label>
+              <Input
+                value={form.timings_ar || ""}
+                onChange={(e) => update("timings_ar", e.target.value)}
+                className="font-arabic text-right"
+              />
+            </div>
+          </TabsContent>
+        </Tabs>
+
+        <div className="border-t border-border/50 pt-6 space-y-6">
+          <h3 className="font-medium flex items-center gap-2">
+            <Globe className="w-4 h-4 text-primary" />
+            General Information
+          </h3>
 
         <div className="grid grid-cols-3 gap-4">
           <div className="space-y-2">
@@ -152,13 +243,6 @@ export default function AdminCourseEdit() {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>Timings</Label>
-            <Input
-              value={form.timings}
-              onChange={(e) => update("timings", e.target.value)}
-            />
-          </div>
           <div className="space-y-2">
             <Label>Platform</Label>
             <Input
@@ -209,10 +293,10 @@ export default function AdminCourseEdit() {
         </div>
 
         <div className="space-y-2">
-          <Label>Summary</Label>
+          <Label>Summary (Internal/English fallback)</Label>
           <Textarea
             value={form.summary}
-            rows={3}
+            rows={2}
             onChange={(e) => update("summary", e.target.value)}
             required
           />

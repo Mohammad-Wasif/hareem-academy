@@ -263,6 +263,18 @@ components:
           type: integer
         featured:
           type: boolean
+        title_ur:
+          type: string
+        summary_ur:
+          type: string
+        timings_ur:
+          type: string
+        title_ar:
+          type: string
+        summary_ar:
+          type: string
+        timings_ar:
+          type: string
       required:
         - id
         - slug
@@ -425,6 +437,10 @@ components:
           type: string
         featured:
           type: boolean
+        quote_ur:
+          type: string
+        quote_ar:
+          type: string
       required: [id, studentName, quote, rating, featured]
 
     SiteStats:

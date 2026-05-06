@@ -19,6 +19,8 @@ router.get("/testimonials", async (req, res) => {
         rating: t.rating,
         quote: t.quote,
         featured: t.featured,
+        quote_ur: t.quote_ur ?? undefined,
+        quote_ar: t.quote_ar ?? undefined,
       })),
     );
   } catch (err) {

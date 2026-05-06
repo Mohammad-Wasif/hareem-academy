@@ -5,8 +5,10 @@ import CTAGroup from "@/components/CTAGroup";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Sparkles, ShieldCheck, Award } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function Courses() {
+  const { t } = useTranslation();
   const { data: courses = [], isLoading } = useListCourses();
   const [filter, setFilter] = useState<"all" | "arabic" | "urdu">("all");
 
@@ -20,29 +22,28 @@ export default function Courses() {
         {/* Hero with CTA */}
         <div className="text-center max-w-3xl mx-auto mb-10 space-y-5">
           <span className="inline-block text-xs font-bold tracking-widest text-primary uppercase">
-            Live online classes
+            {t("courses_page.hero.label", "Live online classes")}
           </span>
           <h1 className="font-serif font-bold text-4xl md:text-5xl text-foreground">
-            Find the right course for you.
+            {t("courses_page.hero.title", "Find the right course for you.")}
           </h1>
           <p className="text-lg text-muted-foreground">
-            From absolute beginner to fluent reader. All classes are live, sisters-only,
-            and start with a <strong className="text-primary">free trial</strong>.
+            {t("courses_page.hero.subtitle", "From absolute beginner to fluent reader. All classes are live, sisters-only, and start with a free trial.")}
           </p>
 
           {/* Trust strip */}
           <div className="flex flex-wrap justify-center gap-4 pt-2 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-primary" />
-              Female teachers only
+              {t("home.trust.teachers", "Female teachers only")}
             </span>
             <span className="inline-flex items-center gap-1.5">
               <Sparkles className="w-4 h-4 text-primary" />
-              Free trial class
+              {t("home.trust.trial", "Free trial class")}
             </span>
             <span className="inline-flex items-center gap-1.5">
               <Award className="w-4 h-4 text-primary" />
-              Money-back guarantee
+              {t("courses.guarantee", "Money-back guarantee")}
             </span>
           </div>
 
@@ -52,21 +53,21 @@ export default function Courses() {
               onClick={() => setFilter("all")}
               className="rounded-full"
             >
-              All Courses
+              {t("courses_page.filter.all", "All Courses")}
             </Button>
             <Button
               variant={filter === "arabic" ? "default" : "outline"}
               onClick={() => setFilter("arabic")}
               className="rounded-full"
             >
-              Arabic
+              {t("courses_page.filter.arabic", "Arabic")}
             </Button>
             <Button
               variant={filter === "urdu" ? "default" : "outline"}
               onClick={() => setFilter("urdu")}
               className="rounded-full"
             >
-              Urdu
+              {t("courses_page.filter.urdu", "Urdu")}
             </Button>
           </div>
         </div>
@@ -92,18 +93,17 @@ export default function Courses() {
 
         {!isLoading && filteredCourses.length === 0 && (
           <div className="text-center py-20 text-muted-foreground border border-dashed border-border rounded-2xl">
-            No courses found for this filter.
+            {t("courses_page.no_results", "No courses found for this filter.")}
           </div>
         )}
 
         {/* Help band */}
         <div className="mt-16 bg-card border border-border rounded-3xl p-8 md:p-10 text-center max-w-3xl mx-auto">
           <h3 className="font-serif font-bold text-2xl md:text-3xl text-foreground mb-3">
-            Not sure which to pick?
+            {t("courses_page.help.title", "Not sure which to pick?")}
           </h3>
           <p className="text-muted-foreground mb-6">
-            Tell us your goal on WhatsApp and we'll recommend the right batch — usually
-            within a few minutes.
+            {t("courses_page.help.subtitle", "Tell us your goal on WhatsApp and we'll recommend the right batch — usually within a few minutes.")}
           </p>
           <div className="flex justify-center">
             <CTAGroup variant="hero" align="center" trialMode />

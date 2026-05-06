@@ -12,11 +12,16 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2, Plus, Pencil, Trash2 } from "lucide-react";
 
 const EMPTY: AdminFaqInput = {
   question: "",
+  question_ur: "",
+  question_ar: "",
   answer: "",
+  answer_ur: "",
+  answer_ar: "",
   category: "",
   sortOrder: 0,
 };
@@ -61,7 +66,14 @@ export default function AdminFaqs() {
   function openEdit(f: AdminFaq) {
     setEditing(f);
     const { id: _id, ...rest } = f;
-    setForm({ ...rest, category: rest.category ?? "" });
+    setForm({
+      ...rest,
+      category: rest.category ?? "",
+      question_ur: rest.question_ur ?? "",
+      question_ar: rest.question_ar ?? "",
+      answer_ur: rest.answer_ur ?? "",
+      answer_ar: rest.answer_ar ?? "",
+    });
     setOpen(true);
   }
 
@@ -142,26 +154,87 @@ export default function AdminFaqs() {
             }}
             className="space-y-4"
           >
-            <div className="space-y-2">
-              <Label>Question</Label>
-              <Input
-                value={form.question}
-                onChange={(e) =>
-                  setForm({ ...form, question: e.target.value })
-                }
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Answer</Label>
-              <Textarea
-                value={form.answer}
-                rows={4}
-                onChange={(e) => setForm({ ...form, answer: e.target.value })}
-                required
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
+            <Tabs defaultValue="en" className="w-full">
+              <TabsList className="grid w-full grid-cols-3 mb-4">
+                <TabsTrigger value="en">English</TabsTrigger>
+                <TabsTrigger value="ur">اردو (Urdu)</TabsTrigger>
+                <TabsTrigger value="ar">العربية (Arabic)</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="en" className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Question (English)</Label>
+                  <Input
+                    value={form.question}
+                    onChange={(e) =>
+                      setForm({ ...form, question: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Answer (English)</Label>
+                  <Textarea
+                    value={form.answer}
+                    rows={4}
+                    onChange={(e) => setForm({ ...form, answer: e.target.value })}
+                    required
+                  />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="ur" className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="block text-right font-urdu">سوال (Urdu)</Label>
+                  <Input
+                    className="text-right font-urdu"
+                    dir="rtl"
+                    value={form.question_ur ?? ""}
+                    onChange={(e) =>
+                      setForm({ ...form, question_ur: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="block text-right font-urdu">جواب (Urdu)</Label>
+                  <Textarea
+                    className="text-right font-urdu min-h-[100px]"
+                    dir="rtl"
+                    value={form.answer_ur ?? ""}
+                    onChange={(e) =>
+                      setForm({ ...form, answer_ur: e.target.value })
+                    }
+                  />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="ar" className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="block text-right font-serif">السؤال (Arabic)</Label>
+                  <Input
+                    className="text-right font-serif"
+                    dir="rtl"
+                    value={form.question_ar ?? ""}
+                    onChange={(e) =>
+                      setForm({ ...form, question_ar: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="block text-right font-serif">الإجابة (Arabic)</Label>
+                  <Textarea
+                    className="text-right font-serif min-h-[100px]"
+                    dir="rtl"
+                    value={form.answer_ar ?? ""}
+                    onChange={(e) =>
+                      setForm({ ...form, answer_ar: e.target.value })
+                    }
+                  />
+                </div>
+              </TabsContent>
+            </Tabs>
+
+            <div className="grid grid-cols-2 gap-3 pt-2">
               <div className="space-y-2">
                 <Label>Category (optional)</Label>
                 <Input

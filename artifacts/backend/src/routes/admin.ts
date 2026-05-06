@@ -33,19 +33,19 @@ router.post("/admin/login", (req, res) => {
       req.log.error({ err }, "Session save failed");
       return res.status(500).json({ error: "Login failed" });
     }
-    res.json({ ok: true });
+    return res.json({ ok: true });
   });
 });
 
 router.post("/admin/logout", (req, res) => {
   req.session.destroy(() => {
     res.clearCookie("hareem.sid");
-    res.json({ ok: true });
+    return res.json({ ok: true });
   });
 });
 
 router.get("/admin/me", (req, res) => {
-  res.json({ isAdmin: !!req.session?.isAdmin });
+  return res.json({ isAdmin: !!req.session?.isAdmin });
 });
 
 router.get("/admin/dashboard", requireAdmin, async (req, res) => {
@@ -80,7 +80,7 @@ router.get("/admin/dashboard", requireAdmin, async (req, res) => {
     });
   } catch (err) {
     req.log.error({ err }, "Failed to load dashboard");
-    res.status(500).json({ error: "Failed to load dashboard" });
+    return res.status(500).json({ error: "Failed to load dashboard" });
   }
 });
 
@@ -106,7 +106,7 @@ router.get("/admin/enrollments", requireAdmin, async (req, res) => {
     );
   } catch (err) {
     req.log.error({ err }, "Failed to list enrollments");
-    res.status(500).json({ error: "Failed" });
+    return res.status(500).json({ error: "Failed" });
   }
 });
 
@@ -115,10 +115,10 @@ router.delete("/admin/enrollments/:id", requireAdmin, async (req, res) => {
     await db
       .delete(enrollmentsTable)
       .where(eq(enrollmentsTable.id, Number(req.params.id)));
-    res.json({ ok: true });
+    return res.json({ ok: true });
   } catch (err) {
     req.log.error({ err }, "Failed to delete enrollment");
-    res.status(500).json({ error: "Failed" });
+    return res.status(500).json({ error: "Failed" });
   }
 });
 
@@ -141,7 +141,7 @@ router.get("/admin/contacts", requireAdmin, async (req, res) => {
     );
   } catch (err) {
     req.log.error({ err }, "Failed to list contacts");
-    res.status(500).json({ error: "Failed" });
+    return res.status(500).json({ error: "Failed" });
   }
 });
 
@@ -150,9 +150,9 @@ router.delete("/admin/contacts/:id", requireAdmin, async (req, res) => {
     await db
       .delete(contactMessagesTable)
       .where(eq(contactMessagesTable.id, Number(req.params.id)));
-    res.json({ ok: true });
+    return res.json({ ok: true });
   } catch (err) {
-    res.status(500).json({ error: "Failed" });
+    return res.status(500).json({ error: "Failed" });
   }
 });
 
@@ -174,16 +174,16 @@ router.get("/admin/leads", requireAdmin, async (req, res) => {
     );
   } catch (err) {
     req.log.error({ err }, "Failed to list leads");
-    res.status(500).json({ error: "Failed" });
+    return res.status(500).json({ error: "Failed" });
   }
 });
 
 router.delete("/admin/leads/:id", requireAdmin, async (req, res) => {
   try {
     await db.delete(leadsTable).where(eq(leadsTable.id, Number(req.params.id)));
-    res.json({ ok: true });
+    return res.json({ ok: true });
   } catch (err) {
-    res.status(500).json({ error: "Failed" });
+    return res.status(500).json({ error: "Failed" });
   }
 });
 
@@ -206,6 +206,12 @@ function serializeCourse(c: typeof coursesTable.$inferSelect) {
     forWhom: c.forWhom ?? null,
     seatsRemaining: c.seatsRemaining ?? null,
     featured: c.featured,
+    title_ur: c.title_ur ?? undefined,
+    summary_ur: c.summary_ur ?? undefined,
+    timings_ur: c.timings_ur ?? undefined,
+    title_ar: c.title_ar ?? undefined,
+    summary_ar: c.summary_ar ?? undefined,
+    timings_ar: c.timings_ar ?? undefined,
   };
 }
 
@@ -215,10 +221,10 @@ router.get("/admin/courses", requireAdmin, async (req, res) => {
       .select()
       .from(coursesTable)
       .orderBy(desc(coursesTable.featured), asc(coursesTable.id));
-    res.json(rows.map(serializeCourse));
+    return res.json(rows.map(serializeCourse));
   } catch (err) {
     req.log.error({ err }, "Failed to list courses");
-    res.status(500).json({ error: "Failed" });
+    return res.status(500).json({ error: "Failed" });
   }
 });
 
@@ -230,9 +236,9 @@ router.get("/admin/courses/:id", requireAdmin, async (req, res) => {
       .where(eq(coursesTable.id, Number(req.params.id)))
       .limit(1);
     if (!rows.length) return res.status(404).json({ error: "Not found" });
-    res.json(serializeCourse(rows[0]!));
+    return res.json(serializeCourse(rows[0]!));
   } catch (err) {
-    res.status(500).json({ error: "Failed" });
+    return res.status(500).json({ error: "Failed" });
   }
 });
 
@@ -261,12 +267,18 @@ router.post("/admin/courses", requireAdmin, async (req, res) => {
             ? null
             : Number(b.seatsRemaining),
         featured: !!b.featured,
+        title_ur: b.title_ur || null,
+        summary_ur: b.summary_ur || null,
+        timings_ur: b.timings_ur || null,
+        title_ar: b.title_ar || null,
+        summary_ar: b.summary_ar || null,
+        timings_ar: b.timings_ar || null,
       })
       .returning();
-    res.status(201).json(serializeCourse(row!));
+    return res.status(201).json(serializeCourse(row!));
   } catch (err) {
     req.log.error({ err }, "Failed to create course");
-    res.status(500).json({ error: "Failed to create course" });
+    return res.status(500).json({ error: "Failed to create course" });
   }
 });
 
@@ -295,14 +307,20 @@ router.put("/admin/courses/:id", requireAdmin, async (req, res) => {
             ? null
             : Number(b.seatsRemaining),
         featured: !!b.featured,
+        title_ur: b.title_ur || null,
+        summary_ur: b.summary_ur || null,
+        timings_ur: b.timings_ur || null,
+        title_ar: b.title_ar || null,
+        summary_ar: b.summary_ar || null,
+        timings_ar: b.timings_ar || null,
       })
       .where(eq(coursesTable.id, Number(req.params.id)))
       .returning();
     if (!row) return res.status(404).json({ error: "Not found" });
-    res.json(serializeCourse(row));
+    return res.json(serializeCourse(row));
   } catch (err) {
     req.log.error({ err }, "Failed to update course");
-    res.status(500).json({ error: "Failed to update course" });
+    return res.status(500).json({ error: "Failed to update course" });
   }
 });
 
@@ -311,9 +329,9 @@ router.delete("/admin/courses/:id", requireAdmin, async (req, res) => {
     await db
       .delete(coursesTable)
       .where(eq(coursesTable.id, Number(req.params.id)));
-    res.json({ ok: true });
+    return res.json({ ok: true });
   } catch (err) {
-    res.status(500).json({ error: "Failed" });
+    return res.status(500).json({ error: "Failed" });
   }
 });
 
@@ -332,10 +350,12 @@ router.get("/admin/testimonials", requireAdmin, async (req, res) => {
         rating: t.rating,
         quote: t.quote,
         featured: t.featured,
+        quote_ur: t.quote_ur ?? null,
+        quote_ar: t.quote_ar ?? null,
       })),
     );
   } catch (err) {
-    res.status(500).json({ error: "Failed" });
+    return res.status(500).json({ error: "Failed" });
   }
 });
 
@@ -351,6 +371,8 @@ router.post("/admin/testimonials", requireAdmin, async (req, res) => {
         rating: Number(b.rating),
         quote: b.quote,
         featured: !!b.featured,
+        quote_ur: b.quote_ur || null,
+        quote_ar: b.quote_ar || null,
       })
       .returning();
     res.status(201).json({
@@ -361,10 +383,12 @@ router.post("/admin/testimonials", requireAdmin, async (req, res) => {
       rating: row!.rating,
       quote: row!.quote,
       featured: row!.featured,
+      quote_ur: row!.quote_ur ?? null,
+      quote_ar: row!.quote_ar ?? null,
     });
   } catch (err) {
     req.log.error({ err }, "Failed to create testimonial");
-    res.status(500).json({ error: "Failed" });
+    return res.status(500).json({ error: "Failed" });
   }
 });
 
@@ -380,6 +404,8 @@ router.put("/admin/testimonials/:id", requireAdmin, async (req, res) => {
         rating: Number(b.rating),
         quote: b.quote,
         featured: !!b.featured,
+        quote_ur: b.quote_ur || null,
+        quote_ar: b.quote_ar || null,
       })
       .where(eq(testimonialsTable.id, Number(req.params.id)))
       .returning();
@@ -392,9 +418,11 @@ router.put("/admin/testimonials/:id", requireAdmin, async (req, res) => {
       rating: row.rating,
       quote: row.quote,
       featured: row.featured,
+      quote_ur: row.quote_ur ?? null,
+      quote_ar: row.quote_ar ?? null,
     });
   } catch (err) {
-    res.status(500).json({ error: "Failed" });
+    return res.status(500).json({ error: "Failed" });
   }
 });
 
@@ -403,9 +431,9 @@ router.delete("/admin/testimonials/:id", requireAdmin, async (req, res) => {
     await db
       .delete(testimonialsTable)
       .where(eq(testimonialsTable.id, Number(req.params.id)));
-    res.json({ ok: true });
+    return res.json({ ok: true });
   } catch (err) {
-    res.status(500).json({ error: "Failed" });
+    return res.status(500).json({ error: "Failed" });
   }
 });
 
@@ -419,13 +447,17 @@ router.get("/admin/faqs", requireAdmin, async (req, res) => {
       rows.map((f) => ({
         id: f.id,
         question: f.question,
+        question_ur: f.question_ur ?? null,
+        question_ar: f.question_ar ?? null,
         answer: f.answer,
+        answer_ur: f.answer_ur ?? null,
+        answer_ar: f.answer_ar ?? null,
         category: f.category ?? null,
         sortOrder: f.sortOrder,
       })),
     );
   } catch (err) {
-    res.status(500).json({ error: "Failed" });
+    return res.status(500).json({ error: "Failed" });
   }
 });
 
@@ -436,7 +468,11 @@ router.post("/admin/faqs", requireAdmin, async (req, res) => {
       .insert(faqsTable)
       .values({
         question: b.question,
+        question_ur: b.question_ur || null,
+        question_ar: b.question_ar || null,
         answer: b.answer,
+        answer_ur: b.answer_ur || null,
+        answer_ar: b.answer_ar || null,
         category: b.category || null,
         sortOrder: Number(b.sortOrder ?? 0),
       })
@@ -444,12 +480,16 @@ router.post("/admin/faqs", requireAdmin, async (req, res) => {
     res.status(201).json({
       id: row!.id,
       question: row!.question,
+      question_ur: row!.question_ur ?? null,
+      question_ar: row!.question_ar ?? null,
       answer: row!.answer,
+      answer_ur: row!.answer_ur ?? null,
+      answer_ar: row!.answer_ar ?? null,
       category: row!.category ?? null,
       sortOrder: row!.sortOrder,
     });
   } catch (err) {
-    res.status(500).json({ error: "Failed" });
+    return res.status(500).json({ error: "Failed" });
   }
 });
 
@@ -460,7 +500,11 @@ router.put("/admin/faqs/:id", requireAdmin, async (req, res) => {
       .update(faqsTable)
       .set({
         question: b.question,
+        question_ur: b.question_ur || null,
+        question_ar: b.question_ar || null,
         answer: b.answer,
+        answer_ur: b.answer_ur || null,
+        answer_ar: b.answer_ar || null,
         category: b.category || null,
         sortOrder: Number(b.sortOrder ?? 0),
       })
@@ -470,21 +514,25 @@ router.put("/admin/faqs/:id", requireAdmin, async (req, res) => {
     res.json({
       id: row.id,
       question: row.question,
+      question_ur: row.question_ur ?? null,
+      question_ar: row.question_ar ?? null,
       answer: row.answer,
+      answer_ur: row.answer_ur ?? null,
+      answer_ar: row.answer_ar ?? null,
       category: row.category ?? null,
       sortOrder: row.sortOrder,
     });
   } catch (err) {
-    res.status(500).json({ error: "Failed" });
+    return res.status(500).json({ error: "Failed" });
   }
 });
 
 router.delete("/admin/faqs/:id", requireAdmin, async (req, res) => {
   try {
     await db.delete(faqsTable).where(eq(faqsTable.id, Number(req.params.id)));
-    res.json({ ok: true });
+    return res.json({ ok: true });
   } catch (err) {
-    res.status(500).json({ error: "Failed" });
+    return res.status(500).json({ error: "Failed" });
   }
 });
 
@@ -521,10 +569,10 @@ router.get("/admin/form-fields", requireAdmin, async (req, res) => {
       .select()
       .from(formFieldsTable)
       .orderBy(asc(formFieldsTable.formKey), asc(formFieldsTable.sortOrder));
-    res.json(rows.map(serializeField));
+    return res.json(rows.map(serializeField));
   } catch (err) {
     req.log.error({ err }, "Failed to list form fields");
-    res.status(500).json({ error: "Failed" });
+    return res.status(500).json({ error: "Failed" });
   }
 });
 
@@ -549,10 +597,10 @@ router.post("/admin/form-fields", requireAdmin, async (req, res) => {
         enabled: b.enabled === undefined ? true : !!b.enabled,
       })
       .returning();
-    res.status(201).json(serializeField(row!));
+    return res.status(201).json(serializeField(row!));
   } catch (err) {
     req.log.error({ err }, "Failed to create form field");
-    res.status(500).json({ error: "Failed to create form field" });
+    return res.status(500).json({ error: "Failed to create form field" });
   }
 });
 
@@ -596,10 +644,10 @@ router.put("/admin/form-fields/:id", requireAdmin, async (req, res) => {
       })
       .where(eq(formFieldsTable.id, id))
       .returning();
-    res.json(serializeField(row!));
+    return res.json(serializeField(row!));
   } catch (err) {
     req.log.error({ err }, "Failed to update form field");
-    res.status(500).json({ error: "Failed to update form field" });
+    return res.status(500).json({ error: "Failed to update form field" });
   }
 });
 
@@ -616,9 +664,9 @@ router.delete("/admin/form-fields/:id", requireAdmin, async (req, res) => {
       });
     }
     await db.delete(formFieldsTable).where(eq(formFieldsTable.id, id));
-    res.json({ ok: true });
+    return res.json({ ok: true });
   } catch (err) {
-    res.status(500).json({ error: "Failed" });
+    return res.status(500).json({ error: "Failed" });
   }
 });
 

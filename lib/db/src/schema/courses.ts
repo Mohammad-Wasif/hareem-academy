@@ -31,6 +31,12 @@ export const coursesTable = pgTable("courses", {
   forWhom: text("for_whom"),
   seatsRemaining: integer("seats_remaining"),
   featured: boolean("featured").notNull().default(false),
+  title_ur: text("title_ur"),
+  summary_ur: text("summary_ur"),
+  timings_ur: text("timings_ur"),
+  title_ar: text("title_ar"),
+  summary_ar: text("summary_ar"),
+  timings_ar: text("timings_ar"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

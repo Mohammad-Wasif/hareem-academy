@@ -14,7 +14,11 @@ router.get("/faqs", async (req, res) => {
       rows.map((f) => ({
         id: f.id,
         question: f.question,
+        question_ur: f.question_ur ?? undefined,
+        question_ar: f.question_ar ?? undefined,
         answer: f.answer,
+        answer_ur: f.answer_ur ?? undefined,
+        answer_ar: f.answer_ar ?? undefined,
         category: f.category ?? undefined,
       })),
     );

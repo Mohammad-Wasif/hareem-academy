@@ -3,8 +3,11 @@ import { Star, Quote } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import CTAGroup from "@/components/CTAGroup";
 import { getFlag, getInitials, getAvatarColor } from "@/lib/country";
+import { useTranslation } from "react-i18next";
 
 export default function Testimonials() {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
   const { data: testimonials = [], isLoading } = useListTestimonials();
 
   return (
@@ -13,15 +16,14 @@ export default function Testimonials() {
         {/* Hero */}
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-5">
           <span className="inline-block text-xs font-bold tracking-widest text-primary uppercase">
-            Real stories
+            {t("home.testimonials.label", "Real stories")}
           </span>
           <h1 className="font-serif font-bold text-4xl md:text-5xl text-foreground">
-            Sisters from {testimonials.length > 0 ? "around the world" : "12+ countries"}
-            <br /> who started where you are.
+            {t("testimonials_page.hero.title_part1", "Sisters from around the world")}
+            <br /> {t("testimonials_page.hero.title_part2", "who started where you are.")}
           </h1>
           <p className="text-lg text-muted-foreground">
-            Alhamdulillah, hundreds of sisters have transformed their relationship with
-            the Quran and Arabic through Hareem Academy.
+            {t("testimonials_page.hero.subtitle", "Alhamdulillah, hundreds of sisters have transformed their relationship with the Quran and Arabic through Hareem Academy.")}
           </p>
           <div className="flex justify-center pt-2">
             <CTAGroup variant="hero" align="center" trialMode />
@@ -40,8 +42,9 @@ export default function Testimonials() {
             {testimonials.map((t) => {
               const palette = getAvatarColor(t.studentName);
               const flag = getFlag(t.location);
-              const sentences = t.quote.split(/[.!?]/).filter(Boolean);
-              const highlight = sentences[0]?.trim() || t.quote;
+              const localizedQuote = lang === "ur" ? (t as any).quote_ur || t.quote : lang === "ar" ? (t as any).quote_ar || t.quote : t.quote;
+              const sentences = localizedQuote.split(/[.!?]/).filter(Boolean);
+              const highlight = sentences[0]?.trim() || localizedQuote;
               const rest = sentences
                 .slice(1)
                 .map((s) => s.trim())
@@ -103,10 +106,10 @@ export default function Testimonials() {
         {/* Closing CTA */}
         <div className="mt-20 bg-primary text-primary-foreground rounded-3xl p-10 md:p-14 text-center max-w-4xl mx-auto">
           <h2 className="font-serif font-bold text-3xl md:text-4xl text-white mb-3">
-            Your story could be next.
+            {t("testimonials_page.closing.title", "Your story could be next.")}
           </h2>
           <p className="text-primary-foreground/85 mb-7 max-w-xl mx-auto">
-            Book a free trial and experience the difference for yourself.
+            {t("testimonials_page.closing.subtitle", "Book a free trial and experience the difference for yourself.")}
           </p>
           <div className="flex justify-center">
             <CTAGroup variant="hero" align="center" theme="dark" trialMode />

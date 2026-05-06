@@ -17,7 +17,8 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Loader2, Plus, Pencil, Trash2, Star } from "lucide-react";
+import { Loader2, Plus, Pencil, Trash2, Star, Globe } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const EMPTY: AdminTestimonialInput = {
   studentName: "",
@@ -26,6 +27,8 @@ const EMPTY: AdminTestimonialInput = {
   rating: 5,
   quote: "",
   featured: false,
+  quote_ur: "",
+  quote_ar: "",
 };
 
 export default function AdminTestimonials() {
@@ -204,15 +207,49 @@ export default function AdminTestimonials() {
                 }
               />
             </div>
-            <div className="space-y-2">
-              <Label>Quote</Label>
-              <Textarea
-                value={form.quote}
-                rows={4}
-                onChange={(e) => setForm({ ...form, quote: e.target.value })}
-                required
-              />
-            </div>
+            <Tabs defaultValue="en" className="w-full">
+              <TabsList className="mb-4">
+                <TabsTrigger value="en">English</TabsTrigger>
+                <TabsTrigger value="ur">Urdu</TabsTrigger>
+                <TabsTrigger value="ar">Arabic</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="en" className="space-y-4 mt-0">
+                <div className="space-y-2">
+                  <Label>Quote</Label>
+                  <Textarea
+                    value={form.quote}
+                    rows={4}
+                    onChange={(e) => setForm({ ...form, quote: e.target.value })}
+                    required
+                  />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="ur" className="space-y-4 mt-0" dir="rtl">
+                <div className="space-y-2">
+                  <Label>تاثرات (Urdu Quote)</Label>
+                  <Textarea
+                    value={form.quote_ur || ""}
+                    rows={4}
+                    onChange={(e) => setForm({ ...form, quote_ur: e.target.value })}
+                    className="font-arabic text-right"
+                  />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="ar" className="space-y-4 mt-0" dir="rtl">
+                <div className="space-y-2">
+                  <Label>رأي الطالبة (Arabic Quote)</Label>
+                  <Textarea
+                    value={form.quote_ar || ""}
+                    rows={4}
+                    onChange={(e) => setForm({ ...form, quote_ar: e.target.value })}
+                    className="font-arabic text-right"
+                  />
+                </div>
+              </TabsContent>
+            </Tabs>
             <div className="flex items-center gap-3">
               <Switch
                 checked={form.featured}

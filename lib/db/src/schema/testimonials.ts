@@ -15,6 +15,8 @@ export const testimonialsTable = pgTable("testimonials", {
   rating: integer("rating").notNull(),
   quote: text("quote").notNull(),
   featured: boolean("featured").notNull().default(false),
+  quote_ur: text("quote_ur"),
+  quote_ar: text("quote_ar"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

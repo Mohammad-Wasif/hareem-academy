@@ -17,8 +17,10 @@ import {
 import { Mail, MapPin, CheckCircle2, MessageCircle, Clock } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { WHATSAPP_URL } from "@/components/CTAGroup";
+import { useTranslation } from "react-i18next";
 
 export default function Contact() {
+  const { t } = useTranslation();
   const createContact = useCreateContactMessage();
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -48,15 +50,14 @@ export default function Contact() {
         {/* Emotional hook */}
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-5">
           <span className="inline-block text-xs font-bold tracking-widest text-primary uppercase">
-            Talk to a sister
+            {t("contact.hero.label", "Talk to a sister")}
           </span>
           <h1 className="font-serif font-bold text-4xl md:text-5xl text-foreground">
-            We're here. We listen.
-            <br /> No judgment.
+            {t("contact.hero.title_part1", "We're here. We listen.")}
+            <br /> {t("contact.hero.title_part2", "No judgment.")}
           </h1>
           <p className="text-lg text-muted-foreground">
-            Whether you're nervous to start, unsure which course fits, or just want to ask
-            a sister — message us. We reply on WhatsApp <strong>within minutes</strong>.
+            {t("contact.hero.subtitle", "Whether you're nervous to start, unsure which course fits, or just want to ask a sister — message us. We reply on WhatsApp within minutes.")}
           </p>
         </div>
 
@@ -74,15 +75,14 @@ export default function Contact() {
               </div>
               <div className="flex-1">
                 <div className="font-serif font-bold text-2xl md:text-3xl mb-1">
-                  Chat with us on WhatsApp
+                  {t("contact.whatsapp_cta.title", "Chat with us on WhatsApp")}
                 </div>
                 <p className="text-white/90 text-sm">
-                  +91 9315118289 — fastest way to reach us. Most messages answered in
-                  under 5 minutes.
+                  {t("contact.whatsapp_cta.subtitle", "+91 9315118289 — fastest way to reach us. Most messages answered in under 5 minutes.")}
                 </p>
               </div>
               <div className="bg-white text-[#128C7E] font-bold px-5 py-2.5 rounded-full text-sm whitespace-nowrap">
-                Open chat →
+                {t("contact.whatsapp_cta.btn", "Open chat →")}
               </div>
             </div>
           </a>
@@ -94,11 +94,11 @@ export default function Contact() {
             <div className="flex items-center gap-2 mb-2">
               <MessageCircle className="w-5 h-5 text-primary" />
               <h2 className="font-serif font-bold text-2xl text-foreground">
-                Or send a quick message
+                {t("contact.form.title", "Or send a quick message")}
               </h2>
             </div>
             <p className="text-sm text-muted-foreground mb-6">
-              Prefer not to use WhatsApp? Drop us a line below.
+              {t("contact.form.subtitle", "Prefer not to use WhatsApp? Drop us a line below.")}
             </p>
 
             {isSuccess ? (
@@ -106,9 +106,9 @@ export default function Contact() {
                 <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
-                <h3 className="font-serif font-bold text-2xl text-primary">Message sent!</h3>
+                <h3 className="font-serif font-bold text-2xl text-primary">{t("contact.form.success.title", "Message sent!")}</h3>
                 <p className="text-muted-foreground">
-                  A sister from our team will get back to you shortly, in shaa Allah.
+                  {t("contact.form.success.subtitle", "A sister from our team will get back to you shortly, in shaa Allah.")}
                 </p>
                 <Button
                   variant="outline"
@@ -118,7 +118,7 @@ export default function Contact() {
                   }}
                   className="rounded-full"
                 >
-                  Send another
+                  {t("contact.form.success.btn", "Send another")}
                 </Button>
               </div>
             ) : (
@@ -129,9 +129,9 @@ export default function Contact() {
                     name="fullName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Your name *</FormLabel>
+                        <FormLabel>{t("contact.form.fields.name.label", "Your name *")}</FormLabel>
                         <FormControl>
-                          <Input placeholder="Sister Aisha" {...field} />
+                          <Input placeholder={t("contact.form.fields.name.placeholder", "Sister Aisha")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -143,7 +143,7 @@ export default function Contact() {
                     name="whatsappNumber"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>WhatsApp number *</FormLabel>
+                        <FormLabel>{t("contact.form.fields.whatsapp.label", "WhatsApp number *")}</FormLabel>
                         <FormControl>
                           <Input placeholder="+91 9315..." {...field} />
                         </FormControl>
@@ -158,7 +158,7 @@ export default function Contact() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-muted-foreground">
-                          Email <span className="text-xs">(optional)</span>
+                          {t("contact.form.fields.email.label", "Email")} <span className="text-xs">({t("contact.form.fields.email.optional", "optional")})</span>
                         </FormLabel>
                         <FormControl>
                           <Input placeholder="you@example.com" type="email" {...field} />
@@ -173,10 +173,10 @@ export default function Contact() {
                     name="message"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>How can we help? *</FormLabel>
+                        <FormLabel>{t("contact.form.fields.message.label", "How can we help? *")}</FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder="Type your question here..."
+                            placeholder={t("contact.form.fields.message.placeholder", "Type your question here...")}
                             className="min-h-[100px]"
                             {...field}
                           />
@@ -191,10 +191,10 @@ export default function Contact() {
                     className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-serif text-base rounded-full h-12 mt-2"
                     disabled={createContact.isPending}
                   >
-                    {createContact.isPending ? "Sending..." : "Send Message"}
+                    {createContact.isPending ? t("contact.form.btn_sending", "Sending...") : t("contact.form.btn", "Send Message")}
                   </Button>
                   <p className="text-xs text-center text-muted-foreground">
-                    We reply within 24 hours. For girls & women only.
+                    {t("contact.form.footer", "We reply within 24 hours. For girls & women only.")}
                   </p>
                 </form>
               </Form>
@@ -205,7 +205,7 @@ export default function Contact() {
           <div className="space-y-8">
             <div>
               <h2 className="font-serif font-bold text-2xl md:text-3xl text-foreground mb-6">
-                Other ways to reach us
+                {t("contact.others.title", "Other ways to reach us")}
               </h2>
               <div className="space-y-3">
                 <a
@@ -221,7 +221,7 @@ export default function Contact() {
                     <h3 className="font-bold text-foreground">WhatsApp</h3>
                     <p className="text-sm text-muted-foreground">+91 9315118289</p>
                     <p className="text-xs text-[#128C7E] font-medium mt-1">
-                      ⚡ Fastest response
+                      ⚡ {t("contact.others.fastest", "Fastest response")}
                     </p>
                   </div>
                 </a>
@@ -234,10 +234,10 @@ export default function Contact() {
                     <Mail className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-foreground">Email</h3>
+                    <h3 className="font-bold text-foreground">{t("contact.others.email", "Email")}</h3>
                     <p className="text-sm text-muted-foreground">salam@hareemacademy.com</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Reply within 24 hours
+                      {t("contact.others.email_footer", "Reply within 24 hours")}
                     </p>
                   </div>
                 </a>
@@ -247,9 +247,9 @@ export default function Contact() {
                     <MapPin className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-foreground">Where we are</h3>
+                    <h3 className="font-bold text-foreground">{t("contact.others.location.title", "Where we are")}</h3>
                     <p className="text-sm text-muted-foreground">
-                      Online worldwide. Based in India.
+                      {t("contact.others.location.desc", "Online worldwide. Based in India.")}
                     </p>
                   </div>
                 </div>
@@ -261,11 +261,10 @@ export default function Contact() {
                 <Clock className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                 <div>
                   <h3 className="font-serif font-bold text-lg text-primary mb-1">
-                    Working hours
+                    {t("contact.hours.title", "Working hours")}
                   </h3>
                   <p className="text-sm text-foreground/80">
-                    Monday to Saturday, 9 AM – 6 PM (IST). WhatsApp messages outside hours
-                    get a reply first thing next morning.
+                    {t("contact.hours.desc", "Monday to Saturday, 9 AM – 6 PM (IST). WhatsApp messages outside hours get a reply first thing next morning.")}
                   </p>
                 </div>
               </div>
