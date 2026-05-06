@@ -102,7 +102,7 @@ export default function About() {
             {
               icon: Users,
               title: "A circle of sisters",
-              desc: "Make friends with women from 12+ countries on the same path.",
+              desc: "Make friends with women who are on the same path.",
             },
             {
               icon: Award,

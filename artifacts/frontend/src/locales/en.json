@@ -1,0 +1,22 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "courses": "Courses",
+    "testimonials": "Testimonials",
+    "faqs": "FAQs",
+    "contact": "Contact"
+  },
+  "common": {
+    "enroll_now": "Enroll Now",
+    "book_trial": "Book Free Trial",
+    "learn_more": "Learn More",
+    "message_us": "Message Us on WhatsApp"
+  },
+  "footer": {
+    "tagline": "A safe space for sisters to learn Quran with meaning.",
+    "links": "Quick Links",
+    "legal": "Legal",
+    "copyright": "© {{year}} Hareem Academy. For sisters only."
+  }
+}

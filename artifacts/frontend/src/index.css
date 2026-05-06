@@ -133,4 +133,14 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif;
   }
+
+  /* Automatically use Arabic/Urdu font for appropriate languages */
+  [lang="ar"] body, [lang="ur"] body,
+  [lang="ar"] .font-sans, [lang="ur"] .font-sans {
+    font-family: var(--font-arabic);
+  }
+  
+  [lang="ar"] .font-serif, [lang="ur"] .font-serif {
+    font-family: var(--font-arabic);
+  }
 }

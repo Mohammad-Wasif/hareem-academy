@@ -6,19 +6,24 @@ import { FaWhatsapp } from "react-icons/fa";
 import EnrollmentModal from "@/components/EnrollmentModal";
 import { WHATSAPP_URL } from "@/components/CTAGroup";
 import logo from "@assets/Untitled_design_1777409286493.png";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useTranslation } from "react-i18next";
 
-const navItems = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Courses", href: "/courses" },
-  { label: "Testimonials", href: "/testimonials" },
-  { label: "FAQs", href: "/faqs" },
-  { label: "Contact", href: "/contact" },
-];
+
 
 export default function Header() {
+  const { t } = useTranslation();
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+
+  const navItems = [
+    { label: t("nav.home"), href: "/" },
+    { label: t("nav.about"), href: "/about" },
+    { label: t("nav.courses"), href: "/courses" },
+    { label: t("nav.testimonials"), href: "/testimonials" },
+    { label: t("nav.faqs"), href: "/faqs" },
+    { label: t("nav.contact"), href: "/contact" },
+  ];
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-primary/10">
@@ -30,6 +35,8 @@ export default function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-6">
+          <LanguageSwitcher />
+
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -49,19 +56,22 @@ export default function Header() {
           </Button>
           <EnrollmentModal mode="trial">
             <Button className="bg-primary text-primary-foreground hover:bg-primary/90 font-serif text-base tracking-wide rounded-full px-6 shadow-md shadow-primary/20">
-              Book Free Trial
+              {t("common.book_trial")}
             </Button>
           </EnrollmentModal>
         </nav>
 
         {/* Mobile Trigger */}
-        <button
-          className="md:hidden p-2 text-primary"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle menu"
-        >
-          {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          <LanguageSwitcher />
+          <button
+            className="p-2 text-primary"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Nav */}
@@ -89,7 +99,7 @@ export default function Header() {
             </Button>
             <EnrollmentModal mode="trial">
               <Button className="bg-primary text-primary-foreground rounded-full w-full" onClick={() => setIsOpen(false)}>
-                Free Trial
+                {t("common.enroll_now")}
               </Button>
             </EnrollmentModal>
           </div>

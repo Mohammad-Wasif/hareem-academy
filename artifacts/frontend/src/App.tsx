@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { setBaseUrl } from "@workspace/api-client-react";
 import NotFound from "@/pages/not-found";
 import Layout from "@/components/layout/Layout";
+import "@/lib/i18n";
 
 // In production (Render), VITE_API_URL points to the backend service.
 // In local dev, the Vite proxy handles /api requests so no base URL is needed.
