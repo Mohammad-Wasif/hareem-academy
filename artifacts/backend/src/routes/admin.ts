@@ -53,6 +53,7 @@ router.get("/admin/me", (req, res) => {
 router.put("/admin/site-content", requireAdmin, async (req, res) => {
   try {
     const updates = req.body;
+    req.log.info({ count: updates?.length }, "Updating site content");
     if (!Array.isArray(updates)) {
       return res.status(400).json({ error: "Expected an array of updates" });
     }
