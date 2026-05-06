@@ -426,6 +426,7 @@ export default function AdminCourseEdit() {
           />
           <Label className="!m-0">Featured course (shown on homepage)</Label>
         </div>
+        </div>
 
         <div className="flex gap-3 pt-4 border-t border-border/50">
           <Button type="submit" disabled={saveMut.isPending}>
