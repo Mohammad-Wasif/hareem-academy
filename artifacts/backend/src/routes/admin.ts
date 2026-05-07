@@ -398,9 +398,12 @@ router.get("/admin/testimonials", requireAdmin, async (req, res) => {
         course: t.course ?? null,
         rating: t.rating,
         quote: t.quote,
+        bottomText: t.bottomText ?? null,
         featured: t.featured,
         quote_ur: t.quote_ur ?? null,
         quote_ar: t.quote_ar ?? null,
+        bottomText_ur: t.bottomText_ur ?? null,
+        bottomText_ar: t.bottomText_ar ?? null,
       })),
     );
   } catch (err) {
@@ -419,9 +422,12 @@ router.post("/admin/testimonials", requireAdmin, async (req, res) => {
         course: b.course || null,
         rating: Number(b.rating),
         quote: b.quote,
+        bottomText: b.bottomText || null,
         featured: !!b.featured,
         quote_ur: b.quote_ur || null,
         quote_ar: b.quote_ar || null,
+        bottomText_ur: b.bottomText_ur || null,
+        bottomText_ar: b.bottomText_ar || null,
       })
       .returning();
     return res.status(201).json({
@@ -431,9 +437,12 @@ router.post("/admin/testimonials", requireAdmin, async (req, res) => {
       course: row!.course ?? null,
       rating: row!.rating,
       quote: row!.quote,
+      bottomText: row!.bottomText ?? null,
       featured: row!.featured,
       quote_ur: row!.quote_ur ?? null,
       quote_ar: row!.quote_ar ?? null,
+      bottomText_ur: row!.bottomText_ur ?? null,
+      bottomText_ar: row!.bottomText_ar ?? null,
     });
   } catch (err) {
     req.log.error({ err }, "Failed to create testimonial");
@@ -452,9 +461,12 @@ router.put("/admin/testimonials/:id", requireAdmin, async (req, res) => {
         course: b.course || null,
         rating: Number(b.rating),
         quote: b.quote,
+        bottomText: b.bottomText || null,
         featured: !!b.featured,
         quote_ur: b.quote_ur || null,
         quote_ar: b.quote_ar || null,
+        bottomText_ur: b.bottomText_ur || null,
+        bottomText_ar: b.bottomText_ar || null,
       })
       .where(eq(testimonialsTable.id, Number(req.params.id)))
       .returning();
@@ -466,9 +478,12 @@ router.put("/admin/testimonials/:id", requireAdmin, async (req, res) => {
       course: row.course ?? null,
       rating: row.rating,
       quote: row.quote,
+      bottomText: row.bottomText ?? null,
       featured: row.featured,
       quote_ur: row.quote_ur ?? null,
       quote_ar: row.quote_ar ?? null,
+      bottomText_ur: row.bottomText_ur ?? null,
+      bottomText_ar: row.bottomText_ar ?? null,
     });
   } catch (err) {
     return res.status(500).json({ error: "Failed" });

@@ -26,9 +26,12 @@ const EMPTY: AdminTestimonialInput = {
   course: "",
   rating: 5,
   quote: "",
+  bottomText: "",
   featured: false,
   quote_ur: "",
   quote_ar: "",
+  bottomText_ur: "",
+  bottomText_ar: "",
 };
 
 export default function AdminTestimonials() {
@@ -224,6 +227,14 @@ export default function AdminTestimonials() {
                     required
                   />
                 </div>
+                <div className="space-y-2">
+                  <Label>Bottom Text (Highlight/Tagline)</Label>
+                  <Input
+                    value={form.bottomText || ""}
+                    onChange={(e) => setForm({ ...form, bottomText: e.target.value })}
+                    placeholder="e.g. The lessons are detailed without ever feeling overwhelming."
+                  />
+                </div>
               </TabsContent>
 
               <TabsContent value="ur" className="space-y-4 mt-0" dir="rtl">
@@ -236,6 +247,14 @@ export default function AdminTestimonials() {
                     className="font-arabic text-right"
                   />
                 </div>
+                <div className="space-y-2">
+                  <Label>نمایاں جملہ (Urdu Bottom Text)</Label>
+                  <Input
+                    value={form.bottomText_ur || ""}
+                    onChange={(e) => setForm({ ...form, bottomText_ur: e.target.value })}
+                    className="font-arabic text-right"
+                  />
+                </div>
               </TabsContent>
 
               <TabsContent value="ar" className="space-y-4 mt-0" dir="rtl">
@@ -245,6 +264,14 @@ export default function AdminTestimonials() {
                     value={form.quote_ar || ""}
                     rows={4}
                     onChange={(e) => setForm({ ...form, quote_ar: e.target.value })}
+                    className="font-arabic text-right"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>نص مميز (Arabic Bottom Text)</Label>
+                  <Input
+                    value={form.bottomText_ar || ""}
+                    onChange={(e) => setForm({ ...form, bottomText_ar: e.target.value })}
                     className="font-arabic text-right"
                   />
                 </div>

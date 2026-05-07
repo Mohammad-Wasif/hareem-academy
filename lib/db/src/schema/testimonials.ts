@@ -14,9 +14,12 @@ export const testimonialsTable = pgTable("testimonials", {
   course: text("course"),
   rating: integer("rating").notNull(),
   quote: text("quote").notNull(),
+  bottomText: text("bottom_text"),
   featured: boolean("featured").notNull().default(false),
   quote_ur: text("quote_ur"),
   quote_ar: text("quote_ar"),
+  bottomText_ur: text("bottom_text_ur"),
+  bottomText_ar: text("bottom_text_ar"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

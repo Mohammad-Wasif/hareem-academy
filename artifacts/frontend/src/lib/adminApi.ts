@@ -229,9 +229,12 @@ export type AdminTestimonial = {
   course: string | null;
   rating: number;
   quote: string;
+  bottomText?: string | null;
   featured: boolean;
   quote_ur?: string;
   quote_ar?: string;
+  bottomText_ur?: string | null;
+  bottomText_ar?: string | null;
 };
 
 export type AdminTestimonialInput = Omit<AdminTestimonial, "id">;

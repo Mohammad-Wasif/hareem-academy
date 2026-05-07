@@ -18,9 +18,12 @@ router.get("/testimonials", async (req, res) => {
         course: t.course ?? undefined,
         rating: t.rating,
         quote: t.quote,
+        bottomText: t.bottomText ?? undefined,
         featured: t.featured,
         quote_ur: t.quote_ur ?? undefined,
         quote_ar: t.quote_ar ?? undefined,
+        bottomText_ur: t.bottomText_ur ?? undefined,
+        bottomText_ar: t.bottomText_ar ?? undefined,
       })),
     );
   } catch (err) {
