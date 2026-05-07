@@ -24,6 +24,7 @@ function serialize(c: typeof coursesTable.$inferSelect) {
     seatsRemaining: c.seatsRemaining ?? undefined,
     featured: c.featured,
     sortOrder: c.sortOrder,
+    enrollmentStatus: c.enrollmentStatus as "open" | "closed",
     title_ur: c.title_ur ?? undefined,
     summary_ur: c.summary_ur ?? undefined,
     timings_ur: c.timings_ur ?? undefined,

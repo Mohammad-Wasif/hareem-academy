@@ -27,7 +27,12 @@ export default function CourseCard({ course }: { course: Course }) {
               Most Popular
             </div>
           )}
-          {isBeginner && !course.featured && (
+          {(course as any).enrollmentStatus === "closed" && (
+            <div className="bg-rose-100 text-rose-700 text-xs font-bold px-3 py-1 rounded-full shadow-sm border border-rose-200 uppercase tracking-wider">
+              Enrollments Closed
+            </div>
+          )}
+          {isBeginner && !course.featured && (course as any).enrollmentStatus !== "closed" && (
             <div className="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full shadow-sm">
               Beginner Friendly
             </div>
@@ -41,7 +46,7 @@ export default function CourseCard({ course }: { course: Course }) {
         )}
 
         {/* Image */}
-        <div className="h-44 bg-primary/5 flex items-center justify-center overflow-hidden relative">
+        <div className={`h-44 bg-primary/5 flex items-center justify-center overflow-hidden relative ${(course as any).enrollmentStatus === 'closed' ? 'grayscale opacity-75' : ''}`}>
           {course.language === "arabic" ? (
             <img src="/course-arabic.png" alt="Arabic Course" className="w-full h-full object-cover" />
           ) : (

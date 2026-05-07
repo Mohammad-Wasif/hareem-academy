@@ -55,6 +55,7 @@ export default function AdminCourses() {
                 <th className="px-4 py-3 font-medium">Fee</th>
                 <th className="px-4 py-3 font-medium">Duration</th>
                 <th className="px-4 py-3 font-medium">Sort</th>
+                <th className="px-4 py-3 font-medium">Status</th>
                 <th className="px-4 py-3 font-medium">Featured</th>
                 <th className="px-4 py-3 font-medium"></th>
               </tr>
@@ -75,6 +76,15 @@ export default function AdminCourses() {
                   </td>
                   <td className="px-4 py-3">{c.durationMonths} mo</td>
                   <td className="px-4 py-3">{c.sortOrder}</td>
+                  <td className="px-4 py-3">
+                    <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${
+                      c.enrollmentStatus === 'open' 
+                        ? 'bg-green-100 text-green-700' 
+                        : 'bg-red-100 text-red-700'
+                    }`}>
+                      {c.enrollmentStatus}
+                    </span>
+                  </td>
                   <td className="px-4 py-3">
                     {c.featured && (
                       <Star className="w-4 h-4 fill-accent text-accent" />

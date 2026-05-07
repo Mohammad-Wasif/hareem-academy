@@ -99,9 +99,14 @@ export default function CourseDetail() {
                 <Sparkles className="w-3 h-3" /> {t("courses.most_popular", "Most Popular")}
               </span>
             )}
-            {lowSeats && (
+            {lowSeats && (course as any).enrollmentStatus !== "closed" && (
               <span className="inline-flex items-center gap-1 px-3 py-1 bg-rose-500 text-white font-bold text-xs uppercase tracking-widest rounded-full animate-pulse">
                 <Flame className="w-3 h-3" /> {t("courses.only", "Only")} {course.seatsRemaining} {t("courses.seats_left", "seats left")}
+              </span>
+            )}
+            {(course as any).enrollmentStatus === "closed" && (
+              <span className="inline-flex items-center gap-1 px-3 py-1 bg-rose-100 text-rose-700 font-bold text-xs uppercase tracking-widest rounded-full border border-rose-200">
+                Enrollments Closed
               </span>
             )}
           </div>
@@ -114,13 +119,19 @@ export default function CourseDetail() {
           </p>
 
           <div className="flex flex-wrap gap-4 items-center pt-6 border-t border-primary-foreground/10">
-            <CTAGroup
-              variant="hero"
-              theme="dark"
-              trialMode={false}
-              primaryLabel={t("common.enroll_now", "Enroll Now")}
-              defaultCourseSlug={course.slug}
-            />
+            {(course as any).enrollmentStatus === "closed" ? (
+              <Button disabled className="h-12 px-8 rounded-full opacity-50 cursor-not-allowed">
+                Enrollments Closed
+              </Button>
+            ) : (
+              <CTAGroup
+                variant="hero"
+                theme="dark"
+                trialMode={false}
+                primaryLabel={t("common.enroll_now", "Enroll Now")}
+                defaultCourseSlug={course.slug}
+              />
+            )}
             <div className="font-serif font-bold text-2xl md:ml-2">
               {course.currency} {course.feeMonthly}
               <span className="text-sm font-sans font-normal opacity-70"> / {t("courses.month", "month")}</span>
@@ -199,11 +210,17 @@ export default function CourseDetail() {
 
               {/* Mid-page CTA */}
               <div className="mt-8 pt-8 border-t border-border">
-                <CTAGroup
-                  trialMode={false}
-                  primaryLabel={t("course_detail.enroll_btn", "Enroll in This Course")}
-                  defaultCourseSlug={course.slug}
-                />
+                {(course as any).enrollmentStatus === "closed" ? (
+                  <Button disabled className="h-12 px-8 rounded-full opacity-50">
+                    Enrollments Closed
+                  </Button>
+                ) : (
+                  <CTAGroup
+                    trialMode={false}
+                    primaryLabel={t("course_detail.enroll_btn", "Enroll in This Course")}
+                    defaultCourseSlug={course.slug}
+                  />
+                )}
               </div>
             </section>
 
@@ -262,15 +279,21 @@ export default function CourseDetail() {
               <p className="text-primary-foreground/85 mb-6 text-sm">
                 {t("course_detail.ready_subtitle", "Book a free trial first, or enroll directly. Either way — you'll be on WhatsApp with us within minutes.")}
               </p>
-              <div className="flex justify-center">
-                <CTAGroup
-                  variant="hero"
-                  align="center"
-                  theme="dark"
-                  trialMode
-                  defaultCourseSlug={course.slug}
-                />
-              </div>
+              {(course as any).enrollmentStatus === "closed" ? (
+                <div className="bg-rose-500/20 text-rose-200 px-6 py-3 rounded-full font-bold">
+                  Enrollments are currently closed for this batch.
+                </div>
+              ) : (
+                <div className="flex justify-center">
+                  <CTAGroup
+                    variant="hero"
+                    align="center"
+                    theme="dark"
+                    trialMode
+                    defaultCourseSlug={course.slug}
+                  />
+                </div>
+              )}
             </section>
           </div>
 
@@ -300,20 +323,28 @@ export default function CourseDetail() {
                   </div>
                 )}
 
-                <EnrollmentModal mode="trial" defaultCourseSlug={course.slug}>
-                  <Button className="w-full h-12 font-serif text-base rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
-                    <Sparkles className="w-4 h-4 mr-2" /> {t("common.book_trial", "Book Free Trial")}
+                {(course as any).enrollmentStatus === "closed" ? (
+                  <Button disabled className="w-full h-12 font-serif text-base rounded-full opacity-50">
+                    Enrollments Closed
                   </Button>
-                </EnrollmentModal>
+                ) : (
+                  <>
+                    <EnrollmentModal mode="trial" defaultCourseSlug={course.slug}>
+                      <Button className="w-full h-12 font-serif text-base rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
+                        <Sparkles className="w-4 h-4 mr-2" /> {t("common.book_trial", "Book Free Trial")}
+                      </Button>
+                    </EnrollmentModal>
 
-                <EnrollmentModal defaultCourseSlug={course.slug}>
-                  <Button
-                    variant="outline"
-                    className="w-full h-12 font-serif text-base rounded-full border-primary/30 text-primary hover:bg-primary/5"
-                  >
-                    {t("common.enroll_now", "Enroll Now")}
-                  </Button>
-                </EnrollmentModal>
+                    <EnrollmentModal defaultCourseSlug={course.slug}>
+                      <Button
+                        variant="outline"
+                        className="w-full h-12 font-serif text-base rounded-full border-primary/30 text-primary hover:bg-primary/5"
+                      >
+                        {t("common.enroll_now", "Enroll Now")}
+                      </Button>
+                    </EnrollmentModal>
+                  </>
+                )}
 
                 <Button
                   asChild
@@ -354,11 +385,17 @@ export default function CourseDetail() {
 
       {/* MOBILE STICKY BAR */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-background/95 backdrop-blur border-t border-border p-3 flex gap-2 shadow-2xl">
-        <EnrollmentModal mode="trial" defaultCourseSlug={course.slug}>
-          <Button className="flex-1 h-12 rounded-full bg-primary text-primary-foreground font-serif">
-            <Sparkles className="w-4 h-4 mr-1.5" /> {t("common.free_trial_btn", "Free Trial")}
+        {(course as any).enrollmentStatus === "closed" ? (
+          <Button disabled className="flex-1 h-12 rounded-full opacity-50">
+            Enrollments Closed
           </Button>
-        </EnrollmentModal>
+        ) : (
+          <EnrollmentModal mode="trial" defaultCourseSlug={course.slug}>
+            <Button className="flex-1 h-12 rounded-full bg-primary text-primary-foreground font-serif">
+              <Sparkles className="w-4 h-4 mr-1.5" /> {t("common.free_trial_btn", "Free Trial")}
+            </Button>
+          </EnrollmentModal>
+        )}
         <Button
           asChild
           className="h-12 px-4 rounded-full bg-[#25D366] text-white"

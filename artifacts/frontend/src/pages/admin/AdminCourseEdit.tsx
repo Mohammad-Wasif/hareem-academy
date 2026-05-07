@@ -28,6 +28,7 @@ const EMPTY: AdminCourseInput = {
   seatsRemaining: null,
   featured: false,
   sortOrder: 0,
+  enrollmentStatus: "open",
   title_ur: "",
   summary_ur: "",
   timings_ur: "",
@@ -440,6 +441,28 @@ export default function AdminCourseEdit() {
               onCheckedChange={(v) => update("featured", v)}
             />
             <Label className="!m-0">Featured course (shown on homepage)</Label>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label>Enrollment Status</Label>
+          <div className="flex gap-4">
+            <Button
+              type="button"
+              variant={form.enrollmentStatus === "open" ? "default" : "outline"}
+              onClick={() => update("enrollmentStatus", "open")}
+              className="flex-1"
+            >
+              Open
+            </Button>
+            <Button
+              type="button"
+              variant={form.enrollmentStatus === "closed" ? "destructive" : "outline"}
+              onClick={() => update("enrollmentStatus", "closed")}
+              className="flex-1"
+            >
+              Closed
+            </Button>
           </div>
         </div>
         </div>

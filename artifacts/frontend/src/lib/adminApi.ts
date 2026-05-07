@@ -211,6 +211,7 @@ export type AdminCourse = {
   seatsRemaining: number | null;
   featured: boolean;
   sortOrder: number;
+  enrollmentStatus: "open" | "closed";
   title_ur?: string;
   summary_ur?: string;
   timings_ur?: string;
