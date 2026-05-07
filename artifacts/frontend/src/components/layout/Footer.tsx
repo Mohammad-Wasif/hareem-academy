@@ -11,7 +11,7 @@ export default function Footer() {
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12">
         <div className="space-y-6">
           <Link href="/" className="inline-block">
-            <img src={t("common.logo_url", logo) || logo} alt="Hareem Academy" className="h-16 w-auto object-contain rounded" />
+            <img src={t("common.logo_url", logo) || logo} alt="Hareem Academy" className="h-20 w-auto object-contain" />
           </Link>
           <p className="text-primary-foreground/80 font-medium text-sm leading-relaxed">
             {t("footer.tagline")}
