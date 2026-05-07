@@ -23,6 +23,7 @@ function serialize(c: typeof coursesTable.$inferSelect) {
     forWhom: c.forWhom ?? undefined,
     seatsRemaining: c.seatsRemaining ?? undefined,
     featured: c.featured,
+    sortOrder: c.sortOrder,
     title_ur: c.title_ur ?? undefined,
     summary_ur: c.summary_ur ?? undefined,
     timings_ur: c.timings_ur ?? undefined,
@@ -34,7 +35,10 @@ function serialize(c: typeof coursesTable.$inferSelect) {
 
 router.get("/courses", async (req, res) => {
   try {
-    const rows = await db.select().from(coursesTable);
+    const rows = await db
+      .select()
+      .from(coursesTable)
+      .orderBy(coursesTable.sortOrder);
     return res.json(rows.map(serialize));
   } catch (err) {
     req.log.error({ err }, "Failed to list courses");

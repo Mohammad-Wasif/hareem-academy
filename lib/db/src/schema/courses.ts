@@ -37,6 +37,7 @@ export const coursesTable = pgTable("courses", {
   title_ar: text("title_ar"),
   summary_ar: text("summary_ar"),
   timings_ar: text("timings_ar"),
+  sortOrder: integer("sort_order").notNull().default(0),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

@@ -210,6 +210,7 @@ export type AdminCourse = {
   forWhom: string | null;
   seatsRemaining: number | null;
   featured: boolean;
+  sortOrder: number;
   title_ur?: string;
   summary_ur?: string;
   timings_ur?: string;

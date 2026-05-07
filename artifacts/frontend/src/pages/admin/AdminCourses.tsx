@@ -54,6 +54,7 @@ export default function AdminCourses() {
                 <th className="px-4 py-3 font-medium">Level</th>
                 <th className="px-4 py-3 font-medium">Fee</th>
                 <th className="px-4 py-3 font-medium">Duration</th>
+                <th className="px-4 py-3 font-medium">Sort</th>
                 <th className="px-4 py-3 font-medium">Featured</th>
                 <th className="px-4 py-3 font-medium"></th>
               </tr>
@@ -73,6 +74,7 @@ export default function AdminCourses() {
                     {c.currency} {c.feeMonthly}/mo
                   </td>
                   <td className="px-4 py-3">{c.durationMonths} mo</td>
+                  <td className="px-4 py-3">{c.sortOrder}</td>
                   <td className="px-4 py-3">
                     {c.featured && (
                       <Star className="w-4 h-4 fill-accent text-accent" />

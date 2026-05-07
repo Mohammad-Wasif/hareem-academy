@@ -27,6 +27,7 @@ const EMPTY: AdminCourseInput = {
   forWhom: "",
   seatsRemaining: null,
   featured: false,
+  sortOrder: 0,
   title_ur: "",
   summary_ur: "",
   timings_ur: "",
@@ -419,12 +420,27 @@ export default function AdminCourseEdit() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Switch
-            checked={form.featured}
-            onCheckedChange={(v) => update("featured", v)}
-          />
-          <Label className="!m-0">Featured course (shown on homepage)</Label>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label>Sort Order</Label>
+            <Input
+              type="number"
+              value={form.sortOrder}
+              onChange={(e) => update("sortOrder", Number(e.target.value))}
+              placeholder="0"
+            />
+            <p className="text-[10px] text-muted-foreground">
+              Lower numbers appear first (e.g. 1 comes before 10).
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3 pt-6">
+            <Switch
+              checked={form.featured}
+              onCheckedChange={(v) => update("featured", v)}
+            />
+            <Label className="!m-0">Featured course (shown on homepage)</Label>
+          </div>
         </div>
         </div>
 

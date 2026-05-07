@@ -249,6 +249,7 @@ function serializeCourse(c: typeof coursesTable.$inferSelect) {
     forWhom: c.forWhom ?? null,
     seatsRemaining: c.seatsRemaining ?? null,
     featured: c.featured,
+    sortOrder: c.sortOrder,
     title_ur: c.title_ur ?? undefined,
     summary_ur: c.summary_ur ?? undefined,
     timings_ur: c.timings_ur ?? undefined,
@@ -263,7 +264,7 @@ router.get("/admin/courses", requireAdmin, async (req, res) => {
     const rows = await db
       .select()
       .from(coursesTable)
-      .orderBy(desc(coursesTable.featured), asc(coursesTable.id));
+      .orderBy(asc(coursesTable.sortOrder), asc(coursesTable.id));
     return res.json(rows.map(serializeCourse));
   } catch (err) {
     req.log.error({ err }, "Failed to list courses");
@@ -310,6 +311,7 @@ router.post("/admin/courses", requireAdmin, async (req, res) => {
             ? null
             : Number(b.seatsRemaining),
         featured: !!b.featured,
+        sortOrder: Number(b.sortOrder || 0),
         title_ur: b.title_ur || null,
         summary_ur: b.summary_ur || null,
         timings_ur: b.timings_ur || null,
@@ -350,6 +352,7 @@ router.put("/admin/courses/:id", requireAdmin, async (req, res) => {
             ? null
             : Number(b.seatsRemaining),
         featured: !!b.featured,
+        sortOrder: Number(b.sortOrder || 0),
         title_ur: b.title_ur || null,
         summary_ur: b.summary_ur || null,
         timings_ur: b.timings_ur || null,
