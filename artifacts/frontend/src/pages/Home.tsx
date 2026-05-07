@@ -14,9 +14,9 @@ import {
 } from "lucide-react";
 import CourseCard from "@/components/CourseCard";
 import CTAGroup from "@/components/CTAGroup";
+import TestimonialCard from "@/components/TestimonialCard";
 import { Button } from "@/components/ui/button";
 import { useListCourses, useListTestimonials, useGetSiteStats } from "@workspace/api-client-react";
-import { getFlag, getInitials, getAvatarColor } from "@/lib/country";
 import calligraphyYellow from "@assets/Asset_1@4x_1777409230830.png";
 import calligraphyGreen from "@assets/Asset_8@4x_1777409251771.png";
 import { useTranslation } from "react-i18next";
@@ -301,53 +301,9 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-5">
-            {testimonials.slice(0, 3).map((t) => {
-              const palette = getAvatarColor(t.studentName);
-              const flag = getFlag(t.location);
-              const localizedQuote = lang === "ur" ? (t as any).quote_ur || t.quote : lang === "ar" ? (t as any).quote_ar || t.quote : t.quote;
-              const localizedBottom = lang === "ur" ? (t as any).bottomText_ur : lang === "ar" ? (t as any).bottomText_ar : (t as any).bottomText;
-
-              return (
-                <div
-                  key={t.id}
-                  className="bg-card p-6 rounded-2xl border border-border hover:border-primary/30 hover:shadow-lg transition-all flex flex-col"
-                >
-                  <div className="flex gap-1 mb-4 text-accent">
-                    {[...Array(t.rating)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-current" />
-                    ))}
-                  </div>
-                  <p className="font-serif text-lg text-foreground leading-relaxed mb-6">
-                    "{localizedQuote}"
-                  </p>
-
-                  {/* Bottom Text Highlight */}
-                  {(localizedBottom || '').trim() && (
-                    <div className="bg-primary/5 p-3 rounded-lg border border-primary/10 mb-6">
-                      <p className="text-[10px] font-bold text-primary italic leading-snug">
-                        "{localizedBottom}"
-                      </p>
-                    </div>
-                  )}
-                  <div className="flex items-center gap-3 mt-auto pt-4 border-t border-border">
-                    <div
-                      className={`w-11 h-11 rounded-full ${palette.bg} ${palette.text} flex items-center justify-center font-bold text-sm shrink-0`}
-                    >
-                      {getInitials(t.studentName)}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="font-bold text-foreground text-sm truncate">
-                        {t.studentName}
-                      </div>
-                      <div className="text-xs text-muted-foreground truncate">
-                        <span className="mr-1">{flag}</span>
-                        {t.location}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            {testimonials.slice(0, 3).map((t) => (
+              <TestimonialCard key={t.id} testimonial={t as any} />
+            ))}
           </div>
         </div>
       </section>

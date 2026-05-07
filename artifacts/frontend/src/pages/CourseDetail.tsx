@@ -21,8 +21,8 @@ import {
   Star,
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
-import { getFlag, getInitials, getAvatarColor } from "@/lib/country";
 import { useTranslation } from "react-i18next";
+import TestimonialCard from "@/components/TestimonialCard";
 
 export default function CourseDetail() {
   const { i18n, t } = useTranslation();
@@ -233,39 +233,10 @@ export default function CourseDetail() {
                 <p className="text-muted-foreground mb-6">
                   {t("course_detail.testimonials_subtitle", "Real words from sisters who took the leap.")}
                 </p>
-                <div className="space-y-4">
-                  {showTestimonials.map((t) => {
-                    const palette = getAvatarColor(t.studentName);
-                    return (
-                      <div
-                        key={t.id}
-                        className="bg-background p-5 rounded-2xl border border-border"
-                      >
-                        <div className="flex gap-1 mb-2 text-accent">
-                          {[...Array(t.rating)].map((_, i) => (
-                            <Star key={i} className="w-4 h-4 fill-current" />
-                          ))}
-                        </div>
-                        <p className="text-foreground/90 text-sm leading-relaxed mb-3">
-                          "{t.quote}"
-                        </p>
-                        <div className="flex items-center gap-2.5 text-xs">
-                          <div
-                            className={`w-9 h-9 rounded-full ${palette.bg} ${palette.text} flex items-center justify-center font-bold`}
-                          >
-                            {getInitials(t.studentName)}
-                          </div>
-                          <div>
-                            <div className="font-bold text-foreground">{t.studentName}</div>
-                            <div className="text-muted-foreground">
-                              <span className="mr-1">{getFlag(t.location)}</span>
-                              {t.location}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                <div className="grid sm:grid-cols-1 gap-6">
+                  {showTestimonials.map((t) => (
+                    <TestimonialCard key={t.id} testimonial={t as any} />
+                  ))}
                 </div>
               </section>
             )}
