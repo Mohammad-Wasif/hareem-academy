@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { FaWhatsapp } from "react-icons/fa";
 import EnrollmentModal from "@/components/EnrollmentModal";
 import { WHATSAPP_URL } from "@/components/CTAGroup";
-import logo from "@assets/Untitled_design_1777409286493.png";
+import logo from "@assets/IMG_20260507_171922.png";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
 

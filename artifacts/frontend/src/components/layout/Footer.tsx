@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { FaWhatsapp, FaInstagram, FaFacebook } from "react-icons/fa";
 import { Mail, MapPin } from "lucide-react";
-import logo from "@assets/Untitled_design_1777409286493.png";
+import logo from "@assets/IMG_20260507_171922.png";
 import { useTranslation } from "react-i18next";
 
 export default function Footer() {
