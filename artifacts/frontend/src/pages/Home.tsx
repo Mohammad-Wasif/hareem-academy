@@ -305,9 +305,8 @@ export default function Home() {
               const palette = getAvatarColor(t.studentName);
               const flag = getFlag(t.location);
               const localizedQuote = lang === "ur" ? (t as any).quote_ur || t.quote : lang === "ar" ? (t as any).quote_ar || t.quote : t.quote;
-              const firstSentence =
-                localizedQuote.split(/[.!?]/).filter(Boolean)[0]?.trim() || localizedQuote;
-              const rest = localizedQuote.replace(firstSentence, "").replace(/^[.!?\s]+/, "");
+              const localizedBottom = lang === "ur" ? (t as any).bottomText_ur : lang === "ar" ? (t as any).bottomText_ar : (t as any).bottomText;
+
               return (
                 <div
                   key={t.id}
@@ -318,13 +317,17 @@ export default function Home() {
                       <Star key={i} className="w-4 h-4 fill-current" />
                     ))}
                   </div>
-                  <p className="font-serif text-lg text-foreground leading-snug mb-3">
-                    "{firstSentence}."
+                  <p className="font-serif text-lg text-foreground leading-relaxed mb-6">
+                    "{localizedQuote}"
                   </p>
-                  {rest && (
-                    <p className="text-sm text-muted-foreground leading-relaxed mb-5 line-clamp-3">
-                      {rest}
-                    </p>
+
+                  {/* Bottom Text Highlight */}
+                  {(localizedBottom || '').trim() && (
+                    <div className="bg-primary/5 p-3 rounded-lg border border-primary/10 mb-6">
+                      <p className="text-[10px] font-bold text-primary italic leading-snug">
+                        "{localizedBottom}"
+                      </p>
+                    </div>
                   )}
                   <div className="flex items-center gap-3 mt-auto pt-4 border-t border-border">
                     <div
