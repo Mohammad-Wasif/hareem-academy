@@ -65,16 +65,9 @@ export default function Testimonials() {
                   </div>
 
                   {/* Highlighted opener */}
-                  <p className="font-serif text-xl text-foreground leading-snug mb-3">
+                  <p className="font-serif text-xl text-foreground leading-snug mb-6">
                     "{highlight}."
                   </p>
-
-                  {/* Body */}
-                  {rest && (
-                    <p className="text-sm text-muted-foreground leading-relaxed mb-4 line-clamp-3">
-                      {rest}.
-                    </p>
-                  )}
 
                   {/* Bottom Text Highlight */}
                   {((lang === 'ur' ? (t as any).bottomText_ur : lang === 'ar' ? (t as any).bottomText_ar : (t as any).bottomText) || '').trim() && (
