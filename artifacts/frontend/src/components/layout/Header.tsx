@@ -29,8 +29,8 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-primary/10">
       <div className="container mx-auto px-4 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <img src={logo} alt="Hareem Academy" className="h-10 sm:h-12 w-auto object-contain rounded" />
-          <span className="font-serif font-bold text-lg sm:text-xl text-primary">Hareem Academy</span>
+          <img src={t("common.logo_url", logo) || logo} alt="Hareem Academy" className="h-10 sm:h-12 w-auto object-contain rounded" />
+          <span className="font-serif font-bold text-lg sm:text-xl text-primary">{t("common.site_name", "Hareem Academy")}</span>
         </Link>
 
         {/* Desktop Nav */}
