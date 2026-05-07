@@ -107,6 +107,31 @@ export default function AdminCourseEdit() {
         }}
         className="space-y-6 bg-white rounded-xl border border-border/50 p-6"
       >
+        <div className="space-y-3 bg-primary/5 p-4 rounded-xl border border-primary/10">
+          <Label className="text-primary font-bold">Enrollment Status</Label>
+          <div className="flex gap-4">
+            <Button
+              type="button"
+              variant={form.enrollmentStatus === "open" ? "default" : "outline"}
+              onClick={() => update("enrollmentStatus", "open")}
+              className="flex-1 h-12"
+            >
+              Enrollments Open
+            </Button>
+            <Button
+              type="button"
+              variant={form.enrollmentStatus === "closed" ? "destructive" : "outline"}
+              onClick={() => update("enrollmentStatus", "closed")}
+              className="flex-1 h-12"
+            >
+              Enrollments Closed
+            </Button>
+          </div>
+          <p className="text-xs text-muted-foreground italic">
+            * Closed courses will be hidden from enrollment but still visible to students.
+          </p>
+        </div>
+
         <Tabs defaultValue="en" className="w-full">
           <TabsList className="mb-4">
             <TabsTrigger value="en">English (Default)</TabsTrigger>
@@ -444,27 +469,6 @@ export default function AdminCourseEdit() {
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Label>Enrollment Status</Label>
-          <div className="flex gap-4">
-            <Button
-              type="button"
-              variant={form.enrollmentStatus === "open" ? "default" : "outline"}
-              onClick={() => update("enrollmentStatus", "open")}
-              className="flex-1"
-            >
-              Open
-            </Button>
-            <Button
-              type="button"
-              variant={form.enrollmentStatus === "closed" ? "destructive" : "outline"}
-              onClick={() => update("enrollmentStatus", "closed")}
-              className="flex-1"
-            >
-              Closed
-            </Button>
-          </div>
-        </div>
         </div>
 
         <div className="flex gap-3 pt-4 border-t border-border/50">
