@@ -313,11 +313,13 @@ export default function EnrollmentModal({
                     />
                   </SelectTrigger>
                   <SelectContent>
-                    {courses.map((c) => (
-                      <SelectItem key={c.slug} value={c.slug}>
-                        {c.title}
-                      </SelectItem>
-                    ))}
+                    {courses
+                      .filter((c) => (c as any).enrollmentStatus !== "closed" || c.slug === defaultCourseSlug)
+                      .map((c) => (
+                        <SelectItem key={c.slug} value={c.slug}>
+                          {c.title} {(c as any).enrollmentStatus === 'closed' ? '(Closed)' : ''}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
                 {courseField.helpText && (
