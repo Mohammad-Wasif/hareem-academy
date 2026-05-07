@@ -43,13 +43,6 @@ export default function Testimonials() {
               const palette = getAvatarColor(t.studentName);
               const flag = getFlag(t.location);
               const localizedQuote = lang === "ur" ? (t as any).quote_ur || t.quote : lang === "ar" ? (t as any).quote_ar || t.quote : t.quote;
-              const sentences = localizedQuote.split(/[.!?]/).filter(Boolean);
-              const highlight = sentences[0]?.trim() || localizedQuote;
-              const rest = sentences
-                .slice(1)
-                .map((s: string) => s.trim())
-                .filter(Boolean)
-                .join(". ");
 
               return (
                 <div
@@ -65,8 +58,8 @@ export default function Testimonials() {
                   </div>
 
                   {/* Highlighted opener */}
-                  <p className="font-serif text-xl text-foreground leading-snug mb-6">
-                    "{highlight}."
+                  <p className="font-serif text-lg text-foreground leading-relaxed mb-6">
+                    "{localizedQuote}"
                   </p>
 
                   {/* Bottom Text Highlight */}
