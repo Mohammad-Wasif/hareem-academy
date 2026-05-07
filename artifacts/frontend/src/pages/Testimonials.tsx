@@ -71,16 +71,16 @@ export default function Testimonials() {
 
                   {/* Body */}
                   {rest && (
-                    <p className="text-sm text-muted-foreground leading-relaxed mb-4 line-clamp-3">
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-6">
                       {rest}.
                     </p>
                   )}
 
-                  {/* Bottom Text Highlight */}
+                  {/* Bottom Text Highlight - More Subtle */}
                   {((lang === 'ur' ? (t as any).bottomText_ur : lang === 'ar' ? (t as any).bottomText_ar : (t as any).bottomText) || '').trim() && (
-                    <div className="bg-primary/5 p-3 rounded-lg border border-primary/10 mb-6">
-                      <p className="text-xs font-bold text-primary italic leading-snug">
-                        "{lang === 'ur' ? (t as any).bottomText_ur : lang === 'ar' ? (t as any).bottomText_ar : (t as any).bottomText}"
+                    <div className="pt-2 mb-6 border-t border-dashed border-primary/20">
+                      <p className="text-sm font-medium text-primary italic leading-snug">
+                        — "{lang === 'ur' ? (t as any).bottomText_ur : lang === 'ar' ? (t as any).bottomText_ar : (t as any).bottomText}"
                       </p>
                     </div>
                   )}
