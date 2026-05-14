@@ -20,6 +20,7 @@ import { useListCourses, useListTestimonials, useGetSiteStats } from "@workspace
 import calligraphyYellow from "@assets/Asset_1@4x_1777409230830.png";
 import calligraphyGreen from "@assets/Asset_8@4x_1777409251771.png";
 import { useTranslation } from "react-i18next";
+import { SEO } from "@/components/SEO";
 
 export default function Home() {
   const { t, i18n } = useTranslation();
@@ -30,6 +31,10 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <SEO 
+        title={t("home.seo.title", "Online Quran Classes for Sisters")}
+        description={t("home.seo.description", "Live, female-only online Quran and Arabic classes. Learn Tajweed and meaning in a comfortable, judgment-free environment.")}
+      />
       {/* 1. HERO — Hook + dual CTA above the fold */}
       <section className="relative bg-background overflow-hidden min-h-[88vh] flex items-center pt-20">
         <div className="absolute inset-0 z-0">

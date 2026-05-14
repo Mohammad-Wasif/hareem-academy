@@ -1,3 +1,4 @@
+import { SEO } from "@/components/SEO";
 import { useParams } from "wouter";
 import { useGetCourse, useListTestimonials } from "@workspace/api-client-react";
 import { getGetCourseQueryKey } from "@workspace/api-client-react";
@@ -87,6 +88,10 @@ export default function CourseDetail() {
 
   return (
     <div className="min-h-screen bg-background pb-32 pt-20">
+      <SEO 
+        title={title} 
+        description={summary}
+      />
       {/* HERO */}
       <div className="bg-primary text-primary-foreground py-12 lg:py-20">
         <div className="container mx-auto px-4 max-w-5xl">

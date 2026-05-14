@@ -17,17 +17,37 @@ import {
   ALWAYS_REQUIRED_BUILTINS,
 } from "../lib/formFieldsSeed";
 
+import bcrypt from "bcrypt";
+
 const router: IRouter = Router();
 
-router.post("/admin/login", (req, res) => {
+router.post("/admin/login", async (req, res) => {
   const { username, password } = req.body ?? {};
-  const expected = process.env["ADMIN_PASSWORD"];
-  if (!expected) {
-    return res.status(500).json({ error: "Admin password not configured" });
+  
+  const hash = process.env["ADMIN_PASSWORD_HASH"];
+  const plain = process.env["ADMIN_PASSWORD"];
+  
+  if (!hash && !plain) {
+    return res.status(500).json({ error: "Admin credentials not configured" });
   }
-  if (username !== "admin" || password !== expected) {
+
+  let isValid = false;
+  if (username === "admin") {
+    if (hash) {
+      isValid = await bcrypt.compare(password, hash);
+    } else if (plain) {
+      // Temporary fallback for migration
+      isValid = password === plain;
+      if (isValid) {
+        req.log.warn("Admin logged in using plain-text password. Please configure ADMIN_PASSWORD_HASH.");
+      }
+    }
+  }
+
+  if (!isValid) {
     return res.status(401).json({ error: "Invalid credentials" });
   }
+
   req.session.isAdmin = true;
   req.session.save((err) => {
     if (err) {
