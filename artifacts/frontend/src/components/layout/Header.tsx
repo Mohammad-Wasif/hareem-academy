@@ -65,7 +65,7 @@ export default function Header() {
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
           />
-          <span className="hidden sm:inline font-serif font-bold text-lg sm:text-xl text-primary group-hover:text-primary/80 transition-colors">
+          <span className="font-serif font-bold text-base sm:text-xl text-primary group-hover:text-primary/80 transition-colors">
             {t("common.site_name", "Hareem Academy")}
           </span>
         </Link>
