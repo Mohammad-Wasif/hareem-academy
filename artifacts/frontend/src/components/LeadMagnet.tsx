@@ -63,7 +63,7 @@ export default function LeadMagnet() {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-24 right-6 z-40 w-full max-w-sm">
+    <div className="fixed bottom-24 left-4 right-4 sm:left-auto sm:right-6 z-40 w-auto sm:w-full sm:max-w-sm">
       <div className="bg-card border-2 border-primary/20 rounded-2xl shadow-xl overflow-hidden shadow-primary/5">
         <div className="bg-primary/5 p-4 border-b border-primary/10 relative">
           <button

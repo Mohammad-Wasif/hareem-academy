@@ -93,7 +93,7 @@ export default function CourseDetail() {
         description={summary}
       />
       {/* HERO */}
-      <div className="bg-primary text-primary-foreground py-12 lg:py-20">
+      <div className="bg-primary text-primary-foreground py-10 sm:py-12 lg:py-20">
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="flex flex-wrap gap-2 mb-4">
             <span className="inline-block px-3 py-1 bg-accent/20 text-accent font-bold text-xs uppercase tracking-widest rounded-full">
@@ -116,14 +116,14 @@ export default function CourseDetail() {
             )}
           </div>
 
-          <h1 className="font-serif font-bold text-3xl md:text-5xl mb-5 text-white leading-tight">
+          <h1 className="font-serif font-bold text-2xl sm:text-3xl md:text-5xl mb-5 text-white leading-tight">
             {title}
           </h1>
           <p className="text-lg md:text-xl text-primary-foreground/80 max-w-3xl leading-relaxed mb-6">
             {summary}
           </p>
 
-          <div className="flex flex-wrap gap-4 items-center pt-6 border-t border-primary-foreground/10">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-4 items-start sm:items-center pt-6 border-t border-primary-foreground/10">
             {(course as any).enrollmentStatus === "closed" ? (
               <Button disabled className="h-12 px-8 rounded-full opacity-50 cursor-not-allowed">
                 Enrollments Closed

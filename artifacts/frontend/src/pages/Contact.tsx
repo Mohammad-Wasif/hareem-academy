@@ -69,26 +69,26 @@ export default function Contact() {
             rel="noopener noreferrer"
             className="block bg-[#25D366] hover:bg-[#128C7E] text-white rounded-3xl p-7 md:p-9 transition-colors shadow-xl shadow-[#25D366]/25 group"
           >
-            <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
-              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                <FaWhatsapp className="w-9 h-9" />
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-5 text-center sm:text-left">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/20 rounded-full flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                <FaWhatsapp className="w-7 h-7 sm:w-9 sm:h-9" />
               </div>
-              <div className="flex-1">
-                <div className="font-serif font-bold text-2xl md:text-3xl mb-1">
+              <div className="flex-1 min-w-0">
+                <div className="font-serif font-bold text-xl sm:text-2xl md:text-3xl mb-1">
                   {t("contact.whatsapp_cta.title", "Chat with us on WhatsApp")}
                 </div>
-                <p className="text-white/90 text-sm">
+                <p className="text-white/90 text-xs sm:text-sm">
                   {t("contact.whatsapp_cta.subtitle", "+91 9315118289 — fastest way to reach us. Most messages answered in under 5 minutes.")}
                 </p>
               </div>
-              <div className="bg-white text-[#128C7E] font-bold px-5 py-2.5 rounded-full text-sm whitespace-nowrap">
+              <div className="bg-white text-[#128C7E] font-bold px-5 py-2.5 rounded-full text-sm whitespace-nowrap shrink-0">
                 {t("contact.whatsapp_cta.btn", "Open chat →")}
               </div>
             </div>
           </a>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12 lg:gap-20 mb-20">
+        <div className="grid md:grid-cols-2 gap-8 lg:gap-20 mb-20">
           {/* Form (secondary) */}
           <div className="bg-card p-7 md:p-9 rounded-3xl border border-border shadow-sm">
             <div className="flex items-center gap-2 mb-2">

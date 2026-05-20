@@ -72,9 +72,9 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background/60" />
         </div>
 
-        <div className="container relative z-10 px-4 py-16 lg:py-24 grid lg:grid-cols-12 gap-10 items-center">
+        <div className="container relative z-10 px-4 py-16 lg:py-24">
           <motion.div
-            className="lg:col-span-7 space-y-7"
+            className="max-w-3xl space-y-7"
             variants={staggerContainer}
             initial="hidden"
             animate="show"
@@ -124,7 +124,7 @@ export default function Home() {
             <motion.div
               variants={fadeUp}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="flex items-center gap-6 pt-6 border-t border-border/50"
+              className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 pt-6 border-t border-border/50"
             >
               <div className="flex -space-x-2">
                 {[1, 2, 3, 4].map((i) => (
@@ -161,7 +161,7 @@ export default function Home() {
       >
         <div className="container px-4">
           <motion.div
-            className="flex flex-wrap justify-center gap-6 md:gap-12 text-sm"
+            className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-12 text-sm"
             variants={staggerContainer}
             initial="hidden"
             whileInView="show"
@@ -448,7 +448,7 @@ export default function Home() {
           </motion.div>
 
           <motion.div
-            className="grid md:grid-cols-3 gap-5"
+            className="grid sm:grid-cols-2 md:grid-cols-3 gap-5"
             variants={staggerContainer}
             initial="hidden"
             whileInView="show"

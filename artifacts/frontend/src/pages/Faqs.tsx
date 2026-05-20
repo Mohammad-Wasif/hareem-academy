@@ -93,7 +93,9 @@ export default function Faqs() {
           <p className="text-muted-foreground max-w-lg mx-auto">
             {t("faqs_page.cta.subtitle", "We're always happy to help. Reach out on WhatsApp or book a free trial to experience our classes first-hand.")}
           </p>
-          <CTAGroup />
+          <div className="flex justify-center">
+            <CTAGroup align="center" />
+          </div>
         </div>
       </div>
     </div>

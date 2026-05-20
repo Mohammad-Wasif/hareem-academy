@@ -31,13 +31,13 @@ export default function Testimonials() {
 
         {/* Testimonials grid */}
         {isLoading ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <Skeleton key={i} className="h-72 w-full rounded-2xl" />
             ))}
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {testimonials.map((t) => (
               <TestimonialCard key={t.id} testimonial={t as any} />
             ))}
@@ -45,7 +45,7 @@ export default function Testimonials() {
         )}
 
         {/* Closing CTA */}
-        <div className="mt-20 bg-primary text-primary-foreground rounded-3xl p-10 md:p-14 text-center max-w-4xl mx-auto">
+        <div className="mt-20 bg-primary text-primary-foreground rounded-3xl p-8 sm:p-10 md:p-14 text-center max-w-4xl mx-auto">
           <h2 className="font-serif font-bold text-3xl md:text-4xl text-white mb-3">
             {t("testimonials_page.closing.title", "Your story could be next.")}
           </h2>

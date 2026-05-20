@@ -59,7 +59,7 @@ export default function CourseCard({ course }: { course: Course }) {
         )}
 
         {/* Image */}
-        <div className={`h-44 bg-primary/5 flex items-center justify-center overflow-hidden relative ${(course as any).enrollmentStatus === 'closed' ? 'grayscale opacity-75' : ''}`}>
+        <div className={`h-40 sm:h-44 lg:h-48 bg-primary/5 flex items-center justify-center overflow-hidden relative ${(course as any).enrollmentStatus === 'closed' ? 'grayscale opacity-75' : ''}`}>
           <img src={thumbnail} alt={title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
         </div>
 

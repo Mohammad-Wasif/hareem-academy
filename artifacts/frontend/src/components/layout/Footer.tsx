@@ -8,7 +8,7 @@ export default function Footer() {
   const { t } = useTranslation();
   return (
     <footer className="bg-primary text-primary-foreground py-16 border-t border-primary-foreground/10">
-      <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12">
+      <div className="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12">
         <div className="space-y-6">
           <Link href="/" className="inline-block">
             <img src={t("common.logo_url", logo) || logo} alt="Hareem Academy" className="h-20 w-auto object-contain" />

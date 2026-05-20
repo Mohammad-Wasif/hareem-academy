@@ -90,7 +90,7 @@ export default function About() {
           </motion.div>
           <motion.ul
             variants={staggerContainer}
-            className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto"
+            className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto"
           >
             {[
               "You can recite the Quran but don't understand a word.",
@@ -264,7 +264,7 @@ export default function About() {
               { value: `${(stats?.averageRating ?? 4.9).toFixed(1)}★`, label: "Average rating" },
             ].map((stat, i) => (
               <div key={i}>
-                <div className="font-serif font-bold text-3xl md:text-5xl text-accent mb-1">
+                <div className="font-serif font-bold text-2xl sm:text-3xl md:text-5xl text-accent mb-1">
                   {stat.value}
                 </div>
                 <div className="text-sm text-primary-foreground/80 uppercase tracking-wider">
@@ -298,7 +298,7 @@ export default function About() {
         </motion.div>
 
         <motion.div
-          className="grid md:grid-cols-3 gap-6"
+          className="grid sm:grid-cols-2 md:grid-cols-3 gap-6"
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
