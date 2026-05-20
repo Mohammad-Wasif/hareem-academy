@@ -1,11 +1,14 @@
 import { Link } from "wouter";
 import { Clock, GraduationCap, Video, Users, Flame, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 import { Course } from "@workspace/api-client-react";
 import { useTranslation } from "react-i18next";
+import { useSiteAssets } from "@/hooks/use-site-assets";
 
 export default function CourseCard({ course }: { course: Course }) {
   const { i18n, t } = useTranslation();
   const lang = i18n.language;
+  const { assets } = useSiteAssets();
 
   // Select localized fields
   const title = lang === "ur" ? (course as any).title_ur || course.title : lang === "ar" ? (course as any).title_ar || course.title : course.title;
@@ -16,9 +19,19 @@ export default function CourseCard({ course }: { course: Course }) {
     typeof course.seatsRemaining === "number" && course.seatsRemaining > 0 && course.seatsRemaining <= 8;
   const isBeginner = (course.level ?? "").toLowerCase().includes("beginner");
 
+  // Dynamic thumbnail — falls back to static public files
+  const thumbnail =
+    course.language === "arabic"
+      ? assets["course_arabic"] || "/course-arabic.png"
+      : assets["course_urdu"] || "/course-urdu.png";
+
   return (
     <Link href={`/courses/${course.slug}`} className="block h-full">
-      <div className="group bg-card rounded-2xl border border-border overflow-hidden hover:border-primary/40 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-full cursor-pointer relative">
+      <motion.div
+        className="group bg-card rounded-2xl border border-border overflow-hidden hover:border-primary/40 hover:shadow-2xl flex flex-col h-full cursor-pointer relative"
+        whileHover={{ y: -6 }}
+        transition={{ type: "spring", stiffness: 300, damping: 22 }}
+      >
         {/* Top badges */}
         <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">
           {course.featured && (
@@ -47,12 +60,9 @@ export default function CourseCard({ course }: { course: Course }) {
 
         {/* Image */}
         <div className={`h-44 bg-primary/5 flex items-center justify-center overflow-hidden relative ${(course as any).enrollmentStatus === 'closed' ? 'grayscale opacity-75' : ''}`}>
-          {course.language === "arabic" ? (
-            <img src="/course-arabic.png" alt="Arabic Course" className="w-full h-full object-cover" />
-          ) : (
-            <img src="/course-urdu.png" alt="Urdu Course" className="w-full h-full object-cover" />
-          )}
+          <img src={thumbnail} alt={title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
         </div>
+
 
         {/* Content */}
         <div className="p-6 flex-grow flex flex-col">
@@ -110,7 +120,7 @@ export default function CourseCard({ course }: { course: Course }) {
             {t("courses.see_curriculum", "See Full Curriculum")} →
           </span>
         </div>
-      </div>
+      </motion.div>
     </Link>
   );
 }

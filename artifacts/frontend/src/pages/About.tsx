@@ -13,39 +13,73 @@ import {
 import CTAGroup from "@/components/CTAGroup";
 import { useGetSiteStats } from "@workspace/api-client-react";
 import { useSiteAssets } from "@/hooks/use-site-assets";
+import { motion } from "framer-motion";
+
+/* ── Reusable animation variants ── */
+const fadeUp = {
+  hidden: { opacity: 0, y: 32 },
+  show: { opacity: 1, y: 0 },
+};
+
+const staggerContainer = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1 } },
+};
 
 export default function About() {
   const { data: stats } = useGetSiteStats();
   const { assets } = useSiteAssets();
 
-
   return (
     <div className="min-h-screen bg-background pb-24 pt-24">
       {/* HERO with above-fold CTA */}
       <section className="container mx-auto px-4 py-12 max-w-5xl">
-        <div className="text-center max-w-3xl mx-auto space-y-6">
-          <span className="inline-block text-xs font-bold tracking-widest text-primary uppercase">
+        <motion.div
+          className="text-center max-w-3xl mx-auto space-y-6"
+          variants={staggerContainer}
+          initial="hidden"
+          animate="show"
+        >
+          <motion.span
+            variants={fadeUp}
+            transition={{ duration: 0.4 }}
+            className="inline-block text-xs font-bold tracking-widest text-primary uppercase"
+          >
             Our Promise
-          </span>
-          <h1 className="font-serif font-bold text-4xl md:text-6xl text-foreground leading-tight">
+          </motion.span>
+          <motion.h1
+            variants={fadeUp}
+            transition={{ duration: 0.5 }}
+            className="font-serif font-bold text-4xl md:text-6xl text-foreground leading-tight"
+          >
             A safe space for sisters
             <br />
             to fall in love with the Quran.
-          </h1>
-          <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+          </motion.h1>
+          <motion.p
+            variants={fadeUp}
+            transition={{ duration: 0.45 }}
+            className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto"
+          >
             No mixed classes. No judgment. Just qualified female teachers and a
             global community of sisters learning together — from your living room.
-          </p>
-          <div className="flex justify-center pt-2">
+          </motion.p>
+          <motion.div variants={fadeUp} transition={{ duration: 0.4 }} className="flex justify-center pt-2">
             <CTAGroup variant="hero" align="center" trialMode />
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* PAIN — Why we exist */}
       <section className="container mx-auto px-4 mt-16 mb-20 max-w-5xl">
-        <div className="bg-card rounded-3xl border border-border p-8 md:p-12">
-          <div className="text-center max-w-2xl mx-auto mb-10">
+        <motion.div
+          className="bg-card rounded-3xl border border-border p-8 md:p-12"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          variants={staggerContainer}
+        >
+          <motion.div variants={fadeUp} transition={{ duration: 0.4 }} className="text-center max-w-2xl mx-auto mb-10">
             <HeartCrack className="w-10 h-10 text-rose-500 mx-auto mb-4" />
             <h2 className="font-serif font-bold text-3xl md:text-4xl text-foreground mb-3">
               We know how it feels.
@@ -53,34 +87,50 @@ export default function About() {
             <p className="text-muted-foreground">
               Most sisters who join us were stuck in one of these places:
             </p>
-          </div>
-          <ul className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+          </motion.div>
+          <motion.ul
+            variants={staggerContainer}
+            className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto"
+          >
             {[
               "You can recite the Quran but don't understand a word.",
               "Local madrasas have fixed timings that clash with work or family.",
               "Mixed-gender online classes feel uncomfortable and rushed.",
               "You started learning years ago, then life got in the way.",
             ].map((pain, i) => (
-              <li
+              <motion.li
                 key={i}
+                variants={fadeUp}
+                transition={{ duration: 0.3 }}
                 className="flex items-start gap-3 bg-background p-4 rounded-xl border border-border"
               >
                 <span className="w-6 h-6 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-sm shrink-0 mt-0.5">
                   ✕
                 </span>
                 <span className="text-foreground/90 text-sm">{pain}</span>
-              </li>
+              </motion.li>
             ))}
-          </ul>
-          <p className="text-center text-foreground font-serif italic text-lg mt-8">
+          </motion.ul>
+          <motion.p
+            variants={fadeUp}
+            transition={{ duration: 0.4 }}
+            className="text-center text-foreground font-serif italic text-lg mt-8"
+          >
             Hareem Academy was built so none of that has to stop you anymore.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
       </section>
 
       {/* TRANSFORMATION — What you get */}
       <section className="container mx-auto px-4 mb-20 max-w-5xl">
-        <div className="text-center max-w-2xl mx-auto mb-10">
+        <motion.div
+          className="text-center max-w-2xl mx-auto mb-10"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          variants={fadeUp}
+          transition={{ duration: 0.4 }}
+        >
           <Sparkles className="w-10 h-10 text-primary mx-auto mb-4" />
           <h2 className="font-serif font-bold text-3xl md:text-4xl text-foreground mb-3">
             Here's what you walk away with.
@@ -88,9 +138,15 @@ export default function About() {
           <p className="text-muted-foreground">
             Not just lessons — a real change in how you connect with your deen.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-5">
+        <motion.div
+          className="grid md:grid-cols-2 gap-5"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          variants={staggerContainer}
+        >
           {[
             {
               icon: BookOpen,
@@ -113,8 +169,10 @@ export default function About() {
               desc: "Pass on what you've learned to the next generation at home.",
             },
           ].map((item, i) => (
-            <div
+            <motion.div
               key={i}
+              variants={fadeUp}
+              transition={{ duration: 0.4 }}
               className="bg-card border border-border rounded-2xl p-6 flex gap-4"
             >
               <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
@@ -124,34 +182,56 @@ export default function About() {
                 <h3 className="font-bold text-foreground mb-1">{item.title}</h3>
                 <p className="text-sm text-muted-foreground">{item.desc}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        <div className="flex justify-center mt-10">
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          variants={fadeUp}
+          transition={{ duration: 0.4 }}
+          className="flex justify-center mt-10"
+        >
           <CTAGroup variant="hero" align="center" trialMode />
-        </div>
+        </motion.div>
       </section>
 
       {/* TRUST — Values */}
       <section className="container mx-auto px-4 mb-20 max-w-5xl">
-        <div className="text-center max-w-2xl mx-auto mb-10">
+        <motion.div
+          className="text-center max-w-2xl mx-auto mb-10"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          variants={fadeUp}
+          transition={{ duration: 0.4 }}
+        >
           <span className="inline-block text-xs font-bold tracking-widest text-primary uppercase mb-3">
             What we stand for
           </span>
           <h2 className="font-serif font-bold text-3xl md:text-4xl text-foreground">
             Four promises — every class, every batch.
           </h2>
-        </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        </motion.div>
+        <motion.div
+          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          variants={staggerContainer}
+        >
           {[
             { icon: ShieldCheck, title: "Privacy First", desc: "100% sisters only." },
             { icon: Heart, title: "Modesty", desc: "Islamic adab in every class." },
             { icon: BookOpen, title: "Quality", desc: "Qualified, experienced female educators." },
             { icon: Video, title: "Flexibility", desc: "Evening & weekend batches." },
           ].map((val, i) => (
-            <div
+            <motion.div
               key={i}
+              variants={fadeUp}
+              transition={{ duration: 0.4 }}
               className="text-center space-y-3 bg-card p-6 rounded-2xl border border-border"
             >
               <div className="w-12 h-12 mx-auto bg-primary/10 rounded-full flex items-center justify-center text-primary">
@@ -159,14 +239,20 @@ export default function About() {
               </div>
               <h3 className="font-serif font-bold text-lg">{val.title}</h3>
               <p className="text-sm text-muted-foreground">{val.desc}</p>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* TRUST — Stats */}
       <section className="container mx-auto px-4 mb-20 max-w-5xl">
-        <div className="bg-primary text-primary-foreground rounded-3xl p-10 md:p-14 text-center">
+        <motion.div
+          className="bg-primary text-primary-foreground rounded-3xl p-10 md:p-14 text-center"
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, type: "spring", stiffness: 200, damping: 20 }}
+        >
           <h2 className="font-serif font-bold text-2xl md:text-3xl text-white mb-8">
             A growing community of sisters worldwide.
           </h2>
@@ -187,12 +273,19 @@ export default function About() {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* TRUST — Teachers */}
       <section className="container mx-auto px-4 mb-16 max-w-5xl">
-        <div className="text-center max-w-2xl mx-auto mb-10">
+        <motion.div
+          className="text-center max-w-2xl mx-auto mb-10"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          variants={fadeUp}
+          transition={{ duration: 0.4 }}
+        >
           <span className="inline-block text-xs font-bold tracking-widest text-primary uppercase mb-3">
             Your teachers
           </span>
@@ -202,9 +295,15 @@ export default function About() {
           <p className="text-muted-foreground">
             Qualified, patient, and dedicated to your journey.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <motion.div
+          className="grid md:grid-cols-3 gap-6"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          variants={staggerContainer}
+        >
           {[
             {
               name: "Ustadha Fatima",
@@ -225,10 +324,12 @@ export default function About() {
               bio: "Ijazah in Tajweed, focused on beginner sisters.",
             },
           ].map((teacher, i) => (
-
-            <div
+            <motion.div
               key={i}
-              className="bg-card rounded-2xl p-6 border border-border text-center hover:border-primary/30 hover:shadow-lg transition-all"
+              variants={fadeUp}
+              transition={{ duration: 0.4 }}
+              whileHover={{ y: -6, transition: { type: "spring", stiffness: 300 } }}
+              className="bg-card rounded-2xl p-6 border border-border text-center hover:border-primary/30 hover:shadow-lg transition-colors cursor-default"
             >
               <img
                 src={teacher.img}
@@ -242,14 +343,20 @@ export default function About() {
                 <CheckCircle2 className="w-3.5 h-3.5 text-primary" />
                 Verified Female Teacher
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* FINAL CTA */}
       <section className="container mx-auto px-4 max-w-4xl">
-        <div className="bg-primary rounded-3xl p-10 md:p-14 text-center text-primary-foreground space-y-5">
+        <motion.div
+          className="bg-primary rounded-3xl p-10 md:p-14 text-center text-primary-foreground space-y-5"
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
           <h2 className="font-serif font-bold text-3xl md:text-4xl text-white">
             Ready to take the first step?
           </h2>
@@ -264,7 +371,7 @@ export default function About() {
             <Clock className="w-4 h-4" />
             We reply on WhatsApp within minutes.
           </p>
-        </div>
+        </motion.div>
       </section>
     </div>
   );

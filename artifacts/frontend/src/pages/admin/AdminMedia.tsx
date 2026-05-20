@@ -35,6 +35,41 @@ const MEDIA_SLOTS = [
     fallback: "/teacher-3.png",
     aspectRatio: "aspect-[1/1] w-28 h-28 rounded-full object-cover border border-border/50",
   },
+  {
+    key: "logo",
+    name: "Site Logo",
+    description: "Main website logo displayed in the navigation bar.",
+    fallback: "/logo.png",
+    aspectRatio: "w-32 h-12 object-contain bg-muted/20 border border-border/50 rounded-lg p-2",
+  },
+  {
+    key: "calligraphy_yellow",
+    name: "Yellow Calligraphy",
+    description: "Decorative yellow Arabic calligraphy used in the homepage sections.",
+    fallback: "/hero-bg.png",
+    aspectRatio: "w-32 h-32 object-contain bg-primary/5 border border-border/50 rounded-lg p-2",
+  },
+  {
+    key: "calligraphy_green",
+    name: "Green Calligraphy",
+    description: "Decorative green Arabic calligraphy used in the homepage sections.",
+    fallback: "/hero-bg.png",
+    aspectRatio: "w-32 h-32 object-contain bg-primary/5 border border-border/50 rounded-lg p-2",
+  },
+  {
+    key: "course_arabic",
+    name: "Arabic Course Thumbnail",
+    description: "Default thumbnail for Arabic language courses.",
+    fallback: "/course-arabic.png",
+    aspectRatio: "aspect-[16/9] w-full max-w-sm rounded-lg object-cover border border-border/50",
+  },
+  {
+    key: "course_urdu",
+    name: "Urdu Course Thumbnail",
+    description: "Default thumbnail for Urdu/Islamic Studies courses.",
+    fallback: "/course-urdu.png",
+    aspectRatio: "aspect-[16/9] w-full max-w-sm rounded-lg object-cover border border-border/50",
+  },
 ];
 
 export default function AdminMedia() {
