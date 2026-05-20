@@ -16,7 +16,6 @@ import { toast } from "sonner";
 
 import enJson from "@/locales/en.json";
 import urJson from "@/locales/ur.json";
-import arJson from "@/locales/ar.json";
 
 // Helper to flatten nested JSON
 function flattenObject(obj: any, prefix = ""): Record<string, string> {
@@ -60,10 +59,9 @@ export default function AdminSiteContent() {
   const defaults = useMemo(() => ({
     en: flattenObject(enJson),
     ur: flattenObject(urJson),
-    ar: flattenObject(arJson),
   }), []);
 
-  const [pendingChanges, setPendingChanges] = useState<Record<string, { en?: string, ur?: string, ar?: string }>>({});
+  const [pendingChanges, setPendingChanges] = useState<Record<string, { en?: string, ur?: string }>>({});
 
   const allKeys = useMemo(() => {
     const keys = new Set(Object.keys(defaults.en));
@@ -86,7 +84,7 @@ export default function AdminSiteContent() {
     });
   }, [allKeys, search, activeTab]);
 
-  const handleUpdate = (key: string, lang: "en" | "ur" | "ar", value: string) => {
+  const handleUpdate = (key: string, lang: "en" | "ur", value: string) => {
     setPendingChanges(prev => ({
       ...prev,
       [key]: {
@@ -103,7 +101,6 @@ export default function AdminSiteContent() {
         key,
         en: changes.en ?? existing?.en ?? defaults.en[key] ?? "",
         ur: changes.ur ?? existing?.ur ?? defaults.ur[key] ?? null,
-        ar: changes.ar ?? existing?.ar ?? defaults.ar[key] ?? null,
       };
     });
 
@@ -174,7 +171,6 @@ export default function AdminSiteContent() {
           const override = overrides?.find(o => o.key === key);
           const currentEn = pendingChanges[key]?.en ?? override?.en ?? defaults.en[key] ?? "";
           const currentUr = pendingChanges[key]?.ur ?? override?.ur ?? defaults.ur[key] ?? "";
-          const currentAr = pendingChanges[key]?.ar ?? override?.ar ?? defaults.ar[key] ?? "";
 
           const isModified = !!pendingChanges[key];
           const hasOverride = !!override;
@@ -199,7 +195,7 @@ export default function AdminSiteContent() {
                 )}
               </CardHeader>
               <CardContent className="p-6">
-                <div className="grid lg:grid-cols-3 gap-6">
+                <div className="grid lg:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">English Content</Label>
                     <Textarea 
@@ -216,15 +212,6 @@ export default function AdminSiteContent() {
                     <Textarea 
                       value={currentUr} 
                       onChange={e => handleUpdate(key, "ur", e.target.value)}
-                      dir="rtl"
-                      className="min-h-[80px] text-lg font-arabic leading-relaxed text-right"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Arabic (العربية)</Label>
-                    <Textarea 
-                      value={currentAr} 
-                      onChange={e => handleUpdate(key, "ar", e.target.value)}
                       dir="rtl"
                       className="min-h-[80px] text-lg font-arabic leading-relaxed text-right"
                     />
