@@ -42,7 +42,7 @@ export default function TestimonialCard({ testimonial: t }: TestimonialProps) {
       </div>
 
       {/* Main Quote */}
-      <p className="font-serif text-base sm:text-lg text-foreground leading-relaxed mb-6">
+      <p className="font-serif text-base sm:text-lg text-foreground leading-relaxed mb-6 break-words">
         "{localizedQuote}"
       </p>
 
