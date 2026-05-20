@@ -26,8 +26,8 @@ export default function TestimonialCard({ testimonial: t }: TestimonialProps) {
   const palette = getAvatarColor(t.studentName);
   const flag = getFlag(t.location || "");
   
-  const localizedQuote = lang === "ur" ? t.quote_ur || t.quote : lang === "ar" ? t.quote_ar || t.quote : t.quote;
-  const localizedBottom = lang === "ur" ? t.bottomText_ur : lang === "ar" ? t.bottomText_ar : t.bottomText;
+  const localizedQuote = lang === "ur" ? t.quote_ur || t.quote : t.quote;
+  const localizedBottom = lang === "ur" ? t.bottomText_ur : t.bottomText;
 
   return (
     <div

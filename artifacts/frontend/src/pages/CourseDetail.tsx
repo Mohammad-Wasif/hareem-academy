@@ -51,9 +51,9 @@ export default function CourseDetail() {
   if (isError || !course) return <NotFound />;
 
   // Select localized fields
-  const title = lang === "ur" ? (course as any).title_ur || course.title : lang === "ar" ? (course as any).title_ar || course.title : course.title;
-  const summary = lang === "ur" ? (course as any).summary_ur || course.summary : lang === "ar" ? (course as any).summary_ar || course.summary : course.summary;
-  const timings = lang === "ur" ? (course as any).timings_ur || course.timings : lang === "ar" ? (course as any).timings_ar || course.timings : course.timings;
+  const title = lang === "ur" ? (course as any).title_ur || course.title : course.title;
+  const summary = lang === "ur" ? (course as any).summary_ur || course.summary : course.summary;
+  const timings = lang === "ur" ? (course as any).timings_ur || course.timings : course.timings;
 
   const lowSeats =
     typeof course.seatsRemaining === "number" &&

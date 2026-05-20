@@ -18,8 +18,7 @@ import CTAGroup from "@/components/CTAGroup";
 import TestimonialCard from "@/components/TestimonialCard";
 import { Button } from "@/components/ui/button";
 import { useListCourses, useListTestimonials, useGetSiteStats } from "@workspace/api-client-react";
-import calligraphyYellowStatic from "@assets/Asset_1@4x_1777409230830.png";
-import calligraphyGreenStatic from "@assets/Asset_8@4x_1777409251771.png";
+
 import { useTranslation } from "react-i18next";
 import { SEO } from "@/components/SEO";
 import { useSiteAssets } from "@/hooks/use-site-assets";
@@ -48,8 +47,7 @@ export default function Home() {
   const { data: testimonials = [] } = useListTestimonials();
   const { data: stats } = useGetSiteStats();
 
-  const calligraphyYellow = assets["calligraphy_yellow"] || calligraphyYellowStatic;
-  const calligraphyGreen = assets["calligraphy_green"] || calligraphyGreenStatic;
+
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -96,11 +94,6 @@ export default function Home() {
               {t("home.hero.title_part1", "Read the Quran with ")}{" "}
               <span className="text-primary relative inline-block">
                 {t("home.hero.title_part2", "meaning")}
-                <img
-                  src={calligraphyGreen}
-                  alt=""
-                  className="absolute -bottom-5 right-0 h-12 opacity-20 pointer-events-none"
-                />
               </span>
               <br />
               {t("home.hero.title_part3", "— from your living room.")}
@@ -300,11 +293,7 @@ export default function Home() {
 
       {/* 4. COURSES */}
       <section className="py-12 lg:py-20 bg-background relative overflow-hidden">
-        <img
-          src={calligraphyGreen}
-          alt=""
-          className="absolute top-0 right-0 h-64 opacity-[0.03] pointer-events-none"
-        />
+
         <div className="container px-4">
           <motion.div
             className="flex flex-col md:flex-row justify-between items-end gap-6 mb-10"
@@ -349,11 +338,7 @@ export default function Home() {
 
       {/* 5. TRUST — Why us */}
       <section className="py-12 lg:py-20 bg-primary text-primary-foreground relative overflow-hidden">
-        <img
-          src={calligraphyYellow}
-          alt=""
-          className="absolute -left-20 bottom-0 h-96 opacity-10 pointer-events-none"
-        />
+
         <div className="container px-4 relative z-10">
           <motion.div
             className="text-center max-w-2xl mx-auto mb-12"

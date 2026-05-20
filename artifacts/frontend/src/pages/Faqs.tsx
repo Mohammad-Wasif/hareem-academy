@@ -61,8 +61,8 @@ export default function Faqs() {
                 </h2>
                 <Accordion type="single" collapsible className="w-full space-y-3">
                   {grouped[category].map((faq: any, index: number) => {
-                    const question = i18n.language === 'ur' ? faq.question_ur || faq.question : i18n.language === 'ar' ? faq.question_ar || faq.question : faq.question;
-                    const answer = i18n.language === 'ur' ? faq.answer_ur || faq.answer : i18n.language === 'ar' ? faq.answer_ar || faq.answer : faq.answer;
+                    const question = i18n.language === 'ur' ? faq.question_ur || faq.question : faq.question;
+                    const answer = i18n.language === 'ur' ? faq.answer_ur || faq.answer : faq.answer;
                     
                     return (
                       <AccordionItem

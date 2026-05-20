@@ -4,7 +4,6 @@ import LanguageDetector from "i18next-browser-languagedetector";
 
 import enTranslations from "../locales/en.json";
 import urTranslations from "../locales/ur.json";
-import arTranslations from "../locales/ar.json";
 
 i18n
   .use(LanguageDetector)
@@ -13,7 +12,6 @@ i18n
     resources: {
       en: { translation: enTranslations },
       ur: { translation: urTranslations },
-      ar: { translation: arTranslations },
     },
     fallbackLng: "en",
     interpolation: {
@@ -27,14 +25,14 @@ i18n
 
 // Set HTML dir and lang attributes on change
 i18n.on("languageChanged", (lng) => {
-  const dir = lng === "ur" || lng === "ar" ? "rtl" : "ltr";
+  const dir = lng === "ur" ? "rtl" : "ltr";
   document.documentElement.dir = dir;
   document.documentElement.lang = lng;
 });
 
 // Initialize attributes
 const initialLng = i18n.language || "en";
-const initialDir = initialLng === "ur" || initialLng === "ar" ? "rtl" : "ltr";
+const initialDir = initialLng === "ur" ? "rtl" : "ltr";
 document.documentElement.dir = initialDir;
 document.documentElement.lang = initialLng;
 

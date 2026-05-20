@@ -42,20 +42,7 @@ const MEDIA_SLOTS = [
     fallback: "/logo.png",
     aspectRatio: "w-32 h-12 object-contain bg-muted/20 border border-border/50 rounded-lg p-2",
   },
-  {
-    key: "calligraphy_yellow",
-    name: "Yellow Calligraphy",
-    description: "Decorative yellow Arabic calligraphy used in the homepage sections.",
-    fallback: "/hero-bg.png",
-    aspectRatio: "w-32 h-32 object-contain bg-primary/5 border border-border/50 rounded-lg p-2",
-  },
-  {
-    key: "calligraphy_green",
-    name: "Green Calligraphy",
-    description: "Decorative green Arabic calligraphy used in the homepage sections.",
-    fallback: "/hero-bg.png",
-    aspectRatio: "w-32 h-32 object-contain bg-primary/5 border border-border/50 rounded-lg p-2",
-  },
+
   {
     key: "course_arabic",
     name: "Arabic Course Thumbnail",
