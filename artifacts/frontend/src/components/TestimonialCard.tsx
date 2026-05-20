@@ -31,7 +31,7 @@ export default function TestimonialCard({ testimonial: t }: TestimonialProps) {
 
   return (
     <div
-      className="bg-card p-6 rounded-2xl border border-border hover:border-primary/30 hover:shadow-xl hover:-translate-y-1 transition-all flex flex-col h-full relative"
+      className="bg-card p-5 sm:p-6 rounded-2xl border border-border hover:border-primary/30 hover:shadow-xl hover:-translate-y-1 transition-all flex flex-col h-full relative"
     >
       <Quote className="absolute top-5 right-5 w-8 h-8 text-primary/10" />
 
@@ -42,7 +42,7 @@ export default function TestimonialCard({ testimonial: t }: TestimonialProps) {
       </div>
 
       {/* Main Quote */}
-      <p className="font-serif text-lg text-foreground leading-relaxed mb-6">
+      <p className="font-serif text-base sm:text-lg text-foreground leading-relaxed mb-6">
         "{localizedQuote}"
       </p>
 

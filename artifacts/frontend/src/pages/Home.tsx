@@ -91,7 +91,7 @@ export default function Home() {
             <motion.h1
               variants={fadeUp}
               transition={{ duration: 0.55, delay: 0.05 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-foreground leading-[1.1]"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-foreground leading-tight md:leading-[1.1]"
             >
               {t("home.hero.title_part1", "Read the Quran with ")}{" "}
               <span className="text-primary relative inline-block">
@@ -161,7 +161,7 @@ export default function Home() {
       >
         <div className="container px-4">
           <motion.div
-            className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-12 text-sm"
+            className="flex flex-wrap justify-center gap-3 sm:gap-6 md:gap-12 text-sm"
             variants={staggerContainer}
             initial="hidden"
             whileInView="show"
@@ -188,7 +188,7 @@ export default function Home() {
       </motion.div>
 
       {/* 2. PAIN */}
-      <section className="py-20 bg-background">
+      <section className="py-12 lg:py-20 bg-background">
         <div className="container px-4 max-w-5xl mx-auto">
           <motion.div
             className="text-center max-w-2xl mx-auto mb-12"
@@ -249,7 +249,7 @@ export default function Home() {
       </section>
 
       {/* 3. TRANSFORMATION */}
-      <section className="py-20 bg-card">
+      <section className="py-12 lg:py-20 bg-card">
         <div className="container px-4 max-w-5xl mx-auto">
           <motion.div
             className="text-center max-w-2xl mx-auto mb-12"
@@ -299,7 +299,7 @@ export default function Home() {
       </section>
 
       {/* 4. COURSES */}
-      <section className="py-20 bg-background relative overflow-hidden">
+      <section className="py-12 lg:py-20 bg-background relative overflow-hidden">
         <img
           src={calligraphyGreen}
           alt=""
@@ -348,7 +348,7 @@ export default function Home() {
       </section>
 
       {/* 5. TRUST — Why us */}
-      <section className="py-20 bg-primary text-primary-foreground relative overflow-hidden">
+      <section className="py-12 lg:py-20 bg-primary text-primary-foreground relative overflow-hidden">
         <img
           src={calligraphyYellow}
           alt=""
@@ -418,7 +418,7 @@ export default function Home() {
       </section>
 
       {/* 6. TESTIMONIALS */}
-      <section className="py-20 bg-background">
+      <section className="py-12 lg:py-20 bg-background">
         <div className="container px-4 max-w-6xl mx-auto">
           <motion.div
             className="flex flex-col md:flex-row justify-between items-end gap-6 mb-10"
@@ -464,7 +464,7 @@ export default function Home() {
       </section>
 
       {/* 7. RTL Preview */}
-      <section className="py-16 border-t border-border bg-card">
+      <section className="py-10 lg:py-16 border-t border-border bg-card">
         <div className="container px-4 text-center max-w-3xl mx-auto">
           <motion.div
             variants={fadeUp}
@@ -492,7 +492,7 @@ export default function Home() {
       </section>
 
       {/* 8. FINAL CTA */}
-      <section className="py-20 bg-primary text-center px-4 relative overflow-hidden">
+      <section className="py-12 lg:py-20 bg-primary text-center px-4 relative overflow-hidden">
         <motion.div
           className="container relative z-10 max-w-3xl mx-auto space-y-6"
           variants={staggerContainer}
@@ -506,7 +506,7 @@ export default function Home() {
           <motion.h2
             variants={fadeUp}
             transition={{ duration: 0.45 }}
-            className="font-serif font-bold text-3xl md:text-5xl text-white leading-tight"
+            className="font-serif font-bold text-2xl sm:text-3xl md:text-5xl text-white leading-tight"
           >
             {t("home.final_cta.title", "Your free trial is one click away.")}
           </motion.h2>
