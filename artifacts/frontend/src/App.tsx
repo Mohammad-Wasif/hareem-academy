@@ -38,6 +38,8 @@ import AdminTestimonials from "@/pages/admin/AdminTestimonials";
 import AdminFaqs from "@/pages/admin/AdminFaqs";
 import AdminFormFields from "@/pages/admin/AdminFormFields";
 import AdminSiteContent from "@/pages/admin/AdminSiteContent";
+import AdminMedia from "@/pages/admin/AdminMedia";
+
 
 import { I18nInitializer } from "@/components/I18nInitializer";
 
@@ -73,6 +75,8 @@ function AdminRoutes() {
         <Route path="/admin/courses/new" component={AdminCourseEdit} />
         <Route path="/admin/courses/:id/edit" component={AdminCourseEdit} />
         <Route path="/admin/site-content" component={AdminSiteContent} />
+        <Route path="/admin/media" component={AdminMedia} />
+
         <Route path="/admin/enrollments" component={AdminEnrollments} />
         <Route path="/admin/contacts" component={AdminContacts} />
         <Route path="/admin/leads" component={AdminLeads} />

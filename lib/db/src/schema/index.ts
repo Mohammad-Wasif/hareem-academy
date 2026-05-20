@@ -7,3 +7,5 @@ export * from "./faqs";
 export * from "./formFields";
 export * from "./siteContent";
 export * from "./sessions";
+export * from "./siteAssets";
+

@@ -12,9 +12,12 @@ import {
 } from "lucide-react";
 import CTAGroup from "@/components/CTAGroup";
 import { useGetSiteStats } from "@workspace/api-client-react";
+import { useSiteAssets } from "@/hooks/use-site-assets";
 
 export default function About() {
   const { data: stats } = useGetSiteStats();
+  const { assets } = useSiteAssets();
+
 
   return (
     <div className="min-h-screen bg-background pb-24 pt-24">
@@ -206,22 +209,23 @@ export default function About() {
             {
               name: "Ustadha Fatima",
               role: "Head of Arabic",
-              img: "/teacher-1.png",
+              img: assets["teacher_1"] || "/teacher-1.png",
               bio: "8+ years teaching Quranic Arabic to sisters worldwide.",
             },
             {
               name: "Ustadha Ayesha",
               role: "Senior Urdu Instructor",
-              img: "/teacher-2.png",
+              img: assets["teacher_2"] || "/teacher-2.png",
               bio: "Specialist in Urdu literature and Islamic studies.",
             },
             {
               name: "Ustadha Zainab",
               role: "Arabic & Tajweed",
-              img: "/teacher-3.png",
+              img: assets["teacher_3"] || "/teacher-3.png",
               bio: "Ijazah in Tajweed, focused on beginner sisters.",
             },
           ].map((teacher, i) => (
+
             <div
               key={i}
               className="bg-card rounded-2xl p-6 border border-border text-center hover:border-primary/30 hover:shadow-lg transition-all"

@@ -15,12 +15,14 @@ import {
   Loader2,
   ListChecks,
   Globe,
+  Image,
 } from "lucide-react";
 
 const NAV = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/courses", label: "Courses", icon: BookOpen },
   { href: "/admin/site-content", label: "Site Content", icon: Globe },
+  { href: "/admin/media", label: "Media Manager", icon: Image },
   { href: "/admin/enrollments", label: "Enrollments", icon: Users },
   { href: "/admin/form-fields", label: "Form Fields", icon: ListChecks },
   { href: "/admin/contacts", label: "Messages", icon: MessageSquare },
@@ -28,6 +30,7 @@ const NAV = [
   { href: "/admin/testimonials", label: "Testimonials", icon: Star },
   { href: "/admin/faqs", label: "FAQs", icon: HelpCircle },
 ];
+
 
 function NavLink({
   href,

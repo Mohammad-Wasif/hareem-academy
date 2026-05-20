@@ -21,9 +21,11 @@ import calligraphyYellow from "@assets/Asset_1@4x_1777409230830.png";
 import calligraphyGreen from "@assets/Asset_8@4x_1777409251771.png";
 import { useTranslation } from "react-i18next";
 import { SEO } from "@/components/SEO";
+import { useSiteAssets } from "@/hooks/use-site-assets";
 
 export default function Home() {
   const { t, i18n } = useTranslation();
+  const { assets } = useSiteAssets();
   const lang = i18n.language;
   const { data: courses = [] } = useListCourses();
   const { data: testimonials = [] } = useListTestimonials();
@@ -38,9 +40,10 @@ export default function Home() {
       {/* 1. HERO — Hook + dual CTA above the fold */}
       <section className="relative bg-background overflow-hidden min-h-[88vh] flex items-center pt-20">
         <div className="absolute inset-0 z-0">
-          <img src="/hero-bg.png" alt="" className="w-full h-full object-cover opacity-10" />
+          <img src={assets["hero_bg"] || "/hero-bg.png"} alt="" className="w-full h-full object-cover opacity-10" />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background/60" />
         </div>
+
 
         <div className="container relative z-10 px-4 py-16 lg:py-24 grid lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-7 space-y-7">
