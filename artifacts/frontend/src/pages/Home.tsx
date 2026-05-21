@@ -71,76 +71,120 @@ export default function Home() {
         </div>
 
         <div className="container relative z-10 px-4 py-16 lg:py-24">
-          <motion.div
-            className="max-w-3xl space-y-7"
-            variants={staggerContainer}
-            initial="hidden"
-            animate="show"
-          >
+          <div className="grid lg:grid-cols-12 gap-12 items-center">
             <motion.div
-              variants={fadeUp}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/10 text-primary font-medium text-sm tracking-wide"
+              className="lg:col-span-7 space-y-7"
+              variants={staggerContainer}
+              initial="hidden"
+              animate="show"
             >
-              <ShieldCheck className="w-4 h-4 text-accent" />
-              {t("home.hero.privacy", "100% Female-Only • Live on Zoom")}
+              <motion.div
+                variants={fadeUp}
+                transition={{ duration: 0.5 }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/10 text-primary font-medium text-sm tracking-wide"
+              >
+                <ShieldCheck className="w-4 h-4 text-accent" />
+                {t("home.hero.privacy", "100% Female-Only • Live on Zoom")}
+              </motion.div>
+
+              <motion.h1
+                variants={fadeUp}
+                transition={{ duration: 0.55, delay: 0.05 }}
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-foreground leading-tight md:leading-[1.1]"
+              >
+                {t("home.hero.title_part1", "Read the Quran with ")}{" "}
+                <span className="text-primary relative inline-block">
+                  {t("home.hero.title_part2", "meaning")}
+                </span>
+                <br />
+                {t("home.hero.title_part3", "— from your living room.")}
+              </motion.h1>
+
+              <motion.p
+                variants={fadeUp}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="text-lg text-muted-foreground max-w-xl leading-relaxed"
+              >
+                {t(
+                  "home.hero.subtitle",
+                  "Live Arabic & Urdu classes for sisters, taught by qualified female teachers. Flexible timings, no judgment, your camera on a safe space."
+                )}
+              </motion.p>
+
+              <motion.div variants={fadeUp} transition={{ duration: 0.5, delay: 0.15 }}>
+                <CTAGroup variant="hero" trialMode />
+              </motion.div>
+
+              <motion.div
+                variants={fadeUp}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 pt-6 border-t border-border/50"
+              >
+                <div className="flex -space-x-2">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div
+                      key={i}
+                      className="w-9 h-9 rounded-full border-2 border-background bg-primary/10 flex items-center justify-center text-primary"
+                    >
+                      <Heart className="w-4 h-4 fill-current" />
+                    </div>
+                  ))}
+                </div>
+                <div className="text-sm">
+                  <p className="font-bold text-foreground">
+                    {stats?.totalStudents || 500}+{" "}
+                    {t("home.hero.sisters_learning", "sisters learning")}
+                  </p>
+                  <p className="text-muted-foreground">
+                    {t("home.hero.across", "across")} {stats?.countriesReached || 12}+{" "}
+                    {t("home.hero.countries", "countries")}
+                  </p>
+                </div>
+              </motion.div>
             </motion.div>
 
-            <motion.h1
-              variants={fadeUp}
-              transition={{ duration: 0.55, delay: 0.05 }}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-foreground leading-tight md:leading-[1.1]"
-            >
-              {t("home.hero.title_part1", "Read the Quran with ")}{" "}
-              <span className="text-primary relative inline-block">
-                {t("home.hero.title_part2", "meaning")}
-              </span>
-              <br />
-              {t("home.hero.title_part3", "— from your living room.")}
-            </motion.h1>
-
-            <motion.p
-              variants={fadeUp}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-lg text-muted-foreground max-w-xl leading-relaxed"
-            >
-              {t(
-                "home.hero.subtitle",
-                "Live Arabic & Urdu classes for sisters, taught by qualified female teachers. Flexible timings, no judgment, your camera on a safe space."
-              )}
-            </motion.p>
-
-            <motion.div variants={fadeUp} transition={{ duration: 0.5, delay: 0.15 }}>
-              <CTAGroup variant="hero" trialMode />
-            </motion.div>
-
+            {/* Right Column: Premium Hero Visual/Illustration */}
             <motion.div
-              variants={fadeUp}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 pt-6 border-t border-border/50"
+              variants={fadeIn}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="lg:col-span-5 hidden lg:block relative"
             >
-              <div className="flex -space-x-2">
-                {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className="w-9 h-9 rounded-full border-2 border-background bg-primary/10 flex items-center justify-center text-primary"
-                  >
-                    <Heart className="w-4 h-4 fill-current" />
+              <div className="relative w-full max-w-[420px] mx-auto">
+                {/* Decorative glow/gradient background behind the image */}
+                <div className="absolute -inset-4 bg-gradient-to-tr from-primary/20 to-accent/20 rounded-[2.5rem] blur-2xl opacity-70 animate-pulse" />
+                
+                {/* Visual card frame */}
+                <div className="relative bg-card/60 backdrop-blur-md border border-border/80 rounded-[2.5rem] p-4 shadow-2xl hover:border-primary/20 transition-all duration-500">
+                  <img
+                    src="/hero-showcase.png"
+                    alt={t("home.hero.showcase_alt", "Online learning showcase")}
+                    className="w-full h-auto rounded-[2rem] object-cover shadow-inner hover:scale-[1.02] transition-transform duration-500"
+                  />
+                  
+                  {/* Floating badge 1: Live Class */}
+                  <div className="absolute -bottom-4 -left-6 bg-background/95 backdrop-blur border border-border shadow-lg rounded-2xl p-3 flex items-center gap-3 animate-bounce" style={{ animationDuration: '4s' }}>
+                    <div className="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-600">
+                      <span className="w-2.5 h-2.5 rounded-full bg-rose-600 animate-ping" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-foreground">Live Class</p>
+                      <p className="text-[10px] text-muted-foreground">In progress now</p>
+                    </div>
                   </div>
-                ))}
-              </div>
-              <div className="text-sm">
-                <p className="font-bold text-foreground">
-                  {stats?.totalStudents || 500}+{" "}
-                  {t("home.hero.sisters_learning", "sisters learning")}
-                </p>
-                <p className="text-muted-foreground">
-                  {t("home.hero.across", "across")} {stats?.countriesReached || 12}+{" "}
-                  {t("home.hero.countries", "countries")}
-                </p>
+
+                  {/* Floating badge 2: Stars/Rating */}
+                  <div className="absolute -top-4 -right-6 bg-background/95 backdrop-blur border border-border shadow-lg rounded-2xl p-3 flex items-center gap-2">
+                    <div className="flex gap-0.5">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <Star key={s} className="w-3.5 h-3.5 fill-accent text-accent" />
+                      ))}
+                    </div>
+                    <span className="text-xs font-bold text-foreground">4.9/5 Rating</span>
+                  </div>
+                </div>
               </div>
             </motion.div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
