@@ -25,7 +25,7 @@ import { useSiteAssets } from "@/hooks/use-site-assets";
 
 /* ── Reusable animation variants ── */
 const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
+  hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, y: 0 },
 };
 
@@ -60,7 +60,7 @@ export default function Home() {
       />
 
       {/* 1. HERO */}
-      <section className="relative bg-background overflow-hidden pt-4 pb-4 flex items-center min-h-[60vh] lg:min-h-[65vh]">
+      <section className="relative bg-background overflow-hidden pt-2 pb-3 sm:pt-4 sm:pb-4 flex items-center min-h-[auto] sm:min-h-[60vh] lg:min-h-[65vh]">
         <div className="absolute inset-0 z-0 pointer-events-none">
           <img
             src={assets["hero_bg"] || "/hero-bg.png"}
@@ -72,10 +72,10 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/90 to-background" />
         </div>
 
-        <div className="container relative z-10 px-4 py-4 lg:py-6">
+        <div className="container relative z-10 px-4 py-2 sm:py-4 lg:py-6">
           <div className="grid lg:grid-cols-12 gap-6 lg:gap-8 items-center">
             <motion.div
-              className="lg:col-span-7 space-y-3.5 sm:space-y-4 text-left"
+              className="lg:col-span-7 space-y-2.5 sm:space-y-4 text-left"
               variants={staggerContainer}
               initial="hidden"
               animate="show"
@@ -83,16 +83,16 @@ export default function Home() {
               <motion.div
                 variants={fadeUp}
                 transition={{ duration: 0.5 }}
-                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/[0.03] border border-primary/8 text-primary/95 font-sans font-semibold text-xs tracking-wide capitalize"
+                className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-[3px] sm:px-3 sm:py-1 rounded-full bg-primary/[0.03] border border-primary/8 text-primary/95 font-sans font-semibold text-[10px] sm:text-xs tracking-wide capitalize"
               >
-                <ShieldCheck className="w-3.5 h-3.5 text-accent" />
+                <ShieldCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-accent" />
                 <span>{t("home.hero.privacy", "Women-Only • Live Online Arabic & Urdu Classes")}</span>
               </motion.div>
 
               <motion.h1
                 variants={fadeUp}
                 transition={{ duration: 0.55, delay: 0.05 }}
-                className="text-3.5xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-serif font-bold text-foreground leading-[1.12] tracking-tight"
+                className="text-[1.75rem] sm:text-4xl md:text-5xl lg:text-[3.5rem] font-serif font-bold text-foreground leading-[1.15] sm:leading-[1.12] tracking-[-0.02em] sm:tracking-tight"
               >
                 {t("home.hero.title_prefix", "Structured Arabic & Urdu")}{" "}
                 <br className="hidden sm:inline" />
@@ -105,7 +105,7 @@ export default function Home() {
               <motion.p
                 variants={fadeUp}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="text-sm sm:text-base text-muted-foreground max-w-xl leading-relaxed font-sans"
+                className="text-[0.8125rem] sm:text-base text-muted-foreground max-w-[92%] sm:max-w-xl leading-[1.6] sm:leading-relaxed font-sans"
               >
                 {t(
                   "home.hero.subtitle",
@@ -116,26 +116,25 @@ export default function Home() {
               <motion.div 
                 variants={fadeUp} 
                 transition={{ duration: 0.5, delay: 0.15 }}
-                className="flex flex-col gap-3.5"
+                className="flex flex-col gap-2.5 sm:gap-3.5"
               >
                 <CTAGroup variant="hero" trialMode />
                 
                 {/* Trust rating & Student Avatars directly under CTAs */}
                 <div className="flex items-center gap-3 pt-1">
                   <div className="flex -space-x-1.5">
-                    <div className="w-7 h-7 rounded-md bg-emerald-100 border border-background text-emerald-800 font-sans text-[10px] font-bold flex items-center justify-center shadow-sm">A</div>
-                    <div className="w-7 h-7 rounded-md bg-amber-100 border border-background text-amber-800 font-sans text-[10px] font-bold flex items-center justify-center shadow-sm">S</div>
-                    <div className="w-7 h-7 rounded-md bg-rose-100 border border-background text-rose-800 font-sans text-[10px] font-bold flex items-center justify-center shadow-sm">M</div>
-                    <div className="w-7 h-7 rounded-md bg-blue-100 border border-background text-blue-800 font-sans text-[10px] font-bold flex items-center justify-center shadow-sm">F</div>
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-emerald-100 border-2 border-background text-emerald-800 font-sans text-[9px] sm:text-[10px] font-bold flex items-center justify-center">A</div>
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-amber-100 border-2 border-background text-amber-800 font-sans text-[9px] sm:text-[10px] font-bold flex items-center justify-center">S</div>
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-rose-100 border-2 border-background text-rose-800 font-sans text-[9px] sm:text-[10px] font-bold flex items-center justify-center">M</div>
                   </div>
                   <div className="flex flex-col text-left">
                     <div className="flex gap-0.5 items-center">
                       {[1, 2, 3, 4, 5].map((s) => (
-                        <Star key={s} className="w-3 h-3 fill-accent text-accent" />
+                        <Star key={s} className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-accent text-accent" />
                       ))}
-                      <span className="text-[11px] font-bold text-foreground ml-1">4.9/5</span>
+                      <span className="text-[10px] sm:text-[11px] font-bold text-foreground ml-1">4.9/5</span>
                     </div>
-                    <span className="text-[10px] font-medium text-muted-foreground">{t("home.hero.trust_note", "Loved by 500+ sisters worldwide")}</span>
+                    <span className="text-[9px] sm:text-[10px] font-medium text-muted-foreground">{t("home.hero.trust_note", "Loved by 500+ sisters worldwide")}</span>
                   </div>
                 </div>
               </motion.div>
@@ -144,34 +143,52 @@ export default function Home() {
               <motion.div
                 variants={fadeUp}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="grid grid-cols-3 gap-2 sm:gap-4 p-4 rounded-xl bg-card border border-primary/5 shadow-sm shadow-primary/[0.01] mt-4"
+                className="grid grid-cols-3 gap-1.5 sm:gap-4 px-3 py-3 sm:p-4 rounded-xl bg-card border border-primary/5 shadow-[0_2px_12px_rgba(0,0,0,0.03)] mt-3 sm:mt-4"
               >
                 <div className="text-center sm:text-left border-r border-primary/10 last:border-r-0 pr-2">
-                  <p className="text-xl sm:text-2xl md:text-3xl font-sans font-extrabold text-foreground tracking-tight">
+                  <p className="text-lg sm:text-2xl md:text-3xl font-sans font-black text-foreground tracking-tight">
                     {stats?.totalStudents || "480"}+
                   </p>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 font-sans font-medium leading-tight">
+                  <p className="text-[9px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 font-sans font-medium leading-tight">
                     {t("home.hero.stats.students", "Sisters Learning")}
                   </p>
                 </div>
                 <div className="text-center sm:text-left border-r border-primary/10 last:border-r-0 px-2 sm:px-4">
-                  <p className="text-xl sm:text-2xl md:text-3xl font-sans font-extrabold text-foreground tracking-tight">
+                  <p className="text-lg sm:text-2xl md:text-3xl font-sans font-black text-foreground tracking-tight">
                     {stats?.countriesReached || "12"}+
                   </p>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 font-sans font-medium leading-tight">
+                  <p className="text-[9px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 font-sans font-medium leading-tight">
                     {t("home.hero.stats.countries", "Countries Reached")}
                   </p>
                 </div>
                 <div className="text-center sm:text-left pl-2 sm:pl-4">
-                  <p className="text-xl sm:text-2xl md:text-3xl font-sans font-extrabold text-foreground tracking-tight flex items-center justify-center sm:justify-start gap-1">
+                  <p className="text-lg sm:text-2xl md:text-3xl font-sans font-black text-foreground tracking-tight flex items-center justify-center sm:justify-start gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
                     <span>{t("home.hero.stats.live_label", "Live")}</span>
                   </p>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 font-sans font-medium leading-tight">
+                  <p className="text-[9px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 font-sans font-medium leading-tight">
                     {t("home.hero.stats.classes", "Interactive Classes")}
                   </p>
                 </div>
               </motion.div>
+            </motion.div>
+
+            {/* Mobile-only: Compact illustration below stats */}
+            <motion.div
+              variants={fadeUp}
+              transition={{ duration: 0.5, delay: 0.25 }}
+              className="block lg:hidden mt-2"
+            >
+              <div className="relative w-full max-w-[280px] mx-auto">
+                <div className="absolute -inset-1.5 bg-gradient-to-tr from-primary/3 to-accent/3 rounded-xl blur-xl opacity-20" />
+                <div className="relative bg-card border border-primary/5 rounded-xl p-1 shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
+                  <img
+                    src="/premium-hero-showcase.png"
+                    alt={t("home.hero.showcase_alt", "Online learning showcase")}
+                    className="w-full h-auto rounded-lg object-cover"
+                  />
+                </div>
+              </div>
             </motion.div>
 
             {/* Right Column: Premium Hero Visual/Illustration */}
@@ -221,7 +238,7 @@ export default function Home() {
 
       {/* Trust Bar */}
       <motion.div
-        className="bg-primary text-primary-foreground py-5 border-y border-primary/20"
+        className="bg-primary text-primary-foreground py-3.5 sm:py-5 border-y border-primary/20"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
@@ -229,7 +246,7 @@ export default function Home() {
       >
         <div className="container px-4">
           <motion.div
-            className="flex flex-wrap justify-center gap-3 sm:gap-6 md:gap-12 text-sm"
+            className="grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-center gap-2.5 sm:gap-6 md:gap-12 text-xs sm:text-sm"
             variants={staggerContainer}
             initial="hidden"
             whileInView="show"
@@ -245,9 +262,9 @@ export default function Home() {
                 key={label}
                 variants={fadeUp}
                 transition={{ duration: 0.4 }}
-                className="flex items-center gap-2"
+                className="flex items-center gap-1.5 sm:gap-2"
               >
-                <Icon className="w-5 h-5 text-accent" />
+                <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
                 <span className="font-medium">{label}</span>
               </motion.div>
             ))}

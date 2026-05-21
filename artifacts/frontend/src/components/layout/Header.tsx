@@ -44,7 +44,7 @@ export default function Header() {
     <motion.header
       className={`fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300 ${
         scrolled
-          ? "bg-background/98 backdrop-blur-xl border-primary/15 shadow-lg shadow-primary/5"
+          ? "bg-background/98 backdrop-blur-xl border-primary/15 shadow-md shadow-primary/[0.04]"
           : "bg-background/95 backdrop-blur-md border-primary/10"
       }`}
       initial={{ y: -80, opacity: 0 }}
@@ -53,7 +53,7 @@ export default function Header() {
     >
       <div
         className={`container mx-auto px-4 flex items-center justify-between transition-all duration-300 ${
-          scrolled ? "h-12" : "h-14 sm:h-15"
+          scrolled ? "h-11 sm:h-12" : "h-12 sm:h-15"
         }`}
       >
         {/* Logo */}
@@ -61,7 +61,7 @@ export default function Header() {
           <motion.img
             src={logoSrc}
             alt="Hareem Academy"
-            className={`w-auto object-contain transition-all duration-300 ${scrolled ? "h-9.5" : "h-11 sm:h-12.5"}`}
+            className={`w-auto object-contain transition-all duration-300 ${scrolled ? "h-8 sm:h-9.5" : "h-9 sm:h-11"}`}
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
           />
@@ -132,7 +132,7 @@ export default function Header() {
                   exit={{ rotate: 90, opacity: 0 }}
                   transition={{ duration: 0.15 }}
                 >
-                  <X className="h-6 w-6" />
+                  <X className="h-5 w-5" strokeWidth={1.75} />
                 </motion.span>
               ) : (
                 <motion.span
@@ -142,7 +142,7 @@ export default function Header() {
                   exit={{ rotate: -90, opacity: 0 }}
                   transition={{ duration: 0.15 }}
                 >
-                  <Menu className="h-6 w-6" />
+                  <Menu className="h-5 w-5" strokeWidth={1.75} />
                 </motion.span>
               )}
             </AnimatePresence>

@@ -34,27 +34,27 @@ export default function CTAGroup({
 }: CTAGroupProps) {
   const size =
     variant === "hero"
-      ? "h-10 px-5 text-sm sm:text-base rounded-md font-sans font-medium"
+      ? "h-9 sm:h-10 px-4 sm:px-5 text-sm sm:text-base rounded-md font-sans font-medium tracking-wide"
       : variant === "compact"
-        ? "h-8 px-3.5 text-xs rounded-md font-sans font-medium"
-        : "h-9 px-4 text-sm rounded-md font-sans font-medium";
+        ? "h-8 px-3.5 text-xs rounded-md font-sans font-medium tracking-wide"
+        : "h-8.5 sm:h-9 px-4 text-sm rounded-md font-sans font-medium tracking-wide";
 
   const align_classes = align === "center" ? "justify-center" : "";
 
   const primaryButton =
     theme === "dark"
-      ? "bg-accent text-primary hover:bg-accent/90 shadow-sm shadow-black/[0.01] transition-all duration-300 cursor-pointer"
-      : "bg-primary text-primary-foreground hover:bg-primary/95 shadow-sm shadow-primary/[0.015] transition-all duration-300 cursor-pointer";
+      ? "bg-accent text-primary hover:bg-accent/90 active:scale-[0.97] shadow-sm shadow-black/[0.01] transition-all duration-300 cursor-pointer"
+      : "bg-primary text-primary-foreground hover:bg-primary/95 active:scale-[0.97] shadow-sm shadow-primary/[0.015] transition-all duration-300 cursor-pointer";
 
   const secondaryButton =
     theme === "dark"
-      ? "border border-accent/20 text-accent bg-transparent hover:bg-accent/5 transition-all duration-300"
-      : "bg-[#128C7E]/8 text-[#128C7E] border border-[#128C7E]/15 hover:bg-[#128C7E]/12 transition-all duration-300";
+      ? "border border-accent/20 text-accent bg-transparent hover:bg-accent/5 active:scale-[0.97] transition-all duration-300"
+      : "bg-[#128C7E]/10 text-[#0e6b5f] border border-[#128C7E]/20 hover:bg-[#128C7E]/15 active:scale-[0.97] transition-all duration-300";
 
   const label = primaryLabel ?? (trialMode ? "Book Free Trial" : "Enroll Now");
 
   return (
-    <div className={`flex flex-col sm:flex-row flex-wrap gap-2.5 ${align_classes}`}>
+    <div className={`flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-2.5 ${align_classes}`}>
       <EnrollmentModal
         mode={trialMode ? "trial" : "enroll"}
         defaultCourseSlug={defaultCourseSlug}
