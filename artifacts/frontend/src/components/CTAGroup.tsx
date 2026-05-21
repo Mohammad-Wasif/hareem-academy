@@ -34,20 +34,22 @@ export default function CTAGroup({
 }: CTAGroupProps) {
   const size =
     variant === "hero"
-      ? "h-14 px-7 text-base sm:text-lg"
+      ? "h-12 px-6 text-sm sm:text-base rounded-xl font-sans font-medium"
       : variant === "compact"
-        ? "h-10 px-5 text-sm"
-        : "h-12 px-6 text-base";
+        ? "h-9 px-4 text-xs rounded-lg font-sans font-medium"
+        : "h-11 px-5 text-sm rounded-lg font-sans font-medium";
 
   const align_classes = align === "center" ? "justify-center" : "";
 
   const primaryButton =
     theme === "dark"
-      ? "bg-accent text-primary hover:bg-accent/90 shadow-lg shadow-black/20"
-      : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20";
+      ? "bg-accent text-primary hover:bg-accent/90 shadow-sm shadow-black/5 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer"
+      : "bg-primary text-primary-foreground hover:bg-primary/95 shadow-sm shadow-primary/5 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer";
 
   const secondaryButton =
-    "bg-[#25D366] text-white hover:bg-[#128C7E] shadow-lg shadow-[#25D366]/20";
+    theme === "dark"
+      ? "border border-accent/20 text-accent bg-transparent hover:bg-accent/5 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+      : "border border-primary/20 text-primary bg-transparent hover:bg-primary/5 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300";
 
   const label = primaryLabel ?? (trialMode ? "Book Free Trial" : "Enroll Now");
 
@@ -58,21 +60,21 @@ export default function CTAGroup({
         defaultCourseSlug={defaultCourseSlug}
       >
         <Button
-          className={`${size} font-serif rounded-full ${primaryButton} group`}
+          className={`${size} ${primaryButton} group`}
         >
-          <Sparkles className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
+          <Sparkles className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform text-accent" />
           {label}
         </Button>
       </EnrollmentModal>
       {showSecondary && (
-        <Button asChild className={`${size} font-serif rounded-full ${secondaryButton}`}>
+        <Button asChild className={`${size} ${secondaryButton}`}>
           <a
             href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2"
           >
-            <FaWhatsapp className="w-5 h-5" />
+            <FaWhatsapp className="w-4 h-4 text-[#25D366]" />
             {secondaryLabel}
           </a>
         </Button>

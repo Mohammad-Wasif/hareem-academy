@@ -60,20 +60,20 @@ export default function Home() {
       />
 
       {/* 1. HERO */}
-      <section className="relative bg-background overflow-hidden min-h-[88vh] flex items-center pt-20">
+      <section className="relative bg-background overflow-hidden min-h-[82vh] flex items-center pt-24 pb-8">
         <div className="absolute inset-0 z-0">
           <img
             src={assets["hero_bg"] || "/hero-bg.png"}
             alt=""
-            className="w-full h-full object-cover opacity-10"
+            className="w-full h-full object-cover opacity-5"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background/60" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/98 to-background/70" />
         </div>
 
-        <div className="container relative z-10 px-4 py-16 lg:py-24">
-          <div className="grid lg:grid-cols-12 gap-12 items-center">
+        <div className="container relative z-10 px-4 py-8 lg:py-14">
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
             <motion.div
-              className="lg:col-span-7 space-y-7"
+              className="lg:col-span-7 space-y-6 text-left"
               variants={staggerContainer}
               initial="hidden"
               animate="show"
@@ -81,63 +81,91 @@ export default function Home() {
               <motion.div
                 variants={fadeUp}
                 transition={{ duration: 0.5 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/10 text-primary font-medium text-sm tracking-wide"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10 text-primary font-medium text-xs tracking-wider uppercase"
               >
-                <ShieldCheck className="w-4 h-4 text-accent" />
-                {t("home.hero.privacy", "100% Female-Only • Live on Zoom")}
+                <ShieldCheck className="w-3.5 h-3.5 text-accent" />
+                <span>{t("home.hero.privacy", "Women-Only Online Arabic & Urdu Classes")}</span>
               </motion.div>
 
               <motion.h1
                 variants={fadeUp}
                 transition={{ duration: 0.55, delay: 0.05 }}
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-foreground leading-tight md:leading-[1.1]"
+                className="text-3.5xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-foreground leading-[1.15] md:leading-[1.12]"
               >
-                {t("home.hero.title_part1", "Read the Quran with ")}{" "}
+                {t("home.hero.title_prefix", "Structured Arabic & Urdu")}{" "}
+                <br className="hidden sm:inline" />
                 <span className="text-primary relative inline-block">
-                  {t("home.hero.title_part2", "meaning")}
+                  {t("home.hero.title_highlight", "Learning for Sisters")}
+                  <span className="absolute bottom-1 left-0 w-full h-[3px] bg-accent/40 rounded-full" />
                 </span>
-                <br />
-                {t("home.hero.title_part3", "— from your living room.")}
               </motion.h1>
 
               <motion.p
                 variants={fadeUp}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="text-lg text-muted-foreground max-w-xl leading-relaxed"
+                className="text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed font-sans"
               >
                 {t(
                   "home.hero.subtitle",
-                  "Live Arabic & Urdu classes for sisters, taught by qualified female teachers. Flexible timings, no judgment, your camera on a safe space."
+                  "Live online Arabic and Urdu classes taught by qualified female teachers through structured, beginner-friendly lessons designed for sisters worldwide."
                 )}
               </motion.p>
 
-              <motion.div variants={fadeUp} transition={{ duration: 0.5, delay: 0.15 }}>
+              <motion.div 
+                variants={fadeUp} 
+                transition={{ duration: 0.5, delay: 0.15 }}
+                className="flex flex-col gap-4"
+              >
                 <CTAGroup variant="hero" trialMode />
+                
+                {/* Trust rating & Student Avatars directly under CTAs */}
+                <div className="flex items-center gap-3 pt-1">
+                  <div className="flex -space-x-2">
+                    <div className="w-8 h-8 rounded-full bg-accent/15 border-2 border-background text-accent-foreground font-serif text-[10px] font-bold flex items-center justify-center shadow-sm">H</div>
+                    <div className="w-8 h-8 rounded-full bg-primary/10 border-2 border-background text-primary font-serif text-[10px] font-bold flex items-center justify-center shadow-sm">A</div>
+                    <div className="w-8 h-8 rounded-full bg-[#135E46]/10 border-2 border-background text-[#135E46] font-serif text-[10px] font-bold flex items-center justify-center shadow-sm">S</div>
+                    <div className="w-8 h-8 rounded-full bg-amber-500/10 border-2 border-background text-amber-700 font-serif text-[10px] font-bold flex items-center justify-center shadow-sm">M</div>
+                  </div>
+                  <div className="flex flex-col text-left">
+                    <div className="flex gap-0.5">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <Star key={s} className="w-3.5 h-3.5 fill-accent text-accent" />
+                      ))}
+                    </div>
+                    <span className="text-xs font-medium text-muted-foreground">{t("home.hero.trust_note", "Loved by 500+ sisters worldwide")}</span>
+                  </div>
+                </div>
               </motion.div>
 
+              {/* Redesigned Structured Stats Box */}
               <motion.div
                 variants={fadeUp}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 pt-6 border-t border-border/50"
+                className="grid grid-cols-3 gap-2 sm:gap-4 p-4 sm:p-5 rounded-2xl bg-primary/[0.02] border border-primary/10 mt-6"
               >
-                <div className="flex -space-x-2">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div
-                      key={i}
-                      className="w-9 h-9 rounded-full border-2 border-background bg-primary/10 flex items-center justify-center text-primary"
-                    >
-                      <Heart className="w-4 h-4 fill-current" />
-                    </div>
-                  ))}
-                </div>
-                <div className="text-sm">
-                  <p className="font-bold text-foreground">
-                    {stats?.totalStudents || 500}+{" "}
-                    {t("home.hero.sisters_learning", "sisters learning")}
+                <div className="text-center sm:text-left border-r border-primary/10 last:border-r-0 pr-2">
+                  <p className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-primary">
+                    {stats?.totalStudents || "480"}+
                   </p>
-                  <p className="text-muted-foreground">
-                    {t("home.hero.across", "across")} {stats?.countriesReached || 12}+{" "}
-                    {t("home.hero.countries", "countries")}
+                  <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 font-medium leading-tight">
+                    {t("home.hero.stats.students", "Sisters Learning")}
+                  </p>
+                </div>
+                <div className="text-center sm:text-left border-r border-primary/10 last:border-r-0 px-2 sm:px-4">
+                  <p className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-primary">
+                    {stats?.countriesReached || "12"}+
+                  </p>
+                  <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 font-medium leading-tight">
+                    {t("home.hero.stats.countries", "Countries Reached")}
+                  </p>
+                </div>
+                <div className="text-center sm:text-left pl-2 sm:pl-4">
+                  <p className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-accent flex items-center justify-center sm:justify-start gap-1">
+                    <span className="w-2 h-2 rounded-full bg-accent animate-pulse shrink-0" />
+                    <span>{t("home.hero.stats.live_label", "Live")}</span>
+                  </p>
+                  <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 font-medium leading-tight">
+                    {t("home.hero.stats.classes", "Interactive Classes")}
                   </p>
                 </div>
               </motion.div>
@@ -146,40 +174,40 @@ export default function Home() {
             {/* Right Column: Premium Hero Visual/Illustration */}
             <motion.div
               variants={fadeIn}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              transition={{ duration: 0.8, delay: 0.15 }}
               className="lg:col-span-5 hidden lg:block relative"
             >
-              <div className="relative w-full max-w-[420px] mx-auto">
+              <div className="relative w-full max-w-[430px] mx-auto">
                 {/* Decorative glow/gradient background behind the image */}
-                <div className="absolute -inset-4 bg-gradient-to-tr from-primary/20 to-accent/20 rounded-[2.5rem] blur-2xl opacity-70 animate-pulse" />
+                <div className="absolute -inset-4 bg-gradient-to-tr from-primary/15 to-accent/15 rounded-[2.5rem] blur-2xl opacity-60" />
                 
                 {/* Visual card frame */}
-                <div className="relative bg-card/60 backdrop-blur-md border border-border/80 rounded-[2.5rem] p-4 shadow-2xl hover:border-primary/20 transition-all duration-500">
+                <div className="relative bg-card/75 backdrop-blur-lg border border-border/80 rounded-[2.5rem] p-3.5 shadow-2xl hover:border-primary/15 transition-all duration-500">
                   <img
-                    src="/hero-showcase.png"
+                    src="/premium-hero-showcase.png"
                     alt={t("home.hero.showcase_alt", "Online learning showcase")}
-                    className="w-full h-auto rounded-[2rem] object-cover shadow-inner hover:scale-[1.02] transition-transform duration-500"
+                    className="w-full h-auto rounded-[2rem] object-cover hover:scale-[1.01] transition-transform duration-500"
                   />
                   
-                  {/* Floating badge 1: Live Class */}
-                  <div className="absolute -bottom-4 -left-6 bg-background/95 backdrop-blur border border-border shadow-lg rounded-2xl p-3 flex items-center gap-3 animate-bounce" style={{ animationDuration: '4s' }}>
-                    <div className="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-600">
-                      <span className="w-2.5 h-2.5 rounded-full bg-rose-600 animate-ping" />
+                  {/* Floating badge 1: sisters-only */}
+                  <div className="absolute -bottom-4 -left-6 bg-background/98 border border-border/80 shadow-lg rounded-2xl p-3 flex items-center gap-3 hover:-translate-y-1 transition-transform duration-300">
+                    <div className="w-8 h-8 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center text-primary">
+                      <ShieldCheck className="w-4 h-4 text-accent" />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-foreground">Live Class</p>
-                      <p className="text-[10px] text-muted-foreground">In progress now</p>
+                      <p className="text-xs font-bold text-foreground">Sisters Only</p>
+                      <p className="text-[10px] text-muted-foreground">100% Private Classes</p>
                     </div>
                   </div>
 
                   {/* Floating badge 2: Stars/Rating */}
-                  <div className="absolute -top-4 -right-6 bg-background/95 backdrop-blur border border-border shadow-lg rounded-2xl p-3 flex items-center gap-2">
+                  <div className="absolute -top-4 -right-6 bg-background/98 border border-border/80 shadow-lg rounded-2xl p-3 flex items-center gap-2 hover:translate-y-1 transition-transform duration-300">
                     <div className="flex gap-0.5">
                       {[1, 2, 3, 4, 5].map((s) => (
-                        <Star key={s} className="w-3.5 h-3.5 fill-accent text-accent" />
+                        <Star key={s} className="w-3 h-3 fill-accent text-accent" />
                       ))}
                     </div>
-                    <span className="text-xs font-bold text-foreground">4.9/5 Rating</span>
+                    <span className="text-[10px] font-bold text-foreground">Qualified Teachers</span>
                   </div>
                 </div>
               </div>

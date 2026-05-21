@@ -53,19 +53,19 @@ export default function Header() {
     >
       <div
         className={`container mx-auto px-4 flex items-center justify-between transition-all duration-300 ${
-          scrolled ? "h-16" : "h-20"
+          scrolled ? "h-14" : "h-18"
         }`}
       >
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
+        <Link href="/" className="flex items-center gap-3 group">
           <motion.img
             src={logoSrc}
             alt="Hareem Academy"
-            className={`w-auto object-contain transition-all duration-300 ${scrolled ? "h-10" : "h-12 sm:h-14"}`}
+            className={`w-auto object-contain transition-all duration-300 ${scrolled ? "h-11" : "h-14 sm:h-16"}`}
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
           />
-          <span className="font-serif font-bold text-base sm:text-xl text-primary group-hover:text-primary/80 transition-colors">
+          <span className="font-serif font-semibold text-lg sm:text-2xl tracking-wide text-primary group-hover:text-primary/80 transition-colors">
             {t("common.site_name", "Hareem Academy")}
           </span>
         </Link>
@@ -97,19 +97,18 @@ export default function Header() {
             );
           })}
 
-          <Button
-            asChild
-            variant="outline"
-            className="rounded-full border-[#25D366]/30 text-[#25D366] hover:bg-[#25D366]/10 hover:text-[#128C7E] gap-2"
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-[#128C7E] transition-colors py-1.5"
           >
-            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
-              <FaWhatsapp className="w-4 h-4" />
-              WhatsApp
-            </a>
-          </Button>
+            <FaWhatsapp className="w-4 h-4 text-[#25D366]" />
+            <span>WhatsApp</span>
+          </a>
 
           <EnrollmentModal mode="trial">
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90 font-serif text-base tracking-wide rounded-full px-6 shadow-md shadow-primary/20">
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/95 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 font-serif text-sm tracking-wide rounded-full px-6 py-2 shadow-md shadow-primary/10 cursor-pointer">
               {t("common.book_trial")}
             </Button>
           </EnrollmentModal>
@@ -191,28 +190,28 @@ export default function Header() {
               })}
 
               <motion.div
-                className="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-border/50"
+                className="flex flex-col gap-2 mt-3 pt-3 border-t border-border/50"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.22 }}
               >
+                <EnrollmentModal mode="trial">
+                  <Button
+                    className="bg-primary text-primary-foreground rounded-full w-full font-serif h-11 text-base shadow-sm cursor-pointer"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {t("common.book_trial", "Book Free Trial")}
+                  </Button>
+                </EnrollmentModal>
                 <Button
                   asChild
                   variant="outline"
-                  className="rounded-full border-[#25D366]/30 text-[#25D366] gap-1.5"
+                  className="rounded-full border-primary/20 text-primary hover:bg-primary/5 h-11 text-sm gap-1.5"
                 >
                   <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
-                    <FaWhatsapp className="w-4 h-4" /> Chat
+                    <FaWhatsapp className="w-4 h-4 text-[#25D366]" /> Chat on WhatsApp
                   </a>
                 </Button>
-                <EnrollmentModal mode="trial">
-                  <Button
-                    className="bg-primary text-primary-foreground rounded-full w-full"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {t("common.enroll_now")}
-                  </Button>
-                </EnrollmentModal>
               </motion.div>
             </div>
           </motion.div>
