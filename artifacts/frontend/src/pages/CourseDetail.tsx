@@ -324,7 +324,7 @@ export default function CourseDetail() {
 
                 <Button
                   asChild
-                  className="w-full h-12 font-sans text-base rounded-lg bg-[#0F4D36] text-white hover:bg-[#0A3828] border border-[#D6B25E]/20 shadow-sm font-semibold cursor-pointer"
+                  className="w-full h-12 font-sans text-base rounded-lg bg-[#0F4D36] text-white hover:bg-[#0A3828] border border-[#ECC565]/20 shadow-sm font-semibold cursor-pointer"
                 >
                   <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
                     <FaWhatsapp className="w-4 h-4 mr-2" /> {t("common.chat_whatsapp", "Speak With Our Team")}
@@ -374,7 +374,7 @@ export default function CourseDetail() {
         )}
         <Button
           asChild
-          className="h-12 px-4 rounded-lg bg-[#0F4D36] text-white hover:bg-[#0A3828] border border-[#D6B25E]/20 shadow-sm cursor-pointer"
+          className="h-12 px-4 rounded-lg bg-[#0F4D36] text-white hover:bg-[#0A3828] border border-[#ECC565]/20 shadow-sm cursor-pointer"
           aria-label="WhatsApp"
         >
           <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">

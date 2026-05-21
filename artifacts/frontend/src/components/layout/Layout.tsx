@@ -6,9 +6,9 @@ import LeadMagnet from "../LeadMagnet";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex flex-col min-h-[100dvh]">
+    <div className="flex flex-col min-h-[100dvh] bg-background">
       <Header />
-      <main className="flex-grow pt-20">
+      <main className="flex-grow pt-12 sm:pt-14 bg-background">
         {children}
       </main>
       <Footer />

@@ -43,8 +43,8 @@ export default function Header() {
   return (
     <motion.header
       className={`fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300 ${scrolled
-          ? "bg-[#0F4D36]/95 backdrop-blur-xl border-[#D6B25E]/20 shadow-lg shadow-black/[0.08]"
-          : "bg-[#0F4D36]/90 backdrop-blur-md border-[#D6B25E]/10"
+          ? "bg-[#0F4D36]/95 backdrop-blur-xl border-[#ECC565]/20 shadow-lg shadow-black/[0.08]"
+          : "bg-[#0F4D36]/90 backdrop-blur-md border-[#ECC565]/10"
         }`}
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
@@ -63,7 +63,7 @@ export default function Header() {
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
           />
-          <span className="font-serif font-bold text-base sm:text-lg md:text-xl tracking-[0.12em] text-[#D6B25E] group-hover:text-[#D6B25E]/90 transition-colors uppercase">
+          <span className="font-serif font-bold text-base sm:text-lg md:text-xl tracking-[0.12em] text-[#ECC565] group-hover:text-[#ECC565]/90 transition-colors uppercase">
             {t("common.site_name", "Hareem Academy")}
           </span>
         </Link>
@@ -78,14 +78,14 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`relative text-sm font-medium transition-colors duration-300 py-1 nav-link-glow ${isActive ? "text-[#D6B25E]" : "text-white/80 hover:text-[#D6B25E]"
+                className={`relative text-sm font-medium transition-colors duration-300 py-1 nav-link-glow ${isActive ? "text-[#ECC565]" : "text-white/80 hover:text-[#ECC565]"
                   }`}
               >
                 {item.label}
                 {/* Animated active underline */}
                 {isActive && (
                   <motion.span
-                    className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-[#D6B25E] rounded-full"
+                    className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-[#ECC565] rounded-full"
                     layoutId="nav-active-underline"
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
@@ -98,14 +98,14 @@ export default function Header() {
             href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-sm font-medium text-white/80 hover:text-[#D6B25E] transition-colors py-1.5"
+            className="flex items-center gap-1.5 text-sm font-medium text-white/80 hover:text-[#ECC565] transition-colors py-1.5"
           >
-            <FaWhatsapp className="w-4 h-4 text-[#D6B25E]" />
+            <FaWhatsapp className="w-4 h-4 text-[#ECC565]" />
             <span>WhatsApp</span>
           </a>
 
           <EnrollmentModal mode="trial">
-            <Button className="bg-[#D6B25E] text-[#0F4D36] hover:bg-[#D6B25E]/90 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 font-sans text-sm rounded-lg px-4.5 h-9 font-semibold shadow-sm cursor-pointer">
+            <Button className="bg-[#ECC565] text-[#0F4D36] hover:bg-[#ECC565]/90 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 font-sans text-sm rounded-lg px-4.5 h-9 font-semibold shadow-sm cursor-pointer">
               {t("common.book_trial", "Begin Your Journey")}
             </Button>
           </EnrollmentModal>
@@ -115,7 +115,7 @@ export default function Header() {
         <div className="flex items-center gap-2 md:hidden">
           <LanguageSwitcher />
           <motion.button
-            className="p-2 text-[#D6B25E] rounded-lg hover:bg-white/10 transition-colors"
+            className="p-2 text-[#ECC565] rounded-lg hover:bg-white/10 transition-colors"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
             whileTap={{ scale: 0.9 }}
@@ -156,7 +156,7 @@ export default function Header() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
-            className="md:hidden overflow-hidden bg-[#0F4D36] border-b border-[#D6B25E]/20 shadow-xl shadow-black/10"
+            className="md:hidden overflow-hidden bg-[#0F4D36] border-b border-[#ECC565]/20 shadow-xl shadow-black/10"
           >
             <div className="p-4 flex flex-col gap-1">
               {navItems.map((item, index) => {
@@ -172,12 +172,12 @@ export default function Header() {
                       href={item.href}
                       onClick={() => setIsOpen(false)}
                       className={`flex items-center gap-2 px-4 py-2.5 text-base font-medium rounded-xl transition-colors ${isActive
-                          ? "bg-[#D6B25E]/15 text-[#D6B25E]"
+                          ? "bg-[#ECC565]/15 text-[#ECC565]"
                           : "text-white/80 hover:bg-white/5 hover:text-white"
                         }`}
                     >
                       {isActive && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#D6B25E] shrink-0" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#ECC565] shrink-0" />
                       )}
                       {item.label}
                     </Link>
@@ -193,10 +193,10 @@ export default function Header() {
               >
                 <EnrollmentModal mode="trial">
                   <Button
-                    className="bg-[#D6B25E] text-[#0F4D36] hover:bg-[#D6B25E]/90 rounded-lg w-full font-sans h-10 text-base shadow-sm font-semibold cursor-pointer"
+                    className="bg-[#ECC565] text-[#0F4D36] hover:bg-[#ECC565]/90 rounded-lg w-full font-sans h-10 text-base shadow-sm font-semibold cursor-pointer"
                     onClick={() => setIsOpen(false)}
                   >
-                    {t("common.book_trial", "Book Free Trial")}
+                    {t("common.book_trial", "Begin Your Journey")}
                   </Button>
                 </EnrollmentModal>
                 <Button
@@ -205,7 +205,7 @@ export default function Header() {
                   className="rounded-lg border-white/20 text-white hover:bg-white/5 h-10 text-sm font-sans gap-1.5"
                 >
                   <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
-                    <FaWhatsapp className="w-4 h-4 text-[#D6B25E]" /> Speak With Our Team
+                    <FaWhatsapp className="w-4 h-4 text-[#ECC565]" /> Speak With Our Team
                   </a>
                 </Button>
               </motion.div>
