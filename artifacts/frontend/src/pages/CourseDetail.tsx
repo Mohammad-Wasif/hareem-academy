@@ -300,21 +300,21 @@ export default function CourseDetail() {
                 )}
 
                 {(course as any).enrollmentStatus === "closed" ? (
-                  <Button disabled className="w-full h-12 font-serif text-base rounded-full opacity-50">
+                  <Button disabled className="w-full h-12 font-sans text-base rounded-lg font-semibold opacity-50">
                     Enrollments Closed
                   </Button>
                 ) : (
                   <>
                     <EnrollmentModal mode="trial" defaultCourseSlug={course.slug}>
-                      <Button className="w-full h-12 font-serif text-base rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
-                        <Sparkles className="w-4 h-4 mr-2" /> {t("common.book_trial", "Book Free Trial")}
+                      <Button className="w-full h-12 font-sans text-base rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 font-semibold cursor-pointer">
+                        <Sparkles className="w-4 h-4 mr-2" /> {t("common.book_trial", "Begin Your Journey")}
                       </Button>
                     </EnrollmentModal>
 
                     <EnrollmentModal defaultCourseSlug={course.slug}>
                       <Button
                         variant="outline"
-                        className="w-full h-12 font-serif text-base rounded-full border-primary/30 text-primary hover:bg-primary/5"
+                        className="w-full h-12 font-sans text-base rounded-lg border-primary/30 text-primary hover:bg-primary/5 font-semibold cursor-pointer"
                       >
                         {t("common.enroll_now", "Enroll Now")}
                       </Button>
@@ -324,10 +324,10 @@ export default function CourseDetail() {
 
                 <Button
                   asChild
-                  className="w-full h-12 font-serif text-base rounded-full bg-[#25D366] text-white hover:bg-[#128C7E]"
+                  className="w-full h-12 font-sans text-base rounded-lg bg-[#0F4D36] text-white hover:bg-[#0A3828] border border-[#D6B25E]/20 shadow-sm font-semibold cursor-pointer"
                 >
                   <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
-                    <FaWhatsapp className="w-4 h-4 mr-2" /> {t("common.chat_whatsapp", "Chat on WhatsApp")}
+                    <FaWhatsapp className="w-4 h-4 mr-2" /> {t("common.chat_whatsapp", "Speak With Our Team")}
                   </a>
                 </Button>
 
@@ -362,19 +362,19 @@ export default function CourseDetail() {
       {/* MOBILE STICKY BAR */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-background/95 backdrop-blur border-t border-border p-3 flex gap-2 shadow-2xl">
         {(course as any).enrollmentStatus === "closed" ? (
-          <Button disabled className="flex-1 h-12 rounded-full opacity-50">
+          <Button disabled className="flex-1 h-12 rounded-lg opacity-50 font-sans font-semibold">
             Enrollments Closed
           </Button>
         ) : (
           <EnrollmentModal mode="trial" defaultCourseSlug={course.slug}>
-            <Button className="flex-1 h-12 rounded-full bg-primary text-primary-foreground font-serif">
-              <Sparkles className="w-4 h-4 mr-1.5" /> {t("common.free_trial_btn", "Free Trial")}
+            <Button className="flex-1 h-12 rounded-lg bg-primary text-primary-foreground font-sans font-semibold cursor-pointer">
+              <Sparkles className="w-4 h-4 mr-1.5" /> {t("common.book_trial", "Begin Your Journey")}
             </Button>
           </EnrollmentModal>
         )}
         <Button
           asChild
-          className="h-12 px-4 rounded-full bg-[#25D366] text-white"
+          className="h-12 px-4 rounded-lg bg-[#0F4D36] text-white hover:bg-[#0A3828] border border-[#D6B25E]/20 shadow-sm cursor-pointer"
           aria-label="WhatsApp"
         >
           <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">

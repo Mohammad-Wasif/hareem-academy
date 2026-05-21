@@ -9,7 +9,7 @@
   },
   "common": {
     "enroll_now": "Enroll Now",
-    "book_trial": "Book Free Trial",
+    "book_trial": "Begin Your Journey",
     "learn_more": "Learn More",
     "message_us": "Message Us on WhatsApp",
     "logo_url": "",
@@ -200,10 +200,12 @@
       "countries": "countries"
     },
     "trust": {
-      "teachers": "Female teachers only",
-      "age": "No age limit",
-      "zoom": "Live on Zoom",
-      "trial": "Free trial class"
+      "teachers": "Female Teachers Only",
+      "privacy": "Full Privacy",
+      "live_classes": "Live Online Classes",
+      "flexible_timings": "Flexible Timings",
+      "beginner_friendly": "Beginner Friendly",
+      "small_batches": "Small Interactive Batches"
     },
     "pain": {
       "label": "We get it",

@@ -236,44 +236,68 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trust Bar */}
-      <motion.div
-        className="bg-primary text-primary-foreground py-3.5 sm:py-5 border-y border-primary/20"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="container px-4">
-          <motion.div
-            className="grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-center gap-2.5 sm:gap-6 md:gap-12 text-xs sm:text-sm"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-          >
-            {[
-              { icon: ShieldCheck, label: t("home.trust.teachers", "Female teachers only") },
-              { icon: Heart, label: t("home.trust.age", "No age limit") },
-              { icon: Video, label: t("home.trust.zoom", "Live on Zoom") },
-              { icon: Award, label: t("home.trust.trial", "Free trial class") },
-            ].map(({ icon: Icon, label }) => (
-              <motion.div
-                key={label}
-                variants={fadeUp}
-                transition={{ duration: 0.4 }}
-                className="flex items-center gap-1.5 sm:gap-2 min-w-0 w-full"
-              >
-                <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
-                <span className="font-medium leading-tight break-words">{label}</span>
-              </motion.div>
-            ))}
-          </motion.div>
+      {/* Trust Ticker (Infinite Scrolling Marquee) */}
+      <div className="bg-primary text-primary-foreground py-4 border-y border-primary/20 overflow-hidden relative select-none">
+        <div className="flex w-max animate-marquee">
+          {/* First set of badges */}
+          <div className="flex items-center gap-10 md:gap-20 px-5 md:px-10 shrink-0">
+            <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
+              <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
+              {t("home.trust.teachers", "Female Teachers Only")}
+            </span>
+            <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
+              <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
+              {t("home.trust.privacy", "Full Privacy")}
+            </span>
+            <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
+              <Video className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
+              {t("home.trust.live_classes", "Live Online Classes")}
+            </span>
+            <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
+              <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
+              {t("home.trust.flexible_timings", "Flexible Timings")}
+            </span>
+            <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
+              <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
+              {t("home.trust.beginner_friendly", "Beginner Friendly")}
+            </span>
+            <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
+              <Award className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
+              {t("home.trust.small_batches", "Small Interactive Batches")}
+            </span>
+          </div>
+          {/* Second set of badges for looping */}
+          <div className="flex items-center gap-10 md:gap-20 px-5 md:px-10 shrink-0">
+            <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
+              <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
+              {t("home.trust.teachers", "Female Teachers Only")}
+            </span>
+            <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
+              <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
+              {t("home.trust.privacy", "Full Privacy")}
+            </span>
+            <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
+              <Video className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
+              {t("home.trust.live_classes", "Live Online Classes")}
+            </span>
+            <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
+              <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
+              {t("home.trust.flexible_timings", "Flexible Timings")}
+            </span>
+            <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
+              <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
+              {t("home.trust.beginner_friendly", "Beginner Friendly")}
+            </span>
+            <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
+              <Award className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
+              {t("home.trust.small_batches", "Small Interactive Batches")}
+            </span>
+          </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* 2. PAIN */}
-      <section className="py-12 lg:py-20 bg-background">
+      <section className="py-14 sm:py-16 lg:py-20 bg-background">
         <div className="container px-4 max-w-5xl mx-auto">
           <motion.div
             className="text-center max-w-2xl mx-auto mb-12"
@@ -320,13 +344,13 @@ export default function Home() {
                 variants={fadeUp}
                 transition={{ duration: 0.45 }}
                 whileHover={{ y: -4, transition: { type: "spring", stiffness: 300 } }}
-                className="bg-card border border-border rounded-2xl p-6 text-center"
+                className="bg-card border border-border rounded-2xl p-8 sm:p-9 text-center flex flex-col justify-start min-h-[290px] sm:min-h-[310px]"
               >
-                <div className="w-12 h-12 mx-auto bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mb-4">
-                  <item.icon className="w-6 h-6" />
+                <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto bg-rose-100/60 text-rose-600 rounded-full flex items-center justify-center mb-5 shrink-0">
+                  <item.icon className="w-7 h-7 sm:w-8 sm:h-8" />
                 </div>
-                <h3 className="font-bold text-foreground mb-2">{item.title}</h3>
-                <p className="text-sm text-muted-foreground">{item.desc}</p>
+                <h3 className="font-serif font-bold text-foreground text-lg sm:text-xl mb-1.5 leading-snug">{item.title}</h3>
+                <p className="text-sm sm:text-base text-muted-foreground font-sans leading-relaxed">{item.desc}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -334,7 +358,7 @@ export default function Home() {
       </section>
 
       {/* 3. TRANSFORMATION */}
-      <section className="py-12 lg:py-20 bg-card">
+      <section className="py-14 sm:py-16 lg:py-20 bg-card">
         <div className="container px-4 max-w-5xl mx-auto">
           <motion.div
             className="text-center max-w-2xl mx-auto mb-12"
@@ -384,7 +408,7 @@ export default function Home() {
       </section>
 
       {/* 4. COURSES */}
-      <section className="py-12 lg:py-20 bg-background relative overflow-hidden">
+      <section className="py-14 sm:py-16 lg:py-20 bg-background relative overflow-hidden">
 
         <div className="container px-4">
           <motion.div
@@ -429,7 +453,7 @@ export default function Home() {
       </section>
 
       {/* 5. TRUST — Why us */}
-      <section className="py-12 lg:py-20 bg-primary text-primary-foreground relative overflow-hidden">
+      <section className="py-14 sm:py-16 lg:py-20 bg-primary text-primary-foreground relative overflow-hidden">
 
         <div className="container px-4 relative z-10">
           <motion.div
@@ -477,13 +501,13 @@ export default function Home() {
                 variants={fadeUp}
                 transition={{ duration: 0.45 }}
                 whileHover={{ y: -4, transition: { type: "spring", stiffness: 300 } }}
-                className="bg-primary-foreground/5 border border-primary-foreground/10 rounded-2xl p-7 text-center"
+                className="bg-primary-foreground/5 border border-primary-foreground/10 rounded-2xl p-8 sm:p-9 text-center flex flex-col justify-start min-h-[290px] sm:min-h-[310px]"
               >
-                <div className="w-14 h-14 mx-auto bg-accent rounded-2xl flex items-center justify-center text-primary mb-5">
-                  <feature.icon className="w-7 h-7" />
+                <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto bg-accent rounded-2xl flex items-center justify-center text-primary mb-5 shrink-0">
+                  <feature.icon className="w-7 h-7 sm:w-8 sm:h-8" />
                 </div>
-                <h3 className="font-serif font-bold text-xl mb-2 text-white">{feature.title}</h3>
-                <p className="text-primary-foreground/80 text-sm">{feature.desc}</p>
+                <h3 className="font-serif font-bold text-xl mb-1.5 text-white leading-snug">{feature.title}</h3>
+                <p className="text-primary-foreground/80 text-sm sm:text-base font-sans leading-relaxed">{feature.desc}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -495,7 +519,7 @@ export default function Home() {
       </section>
 
       {/* 6. TESTIMONIALS */}
-      <section className="py-12 lg:py-20 bg-background">
+      <section className="py-14 sm:py-16 lg:py-20 bg-background">
         <div className="container px-4 max-w-6xl mx-auto">
           <motion.div
             className="flex flex-col md:flex-row justify-between items-end gap-6 mb-10"
@@ -574,7 +598,7 @@ export default function Home() {
       </section>
 
       {/* 8. FINAL CTA */}
-      <section className="py-12 lg:py-20 bg-primary text-center px-4 relative overflow-hidden">
+      <section className="py-14 sm:py-16 lg:py-20 bg-primary text-center px-4 relative overflow-hidden">
         <motion.div
           className="container relative z-10 max-w-3xl mx-auto space-y-6"
           variants={staggerContainer}

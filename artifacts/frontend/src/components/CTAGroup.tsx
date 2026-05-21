@@ -28,30 +28,30 @@ export default function CTAGroup({
   theme = "light",
   trialMode = true,
   primaryLabel,
-  secondaryLabel = "Chat on WhatsApp",
+  secondaryLabel = "Speak With Our Team",
   defaultCourseSlug,
   showSecondary = true,
 }: CTAGroupProps) {
   const size =
     variant === "hero"
-      ? "h-9 sm:h-10 px-4 sm:px-5 text-sm sm:text-base rounded-md font-sans font-medium tracking-wide"
+      ? "h-9 sm:h-10 px-4 sm:px-5 text-sm sm:text-base rounded-lg font-sans font-medium tracking-wide"
       : variant === "compact"
         ? "h-8 px-3.5 text-xs rounded-md font-sans font-medium tracking-wide"
-        : "h-8.5 sm:h-9 px-4 text-sm rounded-md font-sans font-medium tracking-wide";
+        : "h-8.5 sm:h-9 px-4 text-sm rounded-lg font-sans font-medium tracking-wide";
 
   const align_classes = align === "center" ? "justify-center" : "";
 
   const primaryButton =
     theme === "dark"
-      ? "bg-accent text-primary hover:bg-accent/90 active:scale-[0.97] shadow-sm shadow-black/[0.01] transition-all duration-300 cursor-pointer"
-      : "bg-primary text-primary-foreground hover:bg-primary/95 active:scale-[0.97] shadow-sm shadow-primary/[0.015] transition-all duration-300 cursor-pointer";
+      ? "bg-accent text-[#0F4D36] hover:bg-accent/90 active:scale-[0.97] shadow-md shadow-accent/10 transition-all duration-300 cursor-pointer font-semibold"
+      : "bg-primary text-primary-foreground hover:bg-primary/95 active:scale-[0.97] shadow-md shadow-primary/10 transition-all duration-300 cursor-pointer font-semibold";
 
   const secondaryButton =
     theme === "dark"
       ? "border border-accent/20 text-accent bg-transparent hover:bg-accent/5 active:scale-[0.97] transition-all duration-300"
-      : "bg-[#128C7E]/10 text-[#0e6b5f] border border-[#128C7E]/20 hover:bg-[#128C7E]/15 active:scale-[0.97] transition-all duration-300";
+      : "bg-[#0F4D36]/5 text-[#0F4D36] border border-[#0F4D36]/15 hover:bg-[#0F4D36]/10 active:scale-[0.97] transition-all duration-300";
 
-  const label = primaryLabel ?? (trialMode ? "Book Free Trial" : "Enroll Now");
+  const label = primaryLabel ?? (trialMode ? "Begin Your Journey" : "Enroll Now");
 
   return (
     <div className={`flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-2.5 ${align_classes}`}>

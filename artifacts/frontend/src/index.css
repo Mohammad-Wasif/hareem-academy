@@ -52,25 +52,25 @@
 }
 
 :root {
-  --background: 42 66% 96%;
-  --foreground: 135 48% 15%;
-  --border: 42 40% 85%;
-  --input: 42 40% 85%;
-  --ring: 135 48% 23%;
-  --card: 42 66% 98%;
-  --card-foreground: 135 48% 15%;
-  --card-border: 42 40% 88%;
-  --popover: 42 66% 98%;
-  --popover-foreground: 135 48% 15%;
-  --popover-border: 42 40% 88%;
-  --primary: 135 48% 23%;
-  --primary-foreground: 42 66% 96%;
-  --secondary: 135 15% 90%;
-  --secondary-foreground: 135 48% 23%;
-  --muted: 42 30% 90%;
-  --muted-foreground: 135 20% 40%;
-  --accent: 46 76% 59%;
-  --accent-foreground: 135 48% 15%;
+  --background: 40 31% 95%;
+  --foreground: 159 70% 13%;
+  --border: 40 20% 87%;
+  --input: 40 20% 87%;
+  --ring: 158 67% 18%;
+  --card: 40 31% 98%;
+  --card-foreground: 159 70% 13%;
+  --card-border: 40 20% 87%;
+  --popover: 40 31% 98%;
+  --popover-foreground: 159 70% 13%;
+  --popover-border: 40 20% 87%;
+  --primary: 158 67% 18%;
+  --primary-foreground: 40 31% 95%;
+  --secondary: 158 20% 90%;
+  --secondary-foreground: 158 67% 18%;
+  --muted: 40 20% 90%;
+  --muted-foreground: 158 25% 40%;
+  --accent: 42 60% 60%;
+  --accent-foreground: 159 70% 13%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
 
@@ -87,8 +87,8 @@
   --accent-border: hsl(var(--accent));
   --destructive-border: hsl(var(--destructive));
   
-  --elevate-1: rgba(0,0,0, .03);
-  --elevate-2: rgba(0,0,0, .08);
+  --elevate-1: rgba(0,0,0, .02);
+  --elevate-2: rgba(0,0,0, .05);
 }
 
 .dark {
@@ -145,3 +145,48 @@
     font-family: var(--font-arabic);
   }
 }
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 35s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+.nav-link-glow {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.nav-link-glow::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #D6B25E;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 8px #D6B25E;
+}
+
+.nav-link-glow:hover::after {
+  width: 100%;
+}
+
+.nav-link-glow:hover {
+  text-shadow: 0 0 8px rgba(214, 178, 94, 0.4);
+}
+
