@@ -42,19 +42,17 @@ export default function Header() {
 
   return (
     <motion.header
-      className={`fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300 ${
-        scrolled
+      className={`fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300 ${scrolled
           ? "bg-[#0F4D36]/95 backdrop-blur-xl border-[#D6B25E]/20 shadow-lg shadow-black/[0.08]"
           : "bg-[#0F4D36]/90 backdrop-blur-md border-[#D6B25E]/10"
-      }`}
+        }`}
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
       <div
-        className={`container mx-auto px-4 flex items-center justify-between transition-all duration-300 ${
-          scrolled ? "h-11 sm:h-12" : "h-12 sm:h-14"
-        }`}
+        className={`container mx-auto px-4 flex items-center justify-between transition-all duration-300 ${scrolled ? "h-11 sm:h-12" : "h-12 sm:h-14"
+          }`}
       >
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
@@ -80,9 +78,8 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`relative text-sm font-medium transition-colors duration-300 py-1 nav-link-glow ${
-                  isActive ? "text-[#D6B25E]" : "text-white/80 hover:text-[#D6B25E]"
-                }`}
+                className={`relative text-sm font-medium transition-colors duration-300 py-1 nav-link-glow ${isActive ? "text-[#D6B25E]" : "text-white/80 hover:text-[#D6B25E]"
+                  }`}
               >
                 {item.label}
                 {/* Animated active underline */}
@@ -174,11 +171,10 @@ export default function Header() {
                     <Link
                       href={item.href}
                       onClick={() => setIsOpen(false)}
-                      className={`flex items-center gap-2 px-4 py-2.5 text-base font-medium rounded-xl transition-colors ${
-                        isActive
+                      className={`flex items-center gap-2 px-4 py-2.5 text-base font-medium rounded-xl transition-colors ${isActive
                           ? "bg-[#D6B25E]/15 text-[#D6B25E]"
                           : "text-white/80 hover:bg-white/5 hover:text-white"
-                      }`}
+                        }`}
                     >
                       {isActive && (
                         <span className="w-1.5 h-1.5 rounded-full bg-[#D6B25E] shrink-0" />
@@ -200,7 +196,7 @@ export default function Header() {
                     className="bg-[#D6B25E] text-[#0F4D36] hover:bg-[#D6B25E]/90 rounded-lg w-full font-sans h-10 text-base shadow-sm font-semibold cursor-pointer"
                     onClick={() => setIsOpen(false)}
                   >
-                    {t("common.book_trial", "Begin Your Journey")}
+                    {t("common.book_trial", "Book Free Trial")}
                   </Button>
                 </EnrollmentModal>
                 <Button

@@ -11,8 +11,11 @@ import {
   CheckCircle2,
   Award,
   ArrowRight,
+  Search,
+  MessageSquare,
+  GraduationCap,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import CourseCard from "@/components/CourseCard";
 import CTAGroup from "@/components/CTAGroup";
 import TestimonialCard from "@/components/TestimonialCard";
@@ -357,9 +360,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. TRANSFORMATION */}
+      {/* 3. HOW ENROLLMENT WORKS */}
       <section className="py-14 sm:py-16 lg:py-20 bg-card">
-        <div className="container px-4 max-w-5xl mx-auto">
+        <div className="container px-4 max-w-6xl mx-auto">
           <motion.div
             className="text-center max-w-2xl mx-auto mb-12"
             variants={fadeUp}
@@ -369,40 +372,84 @@ export default function Home() {
             transition={{ duration: 0.5 }}
           >
             <span className="inline-block text-xs font-bold tracking-widest text-primary uppercase mb-3">
-              {t("home.transformation.label", "Imagine")}
+              {t("home.enrollment.label", "Steps")}
             </span>
             <h2 className="font-serif font-bold text-3xl md:text-4xl text-foreground">
-              {t("home.transformation.title", "Six months from now, in shaa Allah…")}
+              {t("home.enrollment.title", "How Enrollment Works")}
             </h2>
           </motion.div>
 
-          <motion.div
-            className="grid md:grid-cols-2 gap-5"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-          >
-            {[
-              t("home.transformation.item1", "Reading the Quran with proper Tajweed, not just pronunciation"),
-              t("home.transformation.item2", "Understanding what you're reciting in Salah"),
-              t("home.transformation.item3", "Teaching basic Arabic to your children at home"),
-              t("home.transformation.item4", "A community of sisters from 12+ countries by your side"),
-            ].map((item, i) => (
-              <motion.div
-                key={i}
-                variants={fadeUp}
-                transition={{ duration: 0.4 }}
-                className="flex items-start gap-3 bg-background p-5 rounded-xl border border-border"
-              >
-                <CheckCircle2 className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-                <span className="text-foreground/90">{item}</span>
-              </motion.div>
-            ))}
-          </motion.div>
+          <div className="relative">
+            {/* Horizontal timeline line for desktop */}
+            <div className="hidden md:block absolute top-[48px] left-[12%] right-[12%] h-[1px] bg-gradient-to-r from-accent/0 via-accent/40 to-accent/0 z-0" />
+            
+            <motion.div
+              className="grid sm:grid-cols-2 md:grid-cols-4 gap-8 relative z-10"
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+            >
+              {[
+                {
+                  step: "01",
+                  icon: Search,
+                  title: t("home.enrollment.step1_title", "Choose Your Course"),
+                  desc: t("home.enrollment.step1_desc", "Browse Arabic & Urdu programs and select your preferred level and batch."),
+                },
+                {
+                  step: "02",
+                  icon: MessageSquare,
+                  title: t("home.enrollment.step2_title", "Connect With Our Team"),
+                  desc: t("home.enrollment.step2_desc", "Get guidance about timings, course structure, and learning path."),
+                },
+                {
+                  step: "03",
+                  icon: Video,
+                  title: t("home.enrollment.step3_title", "Attend a Trial Class"),
+                  desc: t("home.enrollment.step3_desc", "Experience the classroom environment before enrollment."),
+                },
+                {
+                  step: "04",
+                  icon: GraduationCap,
+                  title: t("home.enrollment.step4_title", "Begin Your Learning Journey"),
+                  desc: t("home.enrollment.step4_desc", "Start structured online learning with qualified female teachers."),
+                },
+              ].map((item, idx) => (
+                <motion.div
+                  key={idx}
+                  variants={fadeUp}
+                  transition={{ duration: 0.45 }}
+                  whileHover={{ y: -4, transition: { type: "spring", stiffness: 300 } }}
+                  className="bg-background border border-primary/5 rounded-2xl p-6 text-center shadow-sm relative group hover:border-primary/10 transition-all duration-300"
+                >
+                  <span className="absolute top-4 right-4 font-serif font-bold text-accent/60 group-hover:text-accent transition-colors duration-300 text-sm tracking-widest">
+                    {item.step}
+                  </span>
+                  <div className="w-12 h-12 mx-auto bg-primary/[0.03] border border-primary/10 rounded-full flex items-center justify-center text-primary mb-4 shrink-0 shadow-inner group-hover:border-accent/40 group-hover:bg-accent/[0.03] transition-all duration-300">
+                    <item.icon className="w-5 h-5 text-accent" />
+                  </div>
+                  <h3 className="font-serif font-bold text-base md:text-lg text-primary mb-2 leading-snug">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground font-sans leading-relaxed max-w-[240px] mx-auto">
+                    {item.desc}
+                  </p>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
 
-          <div className="flex justify-center mt-10">
-            <CTAGroup variant="hero" align="center" trialMode />
+          <div className="flex justify-center mt-12">
+            <Button
+              variant="outline"
+              className="rounded-full border-primary/20 text-primary hover:bg-primary hover:text-white px-8 py-2 font-sans font-medium transition-all duration-300"
+              asChild
+            >
+              <Link href="/courses">
+                {t("home.enrollment.cta", "Explore Courses")}
+              </Link>
+            </Button>
           </div>
         </div>
       </section>

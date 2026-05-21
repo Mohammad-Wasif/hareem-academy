@@ -223,13 +223,18 @@
         "desc": "Reading without meaning leaves you spiritually disconnected."
       }
     },
-    "transformation": {
-      "label": "Imagine",
-      "title": "Six months from now, in shaa Allah…",
-      "item1": "Reading the Quran with proper Tajweed, not just pronunciation",
-      "item2": "Understanding what you're reciting in Salah",
-      "item3": "Teaching basic Arabic to your children at home",
-      "item4": "A community of sisters from 12+ countries by your side"
+    "enrollment": {
+      "label": "Steps",
+      "title": "How Enrollment Works",
+      "step1_title": "Choose Your Course",
+      "step1_desc": "Browse Arabic & Urdu programs and select your preferred level and batch.",
+      "step2_title": "Connect With Our Team",
+      "step2_desc": "Get guidance about timings, course structure, and learning path.",
+      "step3_title": "Attend a Trial Class",
+      "step3_desc": "Experience the classroom environment before enrollment.",
+      "step4_title": "Begin Your Learning Journey",
+      "step4_desc": "Start structured online learning with qualified female teachers.",
+      "cta": "Explore Courses"
     },
     "programs": {
       "label": "Programs",
