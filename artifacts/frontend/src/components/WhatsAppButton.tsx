@@ -1,10 +1,13 @@
 import { FaWhatsapp } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { useWhatsApp } from "@/hooks/use-whatsapp";
 
 export default function WhatsAppButton() {
+  const { whatsappUrl } = useWhatsApp();
+
   return (
     <motion.a
-      href="https://wa.me/919315118289"
+      href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
       className="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-50 flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-[#0F4D36] text-white rounded-full shadow-md shadow-[#0F4D36]/20 border border-[#ECC565]/20 hover:bg-[#0A3828] transition-all hover:scale-105 active:scale-[0.92]"

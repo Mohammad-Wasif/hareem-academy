@@ -4,11 +4,14 @@ import { Mail, MapPin } from "lucide-react";
 import logo from "@assets/IMG_20260507_171922.png";
 import { useTranslation } from "react-i18next";
 import { useSiteAssets } from "@/hooks/use-site-assets";
+import { useWhatsApp } from "@/hooks/use-whatsapp";
 
 export default function Footer() {
   const { t } = useTranslation();
   const { assets } = useSiteAssets();
   const logoSrc = assets["logo"] || logo;
+  const { whatsappNumber, whatsappUrl } = useWhatsApp();
+
   return (
     <footer className="bg-primary text-primary-foreground py-16 border-t border-primary-foreground/10">
       <div className="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12">
@@ -20,7 +23,7 @@ export default function Footer() {
             {t("footer.tagline")}
           </p>
           <div className="flex items-center gap-4">
-            <a href="https://wa.me/919315118289" target="_blank" rel="noopener noreferrer" className="text-accent hover:text-accent/80 transition-colors">
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-accent hover:text-accent/80 transition-colors">
               <FaWhatsapp className="h-6 w-6" />
             </a>
             <a href="#" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
@@ -57,8 +60,8 @@ export default function Footer() {
           <ul className="space-y-4 text-primary-foreground/80">
             <li className="flex items-start gap-3">
               <FaWhatsapp className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-              <a href="https://wa.me/919315118289" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">
-                +91 9315118289
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">
+                {whatsappNumber}
               </a>
             </li>
             <li className="flex items-start gap-3">

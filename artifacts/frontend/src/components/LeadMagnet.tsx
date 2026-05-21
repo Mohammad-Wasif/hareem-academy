@@ -14,10 +14,12 @@ import {
 import { useCreateLead } from "@workspace/api-client-react";
 import { CreateLeadBody } from "@workspace/api-client-react";
 import { toast } from "sonner";
+import { useWhatsApp } from "@/hooks/use-whatsapp";
 
 export default function LeadMagnet() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { whatsappUrl } = useWhatsApp();
 
   const createLead = useCreateLead();
 
@@ -96,7 +98,7 @@ export default function LeadMagnet() {
                 </p>
               </div>
               <Button asChild className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white">
-                <a href="https://wa.me/919315118289" target="_blank" rel="noopener noreferrer">
+                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                   Continue on WhatsApp
                 </a>
               </Button>

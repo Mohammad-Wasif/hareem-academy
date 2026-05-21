@@ -16,13 +16,14 @@ import {
 } from "@/components/ui/form";
 import { Mail, MapPin, CheckCircle2, MessageCircle, Clock } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
-import { WHATSAPP_URL } from "@/components/CTAGroup";
 import { useTranslation } from "react-i18next";
+import { useWhatsApp } from "@/hooks/use-whatsapp";
 
 export default function Contact() {
   const { t } = useTranslation();
   const createContact = useCreateContactMessage();
   const [isSuccess, setIsSuccess] = useState(false);
+  const { whatsappNumber, whatsappUrl } = useWhatsApp();
 
   const form = useForm({
     resolver: zodResolver(CreateContactMessageBody),
@@ -64,7 +65,7 @@ export default function Contact() {
         {/* WhatsApp-first CTA banner */}
         <div className="max-w-3xl mx-auto mb-16">
           <a
-            href={WHATSAPP_URL}
+            href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="block bg-[#25D366] hover:bg-[#128C7E] text-white rounded-3xl p-7 md:p-9 transition-colors shadow-xl shadow-[#25D366]/25 group"
@@ -209,7 +210,7 @@ export default function Contact() {
               </h2>
               <div className="space-y-3">
                 <a
-                  href={WHATSAPP_URL}
+                  href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-start gap-4 p-5 rounded-2xl bg-[#25D366]/5 hover:bg-[#25D366]/10 transition-colors border border-[#25D366]/20"
@@ -219,7 +220,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="font-bold text-foreground">WhatsApp</h3>
-                    <p className="text-sm text-muted-foreground">+91 9315118289</p>
+                    <p className="text-sm text-muted-foreground">{whatsappNumber}</p>
                     <p className="text-xs text-[#128C7E] font-medium mt-1">
                       ⚡ {t("contact.others.fastest", "Fastest response")}
                     </p>

@@ -89,6 +89,11 @@
   
   --elevate-1: rgba(0,0,0, .02);
   --elevate-2: rgba(0,0,0, .05);
+
+  --glow-primary: 19, 94, 70;
+  --glow-accent: 212, 163, 89;
+  --glow-opacity-primary: 0.03;
+  --glow-opacity-accent: 0.015;
 }
 
 .dark {
@@ -189,4 +194,72 @@
 .nav-link-glow:hover {
   text-shadow: 0 0 8px rgba(236, 197, 101, 0.4);
 }
+
+/* Theme presets */
+.theme-emerald {
+  --primary: 158 67% 18%;
+  --ring: 158 67% 18%;
+  --accent: 42 60% 60%;
+  --foreground: 159 70% 13%;
+  --card-foreground: 159 70% 13%;
+  --popover-foreground: 159 70% 13%;
+  --glow-primary: 19, 94, 70;
+  --glow-accent: 212, 163, 89;
+}
+
+.theme-deep {
+  --primary: 162 82% 12%;
+  --ring: 162 82% 12%;
+  --accent: 38 75% 50%;
+  --foreground: 162 82% 10%;
+  --card-foreground: 162 82% 10%;
+  --popover-foreground: 162 82% 10%;
+  --glow-primary: 5, 46, 34;
+  --glow-accent: 204, 132, 31;
+}
+
+.theme-rose {
+  --primary: 343 35% 20%;
+  --ring: 343 35% 20%;
+  --accent: 25 45% 65%;
+  --foreground: 343 45% 15%;
+  --card-foreground: 343 45% 15%;
+  --popover-foreground: 343 45% 15%;
+  --glow-primary: 69, 32, 43;
+  --glow-accent: 206, 160, 135;
+}
+
+.theme-teal {
+  --primary: 180 50% 16%;
+  --ring: 180 50% 16%;
+  --accent: 32 60% 58%;
+  --foreground: 180 60% 12%;
+  --card-foreground: 180 60% 12%;
+  --popover-foreground: 180 60% 12%;
+  --glow-primary: 20, 61, 61;
+  --glow-accent: 207, 140, 82;
+}
+
+/* Glow intensity presets */
+.glow-subtle {
+  --glow-opacity-primary: 0.01;
+  --glow-opacity-accent: 0.005;
+}
+
+.glow-classic {
+  --glow-opacity-primary: 0.03;
+  --glow-opacity-accent: 0.015;
+}
+
+.glow-vibrant {
+  --glow-opacity-primary: 0.06;
+  --glow-opacity-accent: 0.03;
+}
+
+/* Hero Glow BG Utility */
+.hero-glow-bg {
+  background: radial-gradient(circle at 75% 20%, rgba(var(--glow-primary), var(--glow-opacity-primary)), transparent 50%),
+              radial-gradient(circle at 25% 80%, rgba(var(--glow-accent), var(--glow-opacity-accent)), transparent 50%);
+}
+
 

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { FaWhatsapp } from "react-icons/fa";
 import { Sparkles } from "lucide-react";
 import EnrollmentModal from "./EnrollmentModal";
+import { useWhatsApp } from "@/hooks/use-whatsapp";
 
 export const WHATSAPP_NUMBER = "919315118289";
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
@@ -32,6 +33,8 @@ export default function CTAGroup({
   defaultCourseSlug,
   showSecondary = true,
 }: CTAGroupProps) {
+  const { whatsappUrl } = useWhatsApp();
+  
   const size =
     variant === "hero"
       ? "h-9 sm:h-10 px-4 sm:px-5 text-sm sm:text-base rounded-lg font-sans font-medium tracking-wide"
@@ -69,7 +72,7 @@ export default function CTAGroup({
       {showSecondary && (
         <Button asChild className={`${size} ${secondaryButton}`}>
           <a
-            href={WHATSAPP_URL}
+            href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2"

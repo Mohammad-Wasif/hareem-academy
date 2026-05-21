@@ -13,7 +13,11 @@
     "learn_more": "Learn More",
     "message_us": "Message Us on WhatsApp",
     "logo_url": "",
-    "site_name": "Hareem Academy"
+    "site_name": "Hareem Academy",
+    "whatsapp_number": "+91 9315118289",
+    "whatsapp_message": "Assalamu alaikum, I'd like to know more about Hareem Academy.",
+    "theme_preset": "emerald",
+    "glow_preset": "classic"
   },
   "footer": {
     "tagline": "A safe space for sisters to learn Quran with meaning.",

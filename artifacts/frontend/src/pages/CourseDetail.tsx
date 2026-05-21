@@ -5,7 +5,8 @@ import { getGetCourseQueryKey } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import EnrollmentModal from "@/components/EnrollmentModal";
-import CTAGroup, { WHATSAPP_URL } from "@/components/CTAGroup";
+import CTAGroup from "@/components/CTAGroup";
+import { useWhatsApp } from "@/hooks/use-whatsapp";
 import NotFound from "./not-found";
 import {
   Clock,
@@ -30,6 +31,7 @@ export default function CourseDetail() {
   const lang = i18n.language;
   const params = useParams();
   const slug = params.slug || "";
+  const { whatsappUrl } = useWhatsApp();
 
   const { data: course, isLoading, isError } = useGetCourse(slug, {
     query: {
@@ -326,7 +328,7 @@ export default function CourseDetail() {
                   asChild
                   className="w-full h-12 font-sans text-base rounded-lg bg-[#0F4D36] text-white hover:bg-[#0A3828] border border-[#ECC565]/20 shadow-sm font-semibold cursor-pointer"
                 >
-                  <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+                  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                     <FaWhatsapp className="w-4 h-4 mr-2" /> {t("common.chat_whatsapp", "Speak With Our Team")}
                   </a>
                 </Button>
@@ -377,7 +379,7 @@ export default function CourseDetail() {
           className="h-12 px-4 rounded-lg bg-[#0F4D36] text-white hover:bg-[#0A3828] border border-[#ECC565]/20 shadow-sm cursor-pointer"
           aria-label="WhatsApp"
         >
-          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+          <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
             <FaWhatsapp className="w-5 h-5" />
           </a>
         </Button>

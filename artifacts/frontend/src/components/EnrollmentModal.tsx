@@ -22,6 +22,7 @@ import {
 import { useCreateEnrollment, useListCourses } from "@workspace/api-client-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { CheckCircle2 } from "lucide-react";
+import { useWhatsApp } from "@/hooks/use-whatsapp";
 
 type FormFieldType = "text" | "email" | "tel" | "number" | "textarea" | "select";
 type PublicFormField = {
@@ -71,6 +72,7 @@ export default function EnrollmentModal({
   const [isOpen, setIsOpen] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const { whatsappUrl } = useWhatsApp();
   const [values, setValues] = useState<Record<string, string>>({
     fullName: "",
     age: "18",
@@ -266,7 +268,7 @@ export default function EnrollmentModal({
               className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white py-6 text-lg rounded-full mt-4"
             >
               <a
-                href="https://wa.me/919315118289"
+                href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2"

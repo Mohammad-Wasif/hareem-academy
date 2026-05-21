@@ -1,4 +1,8 @@
+import { useWhatsApp } from "@/hooks/use-whatsapp";
+
 export default function Refund() {
+  const { whatsappNumber } = useWhatsApp();
+
   return (
     <div className="min-h-screen bg-background py-16">
       <div className="container mx-auto px-4 max-w-3xl">
@@ -32,7 +36,7 @@ export default function Refund() {
 
           <h3>5. How to Request</h3>
           <p>
-            To discuss payments or request a refund, please contact us directly via WhatsApp at +91 9315118289.
+            To discuss payments or request a refund, please contact us directly via WhatsApp at {whatsappNumber}.
           </p>
         </div>
       </div>

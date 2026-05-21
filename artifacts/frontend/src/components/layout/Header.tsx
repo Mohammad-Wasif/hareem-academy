@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { FaWhatsapp } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import EnrollmentModal from "@/components/EnrollmentModal";
-import { WHATSAPP_URL } from "@/components/CTAGroup";
+import { useWhatsApp } from "@/hooks/use-whatsapp";
 import staticLogo from "@assets/IMG_20260507_171922.png";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
@@ -17,6 +17,7 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { assets } = useSiteAssets();
+  const { whatsappUrl } = useWhatsApp();
 
   const logoSrc = assets["logo"] || staticLogo;
 
@@ -95,7 +96,7 @@ export default function Header() {
           })}
 
           <a
-            href={WHATSAPP_URL}
+            href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-sm font-medium text-white/80 hover:text-[#ECC565] transition-colors py-1.5"
@@ -204,7 +205,7 @@ export default function Header() {
                   variant="outline"
                   className="rounded-lg border-white/20 text-white hover:bg-white/5 h-10 text-sm font-sans gap-1.5"
                 >
-                  <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+                  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                     <FaWhatsapp className="w-4 h-4 text-[#ECC565]" /> Speak With Our Team
                   </a>
                 </Button>

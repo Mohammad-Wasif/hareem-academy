@@ -71,7 +71,7 @@ export default function Home() {
             className="w-full h-full object-cover opacity-[0.03]"
           />
           {/* Subtle radial glow and vertical cream gradient */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_20%,rgba(19,94,70,0.03),transparent_50%),radial-gradient(circle_at_25%_80%,rgba(212,163,89,0.015),transparent_50%)]" />
+          <div className="absolute inset-0 hero-glow-bg" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/90 to-background" />
         </div>
 
