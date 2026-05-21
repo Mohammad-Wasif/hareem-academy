@@ -50,7 +50,7 @@ export default function Home() {
 
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen w-full overflow-x-hidden">
       <SEO
         title={t("home.seo.title", "Online Quran Classes for Sisters")}
         description={t(
@@ -153,7 +153,7 @@ export default function Home() {
                     {t("home.hero.stats.students", "Sisters Learning")}
                   </p>
                 </div>
-                <div className="text-center sm:text-left border-r border-primary/10 last:border-r-0 px-2 sm:px-4">
+                <div className="text-center sm:text-left border-r border-primary/10 last:border-r-0 px-1 sm:px-4">
                   <p className="text-lg sm:text-2xl md:text-3xl font-sans font-black text-foreground tracking-tight">
                     {stats?.countriesReached || "12"}+
                   </p>
@@ -161,7 +161,7 @@ export default function Home() {
                     {t("home.hero.stats.countries", "Countries Reached")}
                   </p>
                 </div>
-                <div className="text-center sm:text-left pl-2 sm:pl-4">
+                <div className="text-center sm:text-left pl-1 sm:pl-4">
                   <p className="text-lg sm:text-2xl md:text-3xl font-sans font-black text-foreground tracking-tight flex items-center justify-center sm:justify-start gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
                     <span>{t("home.hero.stats.live_label", "Live")}</span>
@@ -185,7 +185,7 @@ export default function Home() {
                   <img
                     src="/premium-hero-showcase.png"
                     alt={t("home.hero.showcase_alt", "Online learning showcase")}
-                    className="w-full h-auto rounded-lg object-cover"
+                    className="w-full max-w-full h-auto rounded-lg object-cover"
                   />
                 </div>
               </div>
@@ -206,7 +206,7 @@ export default function Home() {
                   <img
                     src="/premium-hero-showcase.png"
                     alt={t("home.hero.showcase_alt", "Online learning showcase")}
-                    className="w-full h-auto rounded-xl object-cover transition-transform duration-500"
+                    className="w-full max-w-full h-auto rounded-xl object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   
                   {/* Floating badge 1: sisters-only */}
@@ -262,10 +262,10 @@ export default function Home() {
                 key={label}
                 variants={fadeUp}
                 transition={{ duration: 0.4 }}
-                className="flex items-center gap-1.5 sm:gap-2"
+                className="flex items-center gap-1.5 sm:gap-2 min-w-0 w-full"
               >
                 <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
-                <span className="font-medium">{label}</span>
+                <span className="font-medium leading-tight break-words">{label}</span>
               </motion.div>
             ))}
           </motion.div>
@@ -553,11 +553,11 @@ export default function Home() {
             <h2 className="font-serif font-bold text-2xl md:text-3xl mb-6">
               {t("home.rtl_preview.title", "Experience the beauty of the language.")}
             </h2>
-            <div className="bg-background p-8 rounded-2xl border border-primary/10 shadow-sm">
+            <div className="bg-background p-5 sm:p-8 rounded-2xl border border-primary/10 shadow-sm">
               <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">
                 {t("home.rtl_preview.label", "Arabic Script")}
               </div>
-              <p className="font-arabic text-3xl md:text-4xl leading-relaxed text-foreground" dir="rtl">
+              <p className="font-arabic text-2xl sm:text-3xl md:text-4xl leading-relaxed text-foreground" dir="rtl">
                 {t("home.rtl_preview.bismillah", "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ")}
               </p>
               <p className="text-sm text-muted-foreground mt-4">
