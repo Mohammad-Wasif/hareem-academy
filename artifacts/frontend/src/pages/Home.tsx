@@ -525,14 +525,19 @@ export default function Home() {
           </motion.div>
 
           <motion.div
-            className="grid sm:grid-cols-2 md:grid-cols-3 gap-5"
+            className="grid sm:grid-cols-2 md:grid-cols-3 gap-5 w-full max-w-full overflow-hidden"
             variants={staggerContainer}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true }}
           >
             {testimonials.slice(0, 3).map((t) => (
-              <motion.div key={t.id} variants={fadeUp} transition={{ duration: 0.4 }}>
+              <motion.div 
+                key={t.id} 
+                variants={fadeUp} 
+                transition={{ duration: 0.4 }}
+                className="w-full min-w-0 max-w-full overflow-hidden"
+              >
                 <TestimonialCard testimonial={t as any} />
               </motion.div>
             ))}

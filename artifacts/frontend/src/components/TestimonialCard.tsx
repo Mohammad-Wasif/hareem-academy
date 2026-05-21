@@ -48,29 +48,29 @@ export default function TestimonialCard({ testimonial: t }: TestimonialProps) {
 
       {/* Bottom Text Highlight */}
       {(localizedBottom || '').trim() && (
-        <div className="bg-primary/5 p-3 rounded-lg border border-primary/10 mb-6">
-          <p className="text-[10px] font-bold text-primary italic leading-snug">
+        <div className="bg-primary/5 p-3 rounded-lg border border-primary/10 mb-6 w-full min-w-0">
+          <p className="text-[10px] font-bold text-primary italic leading-snug break-words">
             "{localizedBottom}"
           </p>
         </div>
       )}
 
       {/* Author */}
-      <div className="mt-auto flex items-center gap-3 pt-4 border-t border-border">
+      <div className="mt-auto flex items-center gap-3 pt-4 border-t border-border w-full min-w-0">
         <div
           className={`w-12 h-12 rounded-full ${palette.bg} ${palette.text} flex items-center justify-center font-bold shrink-0`}
         >
           {getInitials(t.studentName)}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="font-bold text-foreground truncate">{t.studentName}</div>
-          <div className="text-xs text-muted-foreground truncate">
-            <span className="mr-1">{flag}</span>
-            {t.location}
+          <div className="font-bold text-foreground truncate w-full">{t.studentName}</div>
+          <div className="text-xs text-muted-foreground flex flex-wrap items-center gap-x-1.5 gap-y-0.5 min-w-0 w-full">
+            <span className="shrink-0">{flag}</span>
+            <span className="truncate max-w-[80px] sm:max-w-[120px]">{t.location}</span>
             {t.course && (
               <>
-                <span className="mx-1.5 text-foreground/30">•</span>
-                <span className="text-primary font-medium">{t.course}</span>
+                <span className="text-foreground/30 shrink-0">•</span>
+                <span className="text-primary font-medium truncate max-w-[100px] sm:max-w-[150px]">{t.course}</span>
               </>
             )}
           </div>
