@@ -53,19 +53,19 @@ export default function Header() {
     >
       <div
         className={`container mx-auto px-4 flex items-center justify-between transition-all duration-300 ${
-          scrolled ? "h-14" : "h-18"
+          scrolled ? "h-12" : "h-14 sm:h-15"
         }`}
       >
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
+        <Link href="/" className="flex items-center gap-2.5 group">
           <motion.img
             src={logoSrc}
             alt="Hareem Academy"
-            className={`w-auto object-contain transition-all duration-300 ${scrolled ? "h-11" : "h-14 sm:h-16"}`}
+            className={`w-auto object-contain transition-all duration-300 ${scrolled ? "h-9.5" : "h-11 sm:h-12.5"}`}
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
           />
-          <span className="font-serif font-semibold text-lg sm:text-2xl tracking-wide text-primary group-hover:text-primary/80 transition-colors">
+          <span className="font-sans font-extrabold text-lg sm:text-xl tracking-tight text-primary group-hover:text-primary/80 transition-colors">
             {t("common.site_name", "Hareem Academy")}
           </span>
         </Link>
@@ -80,7 +80,7 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`relative text-sm font-medium transition-colors py-1 ${
+                className={`relative text-sm font-medium transition-colors duration-300 py-1 ${
                   isActive ? "text-primary" : "text-muted-foreground hover:text-primary"
                 }`}
               >
@@ -103,12 +103,12 @@ export default function Header() {
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-[#128C7E] transition-colors py-1.5"
           >
-            <FaWhatsapp className="w-4 h-4 text-[#25D366]" />
+            <FaWhatsapp className="w-4 h-4 text-[#128C7E]" />
             <span>WhatsApp</span>
           </a>
 
           <EnrollmentModal mode="trial">
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/95 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 font-serif text-sm tracking-wide rounded-full px-6 py-2 shadow-md shadow-primary/10 cursor-pointer">
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/95 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 font-sans text-sm rounded-md px-4.5 h-9 shadow-sm shadow-primary/[0.02] cursor-pointer">
               {t("common.book_trial")}
             </Button>
           </EnrollmentModal>
@@ -197,7 +197,7 @@ export default function Header() {
               >
                 <EnrollmentModal mode="trial">
                   <Button
-                    className="bg-primary text-primary-foreground rounded-full w-full font-serif h-11 text-base shadow-sm cursor-pointer"
+                    className="bg-primary text-primary-foreground rounded-lg w-full font-sans h-10 text-base shadow-sm cursor-pointer"
                     onClick={() => setIsOpen(false)}
                   >
                     {t("common.book_trial", "Book Free Trial")}
@@ -206,10 +206,10 @@ export default function Header() {
                 <Button
                   asChild
                   variant="outline"
-                  className="rounded-full border-primary/20 text-primary hover:bg-primary/5 h-11 text-sm gap-1.5"
+                  className="rounded-lg border-primary/20 text-primary hover:bg-primary/5 h-10 text-sm font-sans gap-1.5"
                 >
                   <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
-                    <FaWhatsapp className="w-4 h-4 text-[#25D366]" /> Chat on WhatsApp
+                    <FaWhatsapp className="w-4 h-4 text-[#128C7E]" /> Chat on WhatsApp
                   </a>
                 </Button>
               </motion.div>

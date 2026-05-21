@@ -34,27 +34,27 @@ export default function CTAGroup({
 }: CTAGroupProps) {
   const size =
     variant === "hero"
-      ? "h-12 px-6 text-sm sm:text-base rounded-xl font-sans font-medium"
+      ? "h-10 px-5 text-sm sm:text-base rounded-md font-sans font-medium"
       : variant === "compact"
-        ? "h-9 px-4 text-xs rounded-lg font-sans font-medium"
-        : "h-11 px-5 text-sm rounded-lg font-sans font-medium";
+        ? "h-8 px-3.5 text-xs rounded-md font-sans font-medium"
+        : "h-9 px-4 text-sm rounded-md font-sans font-medium";
 
   const align_classes = align === "center" ? "justify-center" : "";
 
   const primaryButton =
     theme === "dark"
-      ? "bg-accent text-primary hover:bg-accent/90 shadow-sm shadow-black/5 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer"
-      : "bg-primary text-primary-foreground hover:bg-primary/95 shadow-sm shadow-primary/5 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer";
+      ? "bg-accent text-primary hover:bg-accent/90 shadow-sm shadow-black/[0.01] transition-all duration-300 cursor-pointer"
+      : "bg-primary text-primary-foreground hover:bg-primary/95 shadow-sm shadow-primary/[0.015] transition-all duration-300 cursor-pointer";
 
   const secondaryButton =
     theme === "dark"
-      ? "border border-accent/20 text-accent bg-transparent hover:bg-accent/5 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
-      : "border border-primary/20 text-primary bg-transparent hover:bg-primary/5 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300";
+      ? "border border-accent/20 text-accent bg-transparent hover:bg-accent/5 transition-all duration-300"
+      : "bg-[#128C7E]/8 text-[#128C7E] border border-[#128C7E]/15 hover:bg-[#128C7E]/12 transition-all duration-300";
 
   const label = primaryLabel ?? (trialMode ? "Book Free Trial" : "Enroll Now");
 
   return (
-    <div className={`flex flex-col sm:flex-row flex-wrap gap-3 ${align_classes}`}>
+    <div className={`flex flex-col sm:flex-row flex-wrap gap-2.5 ${align_classes}`}>
       <EnrollmentModal
         mode={trialMode ? "trial" : "enroll"}
         defaultCourseSlug={defaultCourseSlug}
@@ -62,7 +62,7 @@ export default function CTAGroup({
         <Button
           className={`${size} ${primaryButton} group`}
         >
-          <Sparkles className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform text-accent" />
+          <Sparkles className="w-4 h-4 mr-2 text-accent" />
           {label}
         </Button>
       </EnrollmentModal>
@@ -74,7 +74,7 @@ export default function CTAGroup({
             rel="noopener noreferrer"
             className="flex items-center gap-2"
           >
-            <FaWhatsapp className="w-4 h-4 text-[#25D366]" />
+            <FaWhatsapp className="w-4 h-4" />
             {secondaryLabel}
           </a>
         </Button>
