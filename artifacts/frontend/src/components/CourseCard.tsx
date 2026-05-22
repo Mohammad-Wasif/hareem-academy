@@ -21,7 +21,7 @@ export default function CourseCard({ course }: { course: Course }) {
 
   // Dynamic thumbnail — falls back to static public files
   const thumbnail =
-    course.language === "arabic"
+    course.language?.toLowerCase() === "arabic"
       ? assets["course_arabic"] || "/course-arabic.png"
       : assets["course_urdu"] || "/course-urdu.png";
 

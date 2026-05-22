@@ -73,7 +73,7 @@ export default function CourseDetail() {
     courseTestimonials.length > 0 ? courseTestimonials : testimonials.slice(0, 3);
 
   // Generic transformations based on language
-  const isArabic = course.language === "arabic";
+  const isArabic = course.language?.toLowerCase() === "arabic";
   const transformations = isArabic
     ? [
         { icon: Heart, text: t("course_detail.achieve.salah", "Pray Salah understanding every word") },

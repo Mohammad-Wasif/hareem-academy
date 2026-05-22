@@ -13,7 +13,7 @@ export default function Courses() {
   const [filter, setFilter] = useState<"all" | "arabic" | "urdu">("all");
 
   const filteredCourses = courses.filter(
-    (course) => filter === "all" || course.language === filter,
+    (course) => filter === "all" || course.language?.toLowerCase() === filter,
   );
 
   return (
