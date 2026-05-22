@@ -63,6 +63,13 @@ const MEDIA_SLOTS = [
     aspectRatio: "aspect-[16/9] w-full max-w-sm rounded-lg object-cover border border-border/40",
   },
   {
+    key: "course_arabic_intermediate",
+    name: "Intermediate Arabic Thumbnail",
+    description: "Default thumbnail for Intermediate Arabic courses.",
+    fallback: "/course-arabic.png",
+    aspectRatio: "aspect-[16/9] w-full max-w-sm rounded-lg object-cover border border-border/40",
+  },
+  {
     key: "course_urdu",
     name: "Urdu Course Thumbnail",
     description: "Default thumbnail for Urdu/Islamic Studies courses.",

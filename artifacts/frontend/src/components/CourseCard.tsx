@@ -19,10 +19,16 @@ export default function CourseCard({ course }: { course: Course }) {
     typeof course.seatsRemaining === "number" && course.seatsRemaining > 0 && course.seatsRemaining <= 8;
   const isBeginner = (course.level ?? "").toLowerCase().includes("beginner");
 
+  const isIntermediate =
+    (course.level ?? "").toLowerCase().includes("intermediate") ||
+    (course.slug ?? "").toLowerCase().includes("intermediate");
+
   // Dynamic thumbnail — falls back to static public files
   const thumbnail =
     course.language?.toLowerCase() === "arabic"
-      ? assets["course_arabic"] || "/course-arabic.png"
+      ? isIntermediate
+        ? assets["course_arabic_intermediate"] || assets["course_arabic"] || "/course-arabic.png"
+        : assets["course_arabic"] || "/course-arabic.png"
       : assets["course_urdu"] || "/course-urdu.png";
 
   return (
