@@ -20,3 +20,6 @@ pool.on("error", (err) => {
 export const db = drizzle(pool, { schema });
 
 export * from "./schema";
+
+// Re-export common drizzle-orm operators to resolve peer-dependency type conflicts in monorepo
+export { eq, and, or, not, desc, asc, sql, relations } from "drizzle-orm";

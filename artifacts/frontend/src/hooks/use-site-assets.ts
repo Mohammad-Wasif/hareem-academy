@@ -4,6 +4,7 @@ export interface SiteAsset {
   key: string;
   url: string;
   publicId: string;
+  updatedAt?: string;
 }
 
 export function useSiteAssets() {
@@ -21,14 +22,17 @@ export function useSiteAssets() {
 
   // Convert to key-value record for rapid lookup
   const assetsRecord: Record<string, string> = {};
+  const assetsMetadataRecord: Record<string, SiteAsset> = {};
   if (data) {
     for (const asset of data) {
       assetsRecord[asset.key] = asset.url;
+      assetsMetadataRecord[asset.key] = asset;
     }
   }
 
   return {
     assets: assetsRecord,
+    assetsMetadata: assetsMetadataRecord,
     assetsArray: data || [],
     isLoading,
     error,

@@ -1,6 +1,5 @@
 import { Router, type IRouter } from "express";
-import { db, siteAssetsTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { db, siteAssetsTable, eq } from "@workspace/db";
 import multer from "multer";
 import { cloudinary } from "../lib/cloudinary";
 import { requireAdmin } from "../lib/adminAuth";
@@ -102,9 +101,53 @@ router.post(
       );
 
       uploadStream.end(file.buffer);
+      return;
     } catch (error) {
       req.log.error({ error }, "Site asset upload failed");
       return res.status(500).json({ error: "Failed to upload asset" });
+    }
+  }
+);
+
+// DELETE /api/admin/site-assets/:key
+router.delete(
+  "/admin/site-assets/:key",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const { key } = req.params;
+
+      if (!key || typeof key !== "string") {
+        return res.status(400).json({ error: "Missing or invalid asset key" });
+      }
+
+      // Check if there is an existing asset with this key
+      const existing = await db
+        .select()
+        .from(siteAssetsTable)
+        .where(eq(siteAssetsTable.key, key))
+        .limit(1);
+
+      if (existing.length === 0) {
+        return res.status(404).json({ error: "Asset not found" });
+      }
+
+      const publicId = existing[0].publicId;
+      req.log.info({ key, publicId }, "Deleting asset from Cloudinary and database");
+
+      try {
+        await cloudinary.uploader.destroy(publicId);
+      } catch (destroyError) {
+        req.log.error({ destroyError }, "Failed to delete asset from Cloudinary");
+      }
+
+      // Delete from Database
+      await db.delete(siteAssetsTable).where(eq(siteAssetsTable.key, key));
+
+      return res.json({ message: "Asset deleted successfully", key });
+    } catch (error) {
+      req.log.error({ error }, "Site asset deletion failed");
+      return res.status(500).json({ error: "Failed to delete asset" });
     }
   }
 );
