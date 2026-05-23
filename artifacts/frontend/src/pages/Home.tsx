@@ -52,6 +52,84 @@ export default function Home() {
 
 
 
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Hareem Academy",
+    "url": "https://hareemacademy.com",
+    "logo": assets["logo"] || "https://hareemacademy.com/assets/IMG_20260507_171922.png",
+    "sameAs": [
+      "https://www.facebook.com/hareemacademy",
+      "https://www.instagram.com/hareemacademy"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+91-9315118289",
+      "contactType": "admissions",
+      "areaServed": "Worldwide",
+      "availableLanguage": ["English", "Urdu", "Arabic"]
+    }
+  };
+
+  const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Hareem Academy",
+    "image": assets["hero_showcase"] || "https://hareemacademy.com/premium-hero-showcase.png",
+    "telePhone": "+91-9315118289",
+    "url": "https://hareemacademy.com",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "New Delhi",
+      "addressRegion": "Delhi",
+      "postalCode": "110025",
+      "addressCountry": "IN"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 28.56,
+      "longitude": 77.29
+    },
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "opens": "09:00",
+      "closes": "18:00"
+    },
+    "priceRange": "$$"
+  };
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Who can join Hareem Academy?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Hareem Academy is exclusively for girls and women (sisters only). We welcome learners of all ages and backgrounds — whether you are a beginner or want to deepen your existing knowledge."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need any prior knowledge of Arabic or Urdu?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Not at all! Our Beginner courses start from the very basics — the alphabet, pronunciation, and simple words. You will be guided step by step."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How are classes conducted?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "All classes are held live on Zoom. You get real-time interaction with your teacher, can ask questions, and practice during class."
+        }
+      }
+    ]
+  };
+
   return (
     <div className="flex flex-col min-h-screen w-full overflow-x-hidden">
       <SEO
@@ -60,6 +138,7 @@ export default function Home() {
           "home.seo.description",
           "Live, female-only online Quran and Arabic classes. Learn Tajweed and meaning in a comfortable, judgment-free environment."
         )}
+        schema={[organizationSchema, localBusinessSchema, faqSchema]}
       />
 
       {/* 1. HERO */}
@@ -186,9 +265,10 @@ export default function Home() {
                 <div className="absolute -inset-1.5 bg-gradient-to-tr from-primary/3 to-accent/3 rounded-xl blur-xl opacity-20" />
                 <div className="relative bg-card border border-primary/5 rounded-xl p-1 shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
                   <img
-                    src="/premium-hero-showcase.png"
-                    alt={t("home.hero.showcase_alt", "Online learning showcase")}
+                    src={assets["hero_showcase"] || "/premium-hero-showcase.png"}
+                    alt={t("home.hero.showcase_alt", "Live online Arabic and Quran classes for sisters at Hareem Academy")}
                     className="w-full max-w-full h-auto rounded-lg object-cover"
+                    fetchpriority="high"
                   />
                 </div>
               </div>
@@ -207,9 +287,10 @@ export default function Home() {
                 {/* Visual card frame */}
                 <div className="relative bg-card border border-primary/5 rounded-2xl p-1.5 shadow-[0_8px_30px_rgba(19,94,70,0.02)] hover:border-primary/10 transition-all duration-500">
                   <img
-                    src="/premium-hero-showcase.png"
-                    alt={t("home.hero.showcase_alt", "Online learning showcase")}
+                    src={assets["hero_showcase"] || "/premium-hero-showcase.png"}
+                    alt={t("home.hero.showcase_alt", "Live online Arabic and Quran classes for sisters at Hareem Academy")}
                     className="w-full max-w-full h-auto rounded-xl object-cover transition-transform duration-500 group-hover:scale-105"
+                    fetchpriority="high"
                   />
                   
                   {/* Floating badge 1: sisters-only */}

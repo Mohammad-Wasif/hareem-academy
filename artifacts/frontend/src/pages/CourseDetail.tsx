@@ -1,5 +1,5 @@
 import { SEO } from "@/components/SEO";
-import { useParams } from "wouter";
+import { useParams, Link } from "wouter";
 import { useGetCourse, useListTestimonials } from "@workspace/api-client-react";
 import { getGetCourseQueryKey } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -88,11 +88,61 @@ export default function CourseDetail() {
         { icon: Users, text: t("course_detail.achieve.urdu_sisterhood", "Join a sisterhood that celebrates the language") },
       ];
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://hareemacademy.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Courses",
+        "item": "https://hareemacademy.com/courses"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": title,
+        "item": `https://hareemacademy.com/courses/${course.slug}`
+      }
+    ]
+  };
+
+  const courseSchema = {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    "name": title,
+    "description": summary,
+    "provider": {
+      "@type": "Organization",
+      "name": "Hareem Academy",
+      "sameAs": "https://hareemacademy.com"
+    },
+    "educationalLevel": course.level,
+    "timeRequired": `P${course.durationMonths}M`,
+    "hasCourseInstance": {
+      "@type": "CourseInstance",
+      "courseMode": "Online",
+      "courseWorkload": course.timings,
+      "instructor": {
+        "@type": "Person",
+        "name": "Qualified Female Educator",
+        "jobTitle": "Islamic Instructor"
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background pb-32 pt-20">
       <SEO 
         title={title} 
         description={summary}
+        schema={[breadcrumbSchema, courseSchema]}
       />
       {/* HERO */}
       <div className="bg-primary text-primary-foreground py-10 sm:py-12 lg:py-20">
@@ -354,6 +404,52 @@ export default function CourseDetail() {
                     <Award className="w-3.5 h-3.5 text-primary" />
                     {t("courses.guarantee", "Money-back guarantee")}
                   </div>
+                </div>
+              </div>
+
+              {/* Related Learning Paths */}
+              <div className="bg-card p-6 rounded-3xl border border-border shadow-sm space-y-4">
+                <h4 className="font-serif font-bold text-lg text-primary">Related Programs</h4>
+                <div className="space-y-3">
+                  {course.slug === "basic-arabic" && (
+                    <>
+                      <Link href="/courses/quranic-arabic-intermediate" className="block text-sm text-foreground hover:text-primary transition-colors hover:underline">
+                        → Quranic Arabic — Intermediate
+                      </Link>
+                      <Link href="/courses/urdu-foundations" className="block text-sm text-foreground hover:text-primary transition-colors hover:underline">
+                        → Urdu Foundations
+                      </Link>
+                      <Link href="/online-tajweed-classes" className="block text-sm text-foreground hover:text-primary transition-colors hover:underline">
+                        → Online Tajweed Classes (Specialized)
+                      </Link>
+                    </>
+                  )}
+                  {course.slug === "quranic-arabic-intermediate" && (
+                    <>
+                      <Link href="/courses/basic-arabic" className="block text-sm text-foreground hover:text-primary transition-colors hover:underline">
+                        → Basic Arabic Course (Beginner)
+                      </Link>
+                      <Link href="/courses/urdu-foundations" className="block text-sm text-foreground hover:text-primary transition-colors hover:underline">
+                        → Urdu Foundations
+                      </Link>
+                      <Link href="/understand-quranic-arabic" className="block text-sm text-foreground hover:text-primary transition-colors hover:underline">
+                        → Understand Quranic Arabic (Specialized)
+                      </Link>
+                    </>
+                  )}
+                  {course.slug === "urdu-foundations" && (
+                    <>
+                      <Link href="/courses/basic-arabic" className="block text-sm text-foreground hover:text-primary transition-colors hover:underline">
+                        → Basic Arabic Course (Beginner)
+                      </Link>
+                      <Link href="/courses/quranic-arabic-intermediate" className="block text-sm text-foreground hover:text-primary transition-colors hover:underline">
+                        → Quranic Arabic — Intermediate
+                      </Link>
+                      <Link href="/learn-urdu-online" className="block text-sm text-foreground hover:text-primary transition-colors hover:underline">
+                        → Learn Urdu Online (Specialized)
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

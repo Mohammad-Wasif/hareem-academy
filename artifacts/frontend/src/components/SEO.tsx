@@ -7,6 +7,7 @@ interface SEOProps {
   type?: string;
   imageUrl?: string;
   url?: string;
+  schema?: Record<string, any> | Record<string, any>[];
 }
 
 export function SEO({
@@ -16,16 +17,19 @@ export function SEO({
   type = "website",
   imageUrl,
   url,
+  schema,
 }: SEOProps) {
   const fullTitle = `${title} | ${name}`;
-  const currentUrl = url || window.location.href;
-  const defaultImage = "https://yourdomain.com/default-og-image.jpg"; // Replace with actual default OG image later
+  // Ensure we safely resolve URL on client side (handling potential SSR / dev issues)
+  const currentUrl = url || (typeof window !== "undefined" ? window.location.href : "https://hareemacademy.com");
+  const defaultImage = "https://hareemacademy.com/premium-hero-showcase.png";
 
   return (
     <Helmet>
       {/* Standard metadata tags */}
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
+      <link rel="canonical" href={currentUrl} />
       
       {/* OpenGraph tags (for Facebook, LinkedIn, WhatsApp, etc.) */}
       <meta property="og:type" content={type} />
@@ -40,6 +44,13 @@ export function SEO({
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={imageUrl || defaultImage} />
+
+      {/* JSON-LD Schema Markup */}
+      {schema && (
+        <script type="application/ld+json">
+          {JSON.stringify(schema)}
+        </script>
+      )}
     </Helmet>
   );
 }

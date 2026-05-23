@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Sparkles, ShieldCheck, Award } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { SEO } from "@/components/SEO";
 
 export default function Courses() {
   const { t } = useTranslation();
@@ -16,8 +17,44 @@ export default function Courses() {
     (course) => filter === "all" || course.language?.toLowerCase() === filter,
   );
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://hareemacademy.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Courses",
+        "item": "https://hareemacademy.com/courses"
+      }
+    ]
+  };
+
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "numberOfItems": courses.length,
+    "itemListElement": courses.map((course, idx) => ({
+      "@type": "ListItem",
+      "position": idx + 1,
+      "url": `https://hareemacademy.com/courses/${course.slug}`,
+      "name": course.title
+    }))
+  };
+
   return (
     <div className="min-h-screen bg-background pt-24 pb-24">
+      <SEO
+        title="Arabic & Urdu Courses"
+        description="Explore live, sisters-only Arabic and Urdu batches at Hareem Academy. Certified female teachers, small interactive online groups, and free trials."
+        schema={[breadcrumbSchema, itemListSchema]}
+      />
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Hero with CTA */}
         <div className="text-center max-w-3xl mx-auto mb-10 space-y-5">

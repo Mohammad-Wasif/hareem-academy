@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://hareem-academy.onrender.com</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://hareem-academy.onrender.com/premium-hero-showcase.png</image:loc>
+      <image:title>Live online Arabic and Quran classes for sisters at Hareem Academy</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://hareem-academy.onrender.com/courses</loc>
@@ -31,18 +36,147 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://hareem-academy.onrender.com/learn-arabic-online-for-sisters</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://hareem-academy.onrender.com/premium-hero-showcase.png</image:loc>
+      <image:title>learn arabic online for sisters</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://hareem-academy.onrender.com/arabic-classes-for-muslim-women</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://hareem-academy.onrender.com/premium-hero-showcase.png</image:loc>
+      <image:title>arabic classes for muslim women</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://hareem-academy.onrender.com/beginner-arabic-course-online</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://hareem-academy.onrender.com/premium-hero-showcase.png</image:loc>
+      <image:title>beginner arabic course online</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://hareem-academy.onrender.com/quranic-arabic-classes</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://hareem-academy.onrender.com/premium-hero-showcase.png</image:loc>
+      <image:title>quranic arabic classes</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://hareem-academy.onrender.com/female-arabic-teachers-online</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://hareem-academy.onrender.com/premium-hero-showcase.png</image:loc>
+      <image:title>female arabic teachers online</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://hareem-academy.onrender.com/learn-urdu-online</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://hareem-academy.onrender.com/premium-hero-showcase.png</image:loc>
+      <image:title>learn urdu online</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://hareem-academy.onrender.com/urdu-course-for-beginners</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://hareem-academy.onrender.com/premium-hero-showcase.png</image:loc>
+      <image:title>urdu course for beginners</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://hareem-academy.onrender.com/urdu-reading-classes</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://hareem-academy.onrender.com/premium-hero-showcase.png</image:loc>
+      <image:title>urdu reading classes</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://hareem-academy.onrender.com/online-urdu-classes-for-sisters</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://hareem-academy.onrender.com/premium-hero-showcase.png</image:loc>
+      <image:title>online urdu classes for sisters</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://hareem-academy.onrender.com/learn-quran-with-meaning</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://hareem-academy.onrender.com/premium-hero-showcase.png</image:loc>
+      <image:title>learn quran with meaning</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://hareem-academy.onrender.com/quran-reading-classes-for-sisters</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://hareem-academy.onrender.com/premium-hero-showcase.png</image:loc>
+      <image:title>quran reading classes for sisters</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://hareem-academy.onrender.com/online-tajweed-classes</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://hareem-academy.onrender.com/premium-hero-showcase.png</image:loc>
+      <image:title>online tajweed classes</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://hareem-academy.onrender.com/understand-quranic-arabic</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://hareem-academy.onrender.com/premium-hero-showcase.png</image:loc>
+      <image:title>understand quranic arabic</image:title>
+    </image:image>
+  </url>
+  <url>
     <loc>https://hareem-academy.onrender.com/courses/intermediate-arabic-level-2</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://hareem-academy.onrender.com/course-arabic.png</image:loc>
+      <image:title>Arabic Course for Sisters</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://hareem-academy.onrender.com/courses/urdu-essentials-basic</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://hareem-academy.onrender.com/course-urdu.png</image:loc>
+      <image:title>Urdu Foundations Course for Sisters</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://hareem-academy.onrender.com/courses/arabic-foundations-level-1</loc>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://hareem-academy.onrender.com/course-arabic.png</image:loc>
+      <image:title>Arabic Course for Sisters</image:title>
+    </image:image>
   </url>
 </urlset>

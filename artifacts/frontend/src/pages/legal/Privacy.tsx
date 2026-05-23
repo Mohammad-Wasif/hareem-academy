@@ -1,6 +1,12 @@
+import { SEO } from "@/components/SEO";
+
 export default function Privacy() {
   return (
     <div className="min-h-screen bg-background py-16">
+      <SEO
+        title="Privacy Policy"
+        description="Privacy policy and data protection guidelines for Hareem Academy students and visitors, guaranteeing a secure sisters-only learning environment."
+      />
       <div className="container mx-auto px-4 max-w-3xl">
         <h1 className="font-serif font-bold text-4xl text-primary mb-8">Privacy Policy</h1>
         <div className="prose prose-stone dark:prose-invert">

@@ -1,6 +1,12 @@
+import { SEO } from "@/components/SEO";
+
 export default function Terms() {
   return (
     <div className="min-h-screen bg-background py-16">
+      <SEO
+        title="Terms of Service"
+        description="Terms of service and student code of conduct guidelines for Hareem Academy, ensuring a respectful learning environment."
+      />
       <div className="container mx-auto px-4 max-w-3xl">
         <h1 className="font-serif font-bold text-4xl text-primary mb-8">Terms of Service</h1>
         <div className="prose prose-stone dark:prose-invert">

@@ -18,12 +18,60 @@ import { Mail, MapPin, CheckCircle2, MessageCircle, Clock } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import { useWhatsApp } from "@/hooks/use-whatsapp";
+import { SEO } from "@/components/SEO";
 
 export default function Contact() {
   const { t } = useTranslation();
   const createContact = useCreateContactMessage();
   const [isSuccess, setIsSuccess] = useState(false);
   const { whatsappNumber, whatsappUrl } = useWhatsApp();
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://hareemacademy.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Contact",
+        "item": "https://hareemacademy.com/contact"
+      }
+    ]
+  };
+
+  const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Hareem Academy",
+    "image": "https://hareemacademy.com/premium-hero-showcase.png",
+    "telePhone": "+91-9315118289",
+    "url": "https://hareemacademy.com",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "New Delhi",
+      "addressRegion": "Delhi",
+      "postalCode": "110025",
+      "addressCountry": "IN"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 28.56,
+      "longitude": 77.29
+    },
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "opens": "09:00",
+      "closes": "18:00"
+    },
+    "priceRange": "$$"
+  };
 
   const form = useForm({
     resolver: zodResolver(CreateContactMessageBody),
@@ -47,6 +95,11 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen bg-background pt-24 pb-24">
+      <SEO
+        title="Contact Us"
+        description="Have questions about batch timings, fee structures, or learning paths? Connect with a sister from Hareem Academy via WhatsApp or contact form."
+        schema={[breadcrumbSchema, localBusinessSchema]}
+      />
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Emotional hook */}
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-5">

@@ -14,6 +14,7 @@ import CTAGroup from "@/components/CTAGroup";
 import { useGetSiteStats } from "@workspace/api-client-react";
 import { useSiteAssets } from "@/hooks/use-site-assets";
 import { motion } from "framer-motion";
+import { SEO } from "@/components/SEO";
 
 /* ── Reusable animation variants ── */
 const fadeUp = {
@@ -30,8 +31,32 @@ export default function About() {
   const { data: stats } = useGetSiteStats();
   const { assets } = useSiteAssets();
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://hareemacademy.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "About Us",
+        "item": "https://hareemacademy.com/about"
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-background pb-24 pt-24">
+      <SEO
+        title="About Us"
+        description="Learn about Hareem Academy's mission to provide a private, comfortable, live online learning environment for sisters to study Arabic, Urdu, and Quran."
+        schema={breadcrumbSchema}
+      />
       {/* HERO with above-fold CTA */}
       <section className="container mx-auto px-4 py-12 max-w-5xl">
         <motion.div

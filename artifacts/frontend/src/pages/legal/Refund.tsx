@@ -1,10 +1,15 @@
 import { useWhatsApp } from "@/hooks/use-whatsapp";
+import { SEO } from "@/components/SEO";
 
 export default function Refund() {
   const { whatsappNumber } = useWhatsApp();
 
   return (
     <div className="min-h-screen bg-background py-16">
+      <SEO
+        title="Refund Policy"
+        description="Refund policy and enrollment terms for Hareem Academy, offering a clear outline of monthly course payments and trial periods."
+      />
       <div className="container mx-auto px-4 max-w-3xl">
         <h1 className="font-serif font-bold text-4xl text-primary mb-8">Refund Policy</h1>
         <div className="prose prose-stone dark:prose-invert">

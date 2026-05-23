@@ -3,14 +3,62 @@ import { Skeleton } from "@/components/ui/skeleton";
 import CTAGroup from "@/components/CTAGroup";
 import TestimonialCard from "@/components/TestimonialCard";
 import { useTranslation } from "react-i18next";
+import { SEO } from "@/components/SEO";
 
 export default function Testimonials() {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const { data: testimonials = [], isLoading } = useListTestimonials();
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://hareemacademy.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Testimonials",
+        "item": "https://hareemacademy.com/testimonials"
+      }
+    ]
+  };
+
+  const reviewSchemas = testimonials.map((testimonial) => ({
+    "@context": "https://schema.org",
+    "@type": "Review",
+    "itemReviewed": {
+      "@type": "Course",
+      "name": testimonial.course || "Quran & Arabic Classes",
+      "provider": {
+        "@type": "Organization",
+        "name": "Hareem Academy"
+      }
+    },
+    "reviewRating": {
+      "@type": "Rating",
+      "ratingValue": testimonial.rating || 5,
+      "bestRating": 5
+    },
+    "author": {
+      "@type": "Person",
+      "name": testimonial.studentName
+    },
+    "reviewBody": testimonial.quote
+  }));
+
   return (
     <div className="min-h-screen bg-background pt-20 pb-12 lg:pt-24 lg:pb-24 w-full overflow-x-hidden">
+      <SEO
+        title="Student Testimonials"
+        description="Read real stories and experiences from sisters around the world who have learned Arabic, Tajweed, and Urdu with Hareem Academy's qualified female teachers."
+        schema={[breadcrumbSchema, ...reviewSchemas]}
+      />
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Hero */}
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-5">

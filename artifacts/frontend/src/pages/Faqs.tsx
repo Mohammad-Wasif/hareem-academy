@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/accordion";
 import CTAGroup from "@/components/CTAGroup";
 import { useTranslation } from "react-i18next";
+import { SEO } from "@/components/SEO";
 
 export default function Faqs() {
   const { t, i18n } = useTranslation();
@@ -23,8 +24,45 @@ export default function Faqs() {
   const categoryOrder = ["General", "Classes", "Enrollment"];
   const sortedCategories = categoryOrder.filter((c) => grouped[c]);
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://hareemacademy.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "FAQs",
+        "item": "https://hareemacademy.com/faqs"
+      }
+    ]
+  };
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map((faq) => ({
+      "@type": "Question",
+      "name": i18n.language === 'ur' ? faq.question_ur || faq.question : faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": i18n.language === 'ur' ? faq.answer_ur || faq.answer : faq.answer
+      }
+    }))
+  };
+
   return (
     <div className="min-h-screen bg-background pt-24 pb-24">
+      <SEO
+        title="Frequently Asked Questions"
+        description="Find answers to common questions about Hareem Academy: enrollment, batch timings, sisters-only privacy measures, fee structures, and free trials."
+        schema={[breadcrumbSchema, faqSchema]}
+      />
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-14 space-y-5">

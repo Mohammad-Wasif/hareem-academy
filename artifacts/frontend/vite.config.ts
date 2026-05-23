@@ -32,6 +32,20 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: path.resolve(import.meta.dirname, "dist/public"),
       emptyOutDir: true,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes("node_modules")) {
+              if (id.includes("lucide-react") || id.includes("react-icons")) {
+                return "vendor-icons";
+              }
+              if (id.includes("framer-motion")) {
+                return "vendor-animation";
+              }
+            }
+          },
+        },
+      },
     },
     server: {
       port,
