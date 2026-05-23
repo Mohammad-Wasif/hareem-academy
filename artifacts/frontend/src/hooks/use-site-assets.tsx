@@ -21,6 +21,15 @@ interface MediaContextType {
 const MediaContext = createContext<MediaContextType | null>(null);
 
 export function MediaProvider({ children }: { children: React.ReactNode }) {
+  const [cachedData] = useState<SiteAsset[] | undefined>(() => {
+    try {
+      const saved = localStorage.getItem("hareem_site_assets");
+      return saved ? JSON.parse(saved) : undefined;
+    } catch {
+      return undefined;
+    }
+  });
+
   const { data, isLoading, isFetching, error, refetch } = useQuery<SiteAsset[]>({
     queryKey: ["site-assets"],
     queryFn: async () => {
@@ -29,13 +38,20 @@ export function MediaProvider({ children }: { children: React.ReactNode }) {
       if (!response.ok) {
         throw new Error("Failed to fetch site assets");
       }
-      return response.json();
+      const json = await response.json();
+      try {
+        localStorage.setItem("hareem_site_assets", JSON.stringify(json));
+      } catch (e) {
+        console.error("Failed to write assets to localStorage", e);
+      }
+      return json;
     },
+    initialData: cachedData,
     staleTime: 1000 * 60 * 10, // 10 minutes cache
     refetchOnWindowFocus: false,
   });
 
-  const [isVerifyingFreshness, setIsVerifyingFreshness] = useState(true);
+  const [isVerifyingFreshness, setIsVerifyingFreshness] = useState(() => !cachedData);
 
   useEffect(() => {
     // When the initial or background query completes fetching, we confirm freshness validation
