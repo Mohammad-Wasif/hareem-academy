@@ -20,8 +20,18 @@ export function SEO({
   schema,
 }: SEOProps) {
   const fullTitle = `${title} | ${name}`;
-  // Ensure we safely resolve URL on client side (handling potential SSR / dev issues)
-  const currentUrl = url || (typeof window !== "undefined" ? window.location.href : "https://hareemacademy.com");
+  // Ensure we safely resolve and normalize URL on client side to prevent search engines from indexing render domain
+  const getCanonicalUrl = () => {
+    if (url) {
+      return url.replace("https://hareem-academy.onrender.com", "https://hareemacademy.com");
+    }
+    if (typeof window !== "undefined") {
+      const path = window.location.pathname;
+      return `https://hareemacademy.com${path}`;
+    }
+    return "https://hareemacademy.com";
+  };
+  const currentUrl = getCanonicalUrl();
   const defaultImage = "https://hareemacademy.com/premium-hero-showcase.png";
 
   return (

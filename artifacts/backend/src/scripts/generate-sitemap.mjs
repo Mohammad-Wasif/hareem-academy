@@ -17,7 +17,7 @@ if (!fs.existsSync(publicDir)) {
 const sitemapPath = path.join(publicDir, "sitemap.xml");
 
 // Base URL for the frontend
-const baseUrl = process.env.VITE_APP_URL || "https://hareemacademy.com";
+const baseUrl = process.env.VITE_SITE_URL || process.env.VITE_APP_URL || "https://hareemacademy.com";
 
 async function generateSitemap() {
   console.log("Generating sitemap...");

@@ -348,8 +348,8 @@ git push -u origin main
 
 ### Step 4 — Visit your live site
 
-- Public site: `https://hareem-academy.onrender.com`
-- Admin panel: `https://hareem-academy.onrender.com/admin/login`
+- Public site: `https://hareemacademy.com`
+- Admin panel: `https://hareemacademy.com/admin/login`
   (username `admin`, password = whatever you set in `ADMIN_PASSWORD`).
 
 > **Free tier note:** Render's free Web Service goes to sleep after ~15 minutes
