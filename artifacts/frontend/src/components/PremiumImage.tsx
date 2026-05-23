@@ -13,6 +13,8 @@ interface PremiumImageProps {
   widthClass?: string; // Width class (e.g. w-full)
   heightClass?: string; // Height class (e.g. h-auto, h-40)
   roundedClass?: string; // Rounded class (e.g. rounded-xl, rounded-full)
+  bgClass?: string; // Background class for loader/skeleton container
+  objectFit?: "cover" | "contain";
   fetchPriority?: "high" | "low" | "auto";
 }
 
@@ -26,6 +28,8 @@ export default function PremiumImage({
   widthClass = "w-full",
   heightClass = "h-auto",
   roundedClass = "rounded-xl",
+  bgClass = "bg-[#FAF7F0]/40",
+  objectFit = "cover",
   fetchPriority = "auto",
 }: PremiumImageProps) {
   const { assets, assetsMetadata, isVerifyingFreshness } = useSiteAssets();
@@ -97,7 +101,7 @@ export default function PremiumImage({
   }, [assetKey, assets, assetsMetadata, isVerifyingFreshness, fallback, width]);
 
   // Combined styling for dimension stability
-  const containerClasses = `relative overflow-hidden bg-[#FAF7F0]/40 select-none ${roundedClass} ${widthClass} ${heightClass} ${aspectRatio}`;
+  const containerClasses = `relative overflow-hidden select-none ${bgClass} ${roundedClass} ${widthClass} ${heightClass} ${aspectRatio}`;
 
   // 1. Shimmer Skeleton State (Initial fresh-asset verification or Loading)
   if (isVerifyingFreshness || (!currentSrc && !hasError)) {
@@ -131,7 +135,9 @@ export default function PremiumImage({
         <img
           src={blurSrc}
           alt=""
-          className={`absolute inset-0 w-full h-full object-cover filter blur-[10px] scale-110 opacity-70 transition-opacity duration-300 ${className}`}
+          className={`absolute inset-0 w-full h-full filter blur-[10px] scale-110 opacity-70 transition-opacity duration-300 ${
+            objectFit === "contain" ? "object-contain" : "object-cover"
+          } ${className}`}
         />
       )}
 
@@ -141,8 +147,10 @@ export default function PremiumImage({
           src={currentSrc}
           alt={alt}
           fetchpriority={fetchPriority}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-out ${
+          className={`absolute inset-0 w-full h-full transition-opacity duration-500 ease-out ${
             isLoaded ? "opacity-100" : "opacity-0"
+          } ${
+            objectFit === "contain" ? "object-contain" : "object-cover"
           } ${className}`}
         />
       )}

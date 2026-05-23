@@ -53,27 +53,31 @@ export default function Header() {
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
       <div
-        className={`container mx-auto px-4 flex items-center justify-between transition-all duration-300 ${scrolled ? "h-11 sm:h-12" : "h-12 sm:h-14"
-          }`}
+        className={`container mx-auto px-3 sm:px-6 flex items-center justify-between transition-all duration-300 ${
+          scrolled ? "h-12 sm:h-14" : "h-14 sm:h-16"
+        }`}
       >
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
+        <Link href="/" className="flex items-center gap-2.5 group min-w-0 shrink-0">
           <motion.div
-            whileHover={{ scale: 1.03 }}
+            whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            className={`flex items-center transition-all duration-300 ${scrolled ? "h-7 sm:h-8.5" : "h-8 sm:h-10"}`}
+            className={`flex items-center shrink-0 transition-all duration-300 ${
+              scrolled ? "h-8 sm:h-9.5" : "h-9.5 sm:h-11"
+            }`}
           >
             <PremiumImage
               assetKey="logo"
               fallback={staticLogo}
               alt="Hareem Academy"
-              className="object-contain"
-              widthClass={scrolled ? "w-20 sm:w-24" : "w-24 sm:w-28"}
+              objectFit="contain"
+              bgClass="bg-transparent"
+              widthClass={scrolled ? "w-16 sm:w-22" : "w-20 sm:w-26"}
               heightClass="h-full"
               fetchPriority="high"
             />
           </motion.div>
-          <span className="font-serif font-bold text-base sm:text-lg md:text-xl tracking-[0.12em] text-[#ECC565] group-hover:text-[#ECC565]/90 transition-colors uppercase">
+          <span className="whitespace-nowrap font-serif font-bold text-xs sm:text-base md:text-lg lg:text-xl tracking-[0.06em] sm:tracking-[0.12em] text-[#ECC565] group-hover:text-[#ECC565]/90 transition-colors uppercase">
             {t("common.site_name", "Hareem Academy")}
           </span>
         </Link>
