@@ -60,6 +60,8 @@ router.post(
         {
           folder: "hareem-academy",
           resource_type: "image",
+          overwrite: true,
+          invalidate: true,
         },
         async (error, result) => {
           if (error || !result) {

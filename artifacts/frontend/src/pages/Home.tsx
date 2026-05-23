@@ -25,6 +25,7 @@ import { useListCourses, useListTestimonials, useGetSiteStats } from "@workspace
 import { useTranslation } from "react-i18next";
 import { SEO } from "@/components/SEO";
 import { useSiteAssets } from "@/hooks/use-site-assets";
+import PremiumImage from "@/components/PremiumImage";
 
 /* ── Reusable animation variants ── */
 const fadeUp = {
@@ -144,11 +145,17 @@ export default function Home() {
       {/* 1. HERO */}
       <section className="relative bg-background overflow-hidden pt-2 pb-3 sm:pt-4 sm:pb-4 flex items-center min-h-[auto] sm:min-h-[60vh] lg:min-h-[65vh]">
         <div className="absolute inset-0 z-0 pointer-events-none">
-          <img
-            src={assets["hero_bg"] || "/hero-bg.png"}
-            alt=""
-            className="w-full h-full object-cover opacity-[0.03]"
-          />
+          <div className="absolute inset-0 w-full h-full opacity-[0.03]">
+            <PremiumImage
+              assetKey="hero_bg"
+              fallback="/hero-bg.png"
+              alt=""
+              className="w-full h-full object-cover"
+              widthClass="w-full"
+              heightClass="h-full"
+              fetchPriority="low"
+            />
+          </div>
           {/* Subtle radial glow and vertical cream gradient */}
           <div className="absolute inset-0 hero-glow-bg" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/90 to-background" />
@@ -264,11 +271,15 @@ export default function Home() {
               <div className="relative w-full max-w-[280px] mx-auto">
                 <div className="absolute -inset-1.5 bg-gradient-to-tr from-primary/3 to-accent/3 rounded-xl blur-xl opacity-20" />
                 <div className="relative bg-card border border-primary/5 rounded-xl p-1 shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
-                  <img
-                    src={assets["hero_showcase"] || "/premium-hero-showcase.png"}
+                  <PremiumImage
+                    assetKey="hero_showcase"
+                    fallback="/premium-hero-showcase.png"
                     alt={t("home.hero.showcase_alt", "Live online Arabic and Quran classes for sisters at Hareem Academy")}
-                    className="w-full max-w-full h-auto rounded-lg object-cover"
-                    fetchpriority="high"
+                    className="rounded-lg object-cover"
+                    aspectRatio="aspect-[1.12/1]"
+                    widthClass="w-full max-w-[280px]"
+                    heightClass="h-auto"
+                    fetchPriority="high"
                   />
                 </div>
               </div>
@@ -286,11 +297,15 @@ export default function Home() {
                 
                 {/* Visual card frame */}
                 <div className="relative bg-card border border-primary/5 rounded-2xl p-1.5 shadow-[0_8px_30px_rgba(19,94,70,0.02)] hover:border-primary/10 transition-all duration-500">
-                  <img
-                    src={assets["hero_showcase"] || "/premium-hero-showcase.png"}
+                  <PremiumImage
+                    assetKey="hero_showcase"
+                    fallback="/premium-hero-showcase.png"
                     alt={t("home.hero.showcase_alt", "Live online Arabic and Quran classes for sisters at Hareem Academy")}
-                    className="w-full max-w-full h-auto rounded-xl object-cover transition-transform duration-500 group-hover:scale-105"
-                    fetchpriority="high"
+                    className="rounded-xl object-cover transition-transform duration-500 group-hover:scale-105"
+                    aspectRatio="aspect-[1.12/1]"
+                    widthClass="w-full max-w-[420px]"
+                    heightClass="h-auto"
+                    fetchPriority="high"
                   />
                   
                   {/* Floating badge 1: sisters-only */}

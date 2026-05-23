@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Course } from "@workspace/api-client-react";
 import { useTranslation } from "react-i18next";
 import { useSiteAssets } from "@/hooks/use-site-assets";
+import PremiumImage from "@/components/PremiumImage";
 
 export default function CourseCard({ course }: { course: Course }) {
   const { i18n, t } = useTranslation();
@@ -23,13 +24,14 @@ export default function CourseCard({ course }: { course: Course }) {
     (course.level ?? "").toLowerCase().includes("intermediate") ||
     (course.slug ?? "").toLowerCase().includes("intermediate");
 
-  // Dynamic thumbnail — falls back to static public files
-  const thumbnail =
-    course.language?.toLowerCase() === "arabic"
-      ? isIntermediate
-        ? assets["course_arabic_intermediate"] || assets["course_arabic"] || "/course-arabic.png"
-        : assets["course_arabic"] || "/course-arabic.png"
-      : assets["course_urdu"] || "/course-urdu.png";
+  const isUrdu = course.language?.toLowerCase() === "urdu";
+  const assetKey = isUrdu 
+    ? "course_urdu" 
+    : isIntermediate 
+      ? "course_arabic_intermediate" 
+      : "course_arabic";
+
+  const fallback = isUrdu ? "/course-urdu.png" : "/course-arabic.png";
 
   return (
     <Link href={`/courses/${course.slug}`} className="block h-full">
@@ -66,7 +68,15 @@ export default function CourseCard({ course }: { course: Course }) {
 
         {/* Image */}
         <div className={`h-40 sm:h-44 lg:h-48 bg-primary/5 flex items-center justify-center overflow-hidden relative ${(course as any).enrollmentStatus === 'closed' ? 'grayscale opacity-75' : ''}`}>
-          <img src={thumbnail} alt={title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <PremiumImage
+            assetKey={assetKey}
+            fallback={fallback}
+            alt={title}
+            className="transition-transform duration-500 group-hover:scale-105"
+            widthClass="w-full"
+            heightClass="h-full"
+            width={480}
+          />
         </div>
 
 

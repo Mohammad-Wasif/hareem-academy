@@ -14,14 +14,26 @@ import {
   Check,
   Calendar,
   Layers,
-  Image as ImageIcon
+  Image as ImageIcon,
+  BookOpen,
+  Users,
+  Sparkles
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 
 const MEDIA_SLOTS = [
   {
+    key: "logo",
+    category: "logos",
+    name: "Site Logo",
+    description: "Main website logo displayed in the navigation bar.",
+    fallback: "/logo.png",
+    aspectRatio: "w-32 h-12 object-contain bg-muted/10 border border-border/40 rounded-lg p-2",
+  },
+  {
     key: "hero_bg",
+    category: "hero",
     name: "Hero Background Image",
     description: "The background pattern displayed in the hero section at the top of the homepage.",
     fallback: "/hero-bg.png",
@@ -29,6 +41,7 @@ const MEDIA_SLOTS = [
   },
   {
     key: "teacher_1",
+    category: "teachers",
     name: "Ustadha Fatima Portrait",
     description: "Headshot portrait image for Ustadha Fatima (Head of Arabic) on the About page.",
     fallback: "/teacher-1.png",
@@ -36,6 +49,7 @@ const MEDIA_SLOTS = [
   },
   {
     key: "teacher_2",
+    category: "teachers",
     name: "Ustadha Ayesha Portrait",
     description: "Headshot portrait image for Ustadha Ayesha (Senior Urdu Instructor) on the About page.",
     fallback: "/teacher-2.png",
@@ -43,20 +57,15 @@ const MEDIA_SLOTS = [
   },
   {
     key: "teacher_3",
+    category: "teachers",
     name: "Ustadha Zainab Portrait",
     description: "Headshot portrait image for Ustadha Zainab (Arabic & Tajweed Instructor) on the About page.",
     fallback: "/teacher-3.png",
     aspectRatio: "aspect-[1/1] w-28 h-28 rounded-full object-cover border border-border/40",
   },
   {
-    key: "logo",
-    name: "Site Logo",
-    description: "Main website logo displayed in the navigation bar.",
-    fallback: "/logo.png",
-    aspectRatio: "w-32 h-12 object-contain bg-muted/10 border border-border/40 rounded-lg p-2",
-  },
-  {
     key: "course_arabic",
+    category: "courses",
     name: "Arabic Course Thumbnail",
     description: "Default thumbnail for Arabic language courses.",
     fallback: "/course-arabic.png",
@@ -64,6 +73,7 @@ const MEDIA_SLOTS = [
   },
   {
     key: "course_arabic_intermediate",
+    category: "courses",
     name: "Intermediate Arabic Thumbnail",
     description: "Default thumbnail for Intermediate Arabic courses.",
     fallback: "/course-arabic.png",
@@ -71,6 +81,7 @@ const MEDIA_SLOTS = [
   },
   {
     key: "course_urdu",
+    category: "courses",
     name: "Urdu Course Thumbnail",
     description: "Default thumbnail for Urdu/Islamic Studies courses.",
     fallback: "/course-urdu.png",
@@ -86,6 +97,7 @@ interface PremiumImagePreviewProps {
   progress: number;
   error?: string;
   updatedAt?: string;
+  onDimensionsLoad?: (dims: { width: number; height: number }) => void;
 }
 
 // A premium cache-busting image preloader to eliminate stale CDN flashing
@@ -96,7 +108,8 @@ function PremiumImagePreview({
   isUploading,
   progress,
   error,
-  updatedAt
+  updatedAt,
+  onDimensionsLoad
 }: PremiumImagePreviewProps) {
   const [currentSrc, setCurrentSrc] = useState(src);
   const [loadingNewSrc, setLoadingNewSrc] = useState(false);
@@ -111,22 +124,29 @@ function PremiumImagePreview({
   useEffect(() => {
     const targetSrc = getCacheBustedUrl(src, updatedAt);
     
-    // Only preload if the target source is actually different
+    // Always measure size, even on first load or when source changes
+    const img = new Image();
+    img.src = targetSrc;
+    img.onload = () => {
+      if (onDimensionsLoad) {
+        onDimensionsLoad({ width: img.naturalWidth, height: img.naturalHeight });
+      }
+      if (targetSrc !== currentSrc) {
+        setCurrentSrc(targetSrc);
+        setLoadingNewSrc(false);
+      }
+    };
+    img.onerror = () => {
+      if (targetSrc !== currentSrc) {
+        setCurrentSrc(targetSrc);
+        setLoadingNewSrc(false);
+      }
+    };
+
     if (targetSrc !== currentSrc) {
       setLoadingNewSrc(true);
-      const img = new Image();
-      img.src = targetSrc;
-      img.onload = () => {
-        setCurrentSrc(targetSrc);
-        setLoadingNewSrc(false);
-      };
-      img.onerror = () => {
-        // Fallback to direct assignment if preload fails
-        setCurrentSrc(targetSrc);
-        setLoadingNewSrc(false);
-      };
     }
-  }, [src, updatedAt]);
+  }, [src, updatedAt, currentSrc]);
 
   return (
     <div className="relative overflow-hidden w-full h-full flex items-center justify-center bg-[#FAF7F0]/40 rounded-xl min-h-[180px] p-4 group">
@@ -405,6 +425,32 @@ export default function AdminMedia() {
   const customUploadsCount = Object.keys(assets).length;
   const defaultStaticCount = totalSlots - customUploadsCount;
 
+  const [activeTab, setActiveTab] = useState<string>("all");
+  const [dimensions, setDimensions] = useState<Record<string, { width: number; height: number }>>({});
+
+  const getFileNameFromUrl = (url: string) => {
+    if (!url) return "";
+    try {
+      const parts = url.split("/");
+      const lastPart = parts[parts.length - 1] || "";
+      return lastPart.split("?")[0] || lastPart;
+    } catch {
+      return url;
+    }
+  };
+
+  const categories = [
+    { id: "all", name: "All Assets", icon: Layers, count: totalSlots },
+    { id: "logos", name: "Logos & Brand", icon: Sparkles, count: MEDIA_SLOTS.filter(s => s.category === "logos").length },
+    { id: "hero", name: "Hero Graphics", icon: ImageIcon, count: MEDIA_SLOTS.filter(s => s.category === "hero").length },
+    { id: "courses", name: "Course Thumbnails", icon: BookOpen, count: MEDIA_SLOTS.filter(s => s.category === "courses").length },
+    { id: "teachers", name: "Teacher Portraits", icon: Users, count: MEDIA_SLOTS.filter(s => s.category === "teachers").length },
+  ];
+
+  const filteredSlots = activeTab === "all"
+    ? MEDIA_SLOTS
+    : MEDIA_SLOTS.filter(slot => slot.category === activeTab);
+
   return (
     <div className="space-y-8 pb-24">
       {/* Premium Header */}
@@ -463,98 +509,162 @@ export default function AdminMedia() {
         </div>
       </div>
 
+      {/* Notion-style Category tabs */}
+      <div className="flex flex-wrap gap-2 border-b border-border/40 pb-4">
+        {categories.map(cat => {
+          const Icon = cat.icon;
+          const isActive = activeTab === cat.id;
+          return (
+            <button
+              key={cat.id}
+              onClick={() => setActiveTab(cat.id)}
+              className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg border transition-all cursor-pointer ${
+                isActive
+                  ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                  : "bg-white text-muted-foreground border-border/80 hover:bg-primary/5 hover:text-primary"
+              }`}
+            >
+              <Icon className="w-3.5 h-3.5" />
+              <span>{cat.name}</span>
+              <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+                isActive ? "bg-primary-foreground/20 text-white" : "bg-neutral-100 text-neutral-600 border border-neutral-200/50"
+              }`}>
+                {cat.count}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
       {/* Grid of media slots */}
       <div className="grid gap-6 md:grid-cols-2">
-        {MEDIA_SLOTS.map(slot => {
-          const activeUrl = assets[slot.key];
-          const metadata = assetsMetadata[slot.key];
-          const isUploaded = !!activeUrl;
-          const isUploading = uploadingKeys[slot.key];
-          
-          // Determine the source to show: local preview if uploading, active Cloudinary URL if available, fallback static asset otherwise.
-          const currentSrc = localPreviews[slot.key] || activeUrl || slot.fallback;
-          const dragOver = dragActive[slot.key];
-          const progress = uploadProgress[slot.key] || 0;
-          const errorMsg = uploadErrors[slot.key];
-          const isDeleting = deletingKeys[slot.key];
+        <AnimatePresence mode="popLayout">
+          {filteredSlots.map(slot => {
+            const activeUrl = assets[slot.key];
+            const metadata = assetsMetadata[slot.key];
+            const isUploaded = !!activeUrl;
+            const isUploading = uploadingKeys[slot.key];
+            
+            // Determine the source to show: local preview if uploading, active Cloudinary URL if available, fallback static asset otherwise.
+            const currentSrc = localPreviews[slot.key] || activeUrl || slot.fallback;
+            const dragOver = dragActive[slot.key];
+            const progress = uploadProgress[slot.key] || 0;
+            const errorMsg = uploadErrors[slot.key];
+            const isDeleting = deletingKeys[slot.key];
 
-          return (
-            <motion.div
-              layout
-              key={slot.key}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              whileHover={{ y: -3, transition: { duration: 0.2 } }}
-              className="bg-white rounded-2xl border border-border/60 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col justify-between"
-            >
-              {/* Card Header */}
-              <div className="p-6 border-b border-border/30">
-                <div className="flex items-start justify-between gap-3">
+            return (
+              <motion.div
+                layout
+                key={slot.key}
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: 0.25 }}
+                className="bg-white rounded-2xl border border-border/60 shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden flex flex-col justify-between"
+              >
+                {/* Card Header */}
+                <div className="p-5 border-b border-border/30 bg-[#FAF7F0]/10 flex items-center justify-between">
                   <div>
-                    <h3 className="font-serif text-lg text-primary font-bold leading-tight">
+                    <span className="text-[9px] font-bold text-primary/60 tracking-widest uppercase font-sans bg-primary/5 border border-primary/10 px-2 py-0.5 rounded-md">
+                      {slot.category} • {slot.key}
+                    </span>
+                    <h3 className="font-serif text-lg text-primary font-bold leading-tight mt-2">
                       {slot.name}
                     </h3>
-                    <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
-                      {slot.description}
-                    </p>
                   </div>
-
-                  {/* Status Badge */}
                   {isUploaded ? (
                     <span className="text-[10px] bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full uppercase font-bold tracking-wider flex items-center gap-1 border border-emerald-200/50 shrink-0">
                       <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                      Custom CDN
+                      CDN Synced
                     </span>
                   ) : (
-                    <span className="text-[10px] bg-neutral-100 text-neutral-500 px-2.5 py-1 rounded-full uppercase font-bold tracking-wider border border-neutral-200/30 shrink-0">
-                      Default Static
+                    <span className="text-[10px] bg-neutral-50 text-neutral-500 px-2.5 py-1 rounded-full uppercase font-bold tracking-wider border border-neutral-200/30 shrink-0">
+                      Static Default
                     </span>
                   )}
                 </div>
-              </div>
 
-              {/* Visual Preview Section */}
-              <div className="px-6 py-4 bg-[#FAF7F0]/20 flex flex-col items-center">
-                <PremiumImagePreview
-                  src={currentSrc}
-                  alt={slot.name}
-                  className={slot.aspectRatio}
-                  isUploading={isUploading}
-                  progress={progress}
-                  error={errorMsg}
-                  updatedAt={metadata?.updatedAt}
-                />
-                
-                {/* Meta details footer inside the preview area */}
-                <div className="w-full flex items-center justify-between mt-3 text-[10px] text-muted-foreground px-1 select-all font-mono truncate gap-4">
-                  <span className="truncate max-w-[200px]">
-                    {isUploaded ? activeUrl : `Fallback: ${slot.fallback}`}
-                  </span>
-                  {metadata?.updatedAt && (
-                    <span className="flex items-center gap-1 text-[9px] text-muted-foreground bg-white border border-border/30 px-1.5 py-0.5 rounded shrink-0">
-                      <Calendar className="w-2.5 h-2.5 text-[#D4A359]" />
-                      {formatTimestamp(metadata.updatedAt)}
-                    </span>
-                  )}
+                {/* Grid content: Left preview, Right stats */}
+                <div className="p-5 grid grid-cols-1 sm:grid-cols-12 gap-5 items-stretch bg-white">
+                  {/* Left side preview (col-span-5) */}
+                  <div className="sm:col-span-5 flex items-center justify-center">
+                    <div className="w-full h-full min-h-[140px] flex items-center justify-center border border-border/30 rounded-xl overflow-hidden bg-[#FAF7F0]/30 relative p-3">
+                      <PremiumImagePreview
+                        src={currentSrc}
+                        alt={slot.name}
+                        className={slot.aspectRatio}
+                        isUploading={isUploading}
+                        progress={progress}
+                        error={errorMsg}
+                        updatedAt={metadata?.updatedAt}
+                        onDimensionsLoad={(dims) => {
+                          setDimensions(prev => ({ ...prev, [slot.key]: dims }));
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Right side stats (col-span-7) */}
+                  <div className="sm:col-span-7 flex flex-col justify-between gap-3 text-xs">
+                    <div className="space-y-2">
+                      <div className="flex justify-between border-b border-border/20 pb-1">
+                        <span className="text-muted-foreground font-medium">Filename</span>
+                        <span className="font-mono text-[10px] text-foreground font-semibold truncate max-w-[130px] text-right" title={getFileNameFromUrl(currentSrc)}>
+                          {getFileNameFromUrl(currentSrc)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between border-b border-border/20 pb-1">
+                        <span className="text-muted-foreground font-medium">Resolution</span>
+                        <span className="font-mono text-[10px] text-foreground font-semibold">
+                          {dimensions[slot.key] ? `${dimensions[slot.key].width} × ${dimensions[slot.key].height} px` : "Measuring..."}
+                        </span>
+                      </div>
+                      <div className="flex justify-between border-b border-border/20 pb-1">
+                        <span className="text-muted-foreground font-medium">Auto Format</span>
+                        <span className="font-mono text-[10px] text-[#0F4D36] font-bold">
+                          AVIF / WebP (Smart)
+                        </span>
+                      </div>
+                      <div className="flex justify-between border-b border-border/20 pb-1">
+                        <span className="text-muted-foreground font-medium">Compression</span>
+                        <span className="font-mono text-[10px] text-accent font-semibold">
+                          q_auto:best (Optimized)
+                        </span>
+                      </div>
+                      <div className="flex justify-between pb-1">
+                        <span className="text-muted-foreground font-medium">CDN Status</span>
+                        <span className="font-sans text-[10px] font-semibold">
+                          {isUploaded ? (
+                            <span className="text-emerald-700 flex items-center gap-1">
+                              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                              Live on CDN
+                            </span>
+                          ) : (
+                            <span className="text-neutral-500 flex items-center gap-1">
+                              <span className="h-1.5 w-1.5 rounded-full bg-neutral-400" />
+                              Template Asset
+                            </span>
+                          )}
+                        </span>
+                      </div>
+                    </div>
+
+                    <p className="text-[10px] text-muted-foreground leading-normal font-sans italic bg-[#FAF7F0]/40 p-2 rounded-lg border border-border/30">
+                      {slot.description}
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Upload Zone & Action Buttons */}
-              <div className="p-6 space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor={`file-input-${slot.key}`} className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold block mb-1">
-                    Upload & Deploy Area
-                  </Label>
-
-                  {/* Stateful Drag and Drop Box */}
+                {/* Upload Zone & Action Buttons */}
+                <div className="p-5 border-t border-border/30 bg-[#FAF7F0]/5 space-y-3">
+                  {/* Drag Drop Area */}
                   <div
                     onDragOver={e => handleDrag(e, slot.key, true)}
                     onDragLeave={e => handleDrag(e, slot.key, false)}
                     onDrop={e => handleDrop(e, slot.key)}
-                    className={`relative rounded-xl border border-dashed text-center p-5 transition-all duration-300 flex flex-col items-center justify-center cursor-pointer ${
+                    className={`relative rounded-xl border border-dashed text-center p-3.5 transition-all duration-300 flex flex-col items-center justify-center cursor-pointer ${
                       dragOver
-                        ? "border-[#D4A359] bg-[#FAF7F0] scale-[1.01]"
+                        ? "border-[#ECC565] bg-[#FAF7F0] scale-[1.01]"
                         : errorMsg
                         ? "border-red-300 bg-red-50/20 hover:bg-red-50/40"
                         : "border-border/60 hover:border-primary/40 hover:bg-primary/2"
@@ -578,29 +688,28 @@ export default function AdminMedia() {
                     />
 
                     {errorMsg ? (
-                      /* Error State Inside Upload Area */
-                      <div className="space-y-3 w-full flex flex-col items-center">
-                        <AlertCircle className="w-6 h-6 text-red-500" />
-                        <div className="text-xs text-red-950 font-semibold">Upload interrupted</div>
-                        <div className="flex gap-2 w-full max-w-[240px]">
+                      <div className="space-y-2 w-full flex flex-col items-center">
+                        <AlertCircle className="w-5 h-5 text-red-500" />
+                        <div className="text-[11px] text-red-950 font-semibold">Upload interrupted</div>
+                        <div className="flex gap-2 w-full max-w-[200px]">
                           <Button
                             type="button"
                             variant="destructive"
                             size="sm"
-                            className="w-full h-8 text-[11px] font-bold"
+                            className="w-full h-7 text-[10px] font-bold"
                             onClick={e => {
                               e.stopPropagation();
                               handleRetryUpload(slot.key);
                             }}
                           >
-                            <RefreshCw className="w-3.5 h-3.5 mr-1" />
+                            <RefreshCw className="w-3 h-3 mr-1" />
                             Retry
                           </Button>
                           <Button
                             type="button"
                             variant="outline"
                             size="sm"
-                            className="w-full h-8 text-[11px] font-bold border-red-200 text-red-800 hover:bg-red-50"
+                            className="w-full h-7 text-[10px] font-bold border-red-200 text-red-800 hover:bg-red-50"
                             onClick={e => {
                               e.stopPropagation();
                               handleCancelUpload(slot.key);
@@ -611,60 +720,60 @@ export default function AdminMedia() {
                         </div>
                       </div>
                     ) : (
-                      /* Default Upload Interface */
-                      <div className="space-y-2">
-                        <div className="p-2.5 rounded-full bg-[#FAF7F0] text-[#D4A359] inline-flex items-center justify-center border border-border/20 group-hover:scale-105 transition-transform duration-300">
+                      <div className="flex items-center gap-2">
+                        <div className="p-1.5 rounded-full bg-[#FAF7F0] text-[#ECC565] border border-border/20">
                           {isUploading ? (
-                            <Loader2 className="w-5 h-5 animate-spin text-[#D4A359]" />
+                            <Loader2 className="w-3.5 h-3.5 animate-spin text-[#ECC565]" />
                           ) : (
-                            <FileImage className="w-5 h-5 text-primary" />
+                            <Upload className="w-3.5 h-3.5 text-primary" />
                           )}
                         </div>
-                        <div className="text-xs font-semibold text-foreground">
-                          {isUploading ? "Uploading file..." : "Drag & Drop Image"}
-                        </div>
-                        <div className="text-[10px] text-muted-foreground">
-                          Supports JPG, PNG, WEBP up to 8MB
+                        <div className="text-left">
+                          <div className="text-xs font-semibold text-foreground">
+                            {isUploading ? "Uploading file..." : "Drag & Drop or Click"}
+                          </div>
+                          <div className="text-[9px] text-muted-foreground">
+                            Supports PNG, JPG, WEBP (under 8MB)
+                          </div>
                         </div>
                       </div>
                     )}
                   </div>
-                </div>
 
-                {/* Replace & Remove buttons */}
-                <div className="flex gap-2 pt-1 border-t border-border/20">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="flex-1 h-10 text-xs font-semibold border-border/60 hover:bg-primary/5 hover:text-primary transition-all flex items-center justify-center gap-1.5"
-                    disabled={isUploading}
-                    onClick={() => document.getElementById(`file-input-${slot.key}`)?.click()}
-                  >
-                    <Upload className="w-3.5 h-3.5" />
-                    Replace Image
-                  </Button>
-
-                  {/* Remove custom asset back to template default */}
-                  {isUploaded && (
+                  {/* Footer Buttons */}
+                  <div className="flex gap-2">
                     <Button
                       type="button"
-                      variant="ghost"
-                      className="h-10 px-3 text-xs font-semibold text-red-600 hover:text-red-700 hover:bg-red-50/60 transition-all flex items-center justify-center gap-1.5 border border-transparent hover:border-red-100 rounded-lg"
-                      disabled={isUploading || isDeleting}
-                      onClick={() => handleFileDelete(slot.key)}
+                      variant="outline"
+                      className="flex-1 h-9 text-xs font-semibold border-border/60 hover:bg-primary/5 hover:text-primary transition-all flex items-center justify-center gap-1.5"
+                      disabled={isUploading}
+                      onClick={() => document.getElementById(`file-input-${slot.key}`)?.click()}
                     >
-                      {isDeleting ? (
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      ) : (
-                        <Trash2 className="w-3.5 h-3.5" />
-                      )}
+                      <Upload className="w-3 h-3" />
+                      Replace Image
                     </Button>
-                  )}
+
+                    {isUploaded && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        className="h-9 px-3 text-xs font-semibold text-red-600 hover:text-red-700 hover:bg-red-50/60 transition-all flex items-center justify-center gap-1.5 border border-transparent hover:border-red-100 rounded-lg"
+                        disabled={isUploading || isDeleting}
+                        onClick={() => handleFileDelete(slot.key)}
+                      >
+                        {isDeleting ? (
+                          <Loader2 className="w-3 h-3 animate-spin" />
+                        ) : (
+                          <Trash2 className="w-3 h-3" />
+                        )}
+                      </Button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          );
-        })}
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import {
 import CTAGroup from "@/components/CTAGroup";
 import { useGetSiteStats } from "@workspace/api-client-react";
 import { useSiteAssets } from "@/hooks/use-site-assets";
+import PremiumImage from "@/components/PremiumImage";
 import { motion } from "framer-motion";
 import { SEO } from "@/components/SEO";
 
@@ -333,19 +334,22 @@ export default function About() {
             {
               name: "Ustadha Fatima",
               role: "Head of Arabic",
-              img: assets["teacher_1"] || "/teacher-1.png",
+              assetKey: "teacher_1",
+              fallback: "/teacher-1.png",
               bio: "8+ years teaching Quranic Arabic to sisters worldwide.",
             },
             {
               name: "Ustadha Ayesha",
               role: "Senior Urdu Instructor",
-              img: assets["teacher_2"] || "/teacher-2.png",
+              assetKey: "teacher_2",
+              fallback: "/teacher-2.png",
               bio: "Specialist in Urdu literature and Islamic studies.",
             },
             {
               name: "Ustadha Zainab",
               role: "Arabic & Tajweed",
-              img: assets["teacher_3"] || "/teacher-3.png",
+              assetKey: "teacher_3",
+              fallback: "/teacher-3.png",
               bio: "Ijazah in Tajweed, focused on beginner sisters.",
             },
           ].map((teacher, i) => (
@@ -356,11 +360,19 @@ export default function About() {
               whileHover={{ y: -6, transition: { type: "spring", stiffness: 300 } }}
               className="bg-card rounded-2xl p-6 border border-border text-center hover:border-primary/30 hover:shadow-lg transition-colors cursor-default"
             >
-              <img
-                src={teacher.img}
-                alt={teacher.name}
-                className="w-28 h-28 rounded-full mx-auto object-cover border-4 border-primary/10 mb-5"
-              />
+              <div className="w-28 h-28 mx-auto mb-5">
+                <PremiumImage
+                  assetKey={teacher.assetKey}
+                  fallback={teacher.fallback}
+                  alt={teacher.name}
+                  width={112}
+                  roundedClass="rounded-full"
+                  widthClass="w-full"
+                  heightClass="h-full"
+                  aspectRatio="aspect-square"
+                  className="object-cover border-4 border-primary/10"
+                />
+              </div>
               <h3 className="font-serif font-bold text-xl text-foreground">{teacher.name}</h3>
               <p className="text-primary font-medium text-sm mt-1">{teacher.role}</p>
               <p className="text-sm text-muted-foreground mt-3">{teacher.bio}</p>

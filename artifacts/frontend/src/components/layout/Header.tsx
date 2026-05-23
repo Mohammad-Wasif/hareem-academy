@@ -10,6 +10,7 @@ import staticLogo from "@assets/IMG_20260507_171922.png";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
 import { useSiteAssets } from "@/hooks/use-site-assets";
+import PremiumImage from "@/components/PremiumImage";
 
 export default function Header() {
   const { t } = useTranslation();
@@ -57,13 +58,21 @@ export default function Header() {
       >
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <motion.img
-            src={logoSrc}
-            alt="Hareem Academy"
-            className={`w-auto object-contain transition-all duration-300 ${scrolled ? "h-7 sm:h-8.5" : "h-8 sm:h-10"}`}
-            whileHover={{ scale: 1.05 }}
+          <motion.div
+            whileHover={{ scale: 1.03 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
-          />
+            className={`flex items-center transition-all duration-300 ${scrolled ? "h-7 sm:h-8.5" : "h-8 sm:h-10"}`}
+          >
+            <PremiumImage
+              assetKey="logo"
+              fallback={staticLogo}
+              alt="Hareem Academy"
+              className="object-contain"
+              widthClass={scrolled ? "w-20 sm:w-24" : "w-24 sm:w-28"}
+              heightClass="h-full"
+              fetchPriority="high"
+            />
+          </motion.div>
           <span className="font-serif font-bold text-base sm:text-lg md:text-xl tracking-[0.12em] text-[#ECC565] group-hover:text-[#ECC565]/90 transition-colors uppercase">
             {t("common.site_name", "Hareem Academy")}
           </span>

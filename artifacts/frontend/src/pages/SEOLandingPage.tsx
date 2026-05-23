@@ -25,6 +25,7 @@ import {
 import EnrollmentModal from "@/components/EnrollmentModal";
 import { useWhatsApp } from "@/hooks/use-whatsapp";
 import { useSiteAssets } from "@/hooks/use-site-assets";
+import PremiumImage from "@/components/PremiumImage";
 import { motion } from "framer-motion";
 
 interface SEOLandingPageProps {
@@ -126,11 +127,14 @@ export default function SEOLandingPage({ slug }: SEOLandingPageProps) {
 
       {/* 1. HERO SECTION */}
       <section className="relative bg-[#0F4D36] text-white py-12 sm:py-16 lg:py-24 overflow-hidden border-b border-[#ECC565]/20">
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <img
-            src={assets["hero_bg"] || "/hero-bg.png"}
+        <div className="absolute inset-0 z-0 pointer-events-none w-full h-full">
+          <PremiumImage
+            assetKey="hero_bg"
+            fallback="/hero-bg.png"
             alt=""
-            className="w-full h-full object-cover opacity-[0.03]"
+            widthClass="w-full"
+            heightClass="h-full"
+            className="object-cover opacity-[0.03]"
           />
           <div className="absolute inset-0 bg-radial-gradient(circle at 50% 50%, rgba(236,197,101,0.05), transparent)" />
         </div>
@@ -268,14 +272,17 @@ export default function SEOLandingPage({ slug }: SEOLandingPageProps) {
               </div>
             </div>
 
-            <div className="relative max-w-md mx-auto">
+            <div className="relative max-w-md mx-auto w-full">
               <div className="absolute -inset-2 bg-gradient-to-tr from-primary/5 to-[#ECC565]/5 rounded-3xl blur-2xl opacity-40" />
-              <div className="relative bg-card border border-border p-2 rounded-3xl shadow-lg">
-                <img
-                  src={assets["hero_showcase"] || "/premium-hero-showcase.png"}
+              <div className="relative bg-card border border-border p-2 rounded-3xl shadow-lg overflow-hidden w-full aspect-[4/3]">
+                <PremiumImage
+                  assetKey="hero_showcase"
+                  fallback="/premium-hero-showcase.png"
                   alt="Sisters learning environment showcase"
-                  className="w-full h-auto rounded-2xl object-cover"
-                  loading="lazy"
+                  widthClass="w-full"
+                  heightClass="h-full"
+                  roundedClass="rounded-2xl"
+                  className="object-cover"
                 />
               </div>
             </div>
@@ -393,8 +400,15 @@ export default function SEOLandingPage({ slug }: SEOLandingPageProps) {
       {/* 9. FINAL CTA CLOSING BAND */}
       <section className="container px-4 mt-12 max-w-4xl">
         <div className="bg-[#0F4D36] text-white rounded-3xl p-8 sm:p-12 md:p-16 text-center space-y-6 border border-[#ECC565]/20 shadow-xl shadow-black/15 relative overflow-hidden">
-          <div className="absolute inset-0 pointer-events-none opacity-5">
-            <img src={assets["hero_bg"] || "/hero-bg.png"} alt="" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 pointer-events-none opacity-5 w-full h-full">
+            <PremiumImage
+              assetKey="hero_bg"
+              fallback="/hero-bg.png"
+              alt=""
+              widthClass="w-full"
+              heightClass="h-full"
+              className="object-cover"
+            />
           </div>
           <Sparkles className="w-8 h-8 text-accent mx-auto" />
           <h2 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl text-white">

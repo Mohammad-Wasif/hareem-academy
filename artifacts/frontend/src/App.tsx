@@ -6,6 +6,7 @@ import { setBaseUrl } from "@workspace/api-client-react";
 import NotFound from "@/pages/not-found";
 import Layout from "@/components/layout/Layout";
 import "@/lib/i18n";
+import { MediaProvider } from "@/hooks/use-site-assets";
 
 // In production (Render), VITE_API_URL points to the backend service.
 // In local dev, the Vite proxy handles /api requests so no base URL is needed.
@@ -160,14 +161,16 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <I18nInitializer>
-        <TooltipProvider>
-          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-            <Router />
-          </WouterRouter>
-          <Toaster />
-        </TooltipProvider>
-      </I18nInitializer>
+      <MediaProvider>
+        <I18nInitializer>
+          <TooltipProvider>
+            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+              <Router />
+            </WouterRouter>
+            <Toaster />
+          </TooltipProvider>
+        </I18nInitializer>
+      </MediaProvider>
     </QueryClientProvider>
   );
 }
