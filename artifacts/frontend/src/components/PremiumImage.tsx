@@ -146,7 +146,7 @@ export default function PremiumImage({
         <img
           src={currentSrc}
           alt={alt}
-          fetchpriority={fetchPriority}
+          fetchPriority={fetchPriority}
           className={`absolute inset-0 w-full h-full transition-opacity duration-500 ease-out ${
             isLoaded ? "opacity-100" : "opacity-0"
           } ${
