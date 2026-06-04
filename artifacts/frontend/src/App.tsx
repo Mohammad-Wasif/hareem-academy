@@ -45,6 +45,7 @@ const AdminFaqs = React.lazy(() => import("@/pages/admin/AdminFaqs"));
 const AdminFormFields = React.lazy(() => import("@/pages/admin/AdminFormFields"));
 const AdminSiteContent = React.lazy(() => import("@/pages/admin/AdminSiteContent"));
 const AdminMedia = React.lazy(() => import("@/pages/admin/AdminMedia"));
+const AdminBuilder = React.lazy(() => import("@/pages/admin/AdminBuilder"));
 
 import { I18nInitializer } from "@/components/I18nInitializer";
 
@@ -137,6 +138,7 @@ function AdminRoutes() {
           <Route path="/admin/courses/:id/edit" component={AdminCourseEdit} />
           <Route path="/admin/site-content" component={AdminSiteContent} />
           <Route path="/admin/media" component={AdminMedia} />
+          <Route path="/admin/builder" component={AdminBuilder} />
 
           <Route path="/admin/enrollments" component={AdminEnrollments} />
           <Route path="/admin/contacts" component={AdminContacts} />

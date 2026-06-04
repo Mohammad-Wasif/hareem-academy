@@ -57,6 +57,7 @@ import {
 const NAV = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/courses", label: "Courses", icon: BookOpen },
+  { href: "/admin/builder", label: "Page Builder", icon: FileText },
   { href: "/admin/site-content", label: "Site Content", icon: Globe },
   { href: "/admin/media", label: "Media Manager", icon: ImageIcon },
   { href: "/admin/enrollments", label: "Enrollments", icon: Users },
@@ -203,6 +204,12 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       return {
         title: "Course Catalog",
         subtitle: "Manage, update, and design Hareem Academy syllabus sheets.",
+      };
+    }
+    if (location.startsWith("/admin/builder")) {
+      return {
+        title: "Page Builder",
+        subtitle: "Visually design, edit, and publish SEO and campaign landing pages.",
       };
     }
     if (location.startsWith("/admin/site-content")) {
