@@ -46,7 +46,7 @@ export default function Faqs() {
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "mainEntity": faqs.map((faq) => ({
+    "mainEntity": faqs.map((faq: any) => ({
       "@type": "Question",
       "name": i18n.language === 'ur' ? faq.question_ur || faq.question : faq.question,
       "acceptedAnswer": {

@@ -25,6 +25,12 @@ import {
 import { FaWhatsapp } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import TestimonialCard from "@/components/TestimonialCard";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export default function CourseDetail() {
   const { i18n, t } = useTranslation();
@@ -243,27 +249,35 @@ export default function CourseDetail() {
             </section>
 
             {/* Curriculum */}
-            <section className="bg-card p-7 md:p-9 rounded-3xl border border-border shadow-sm">
+            <section className="bg-card p-6 sm:p-8 rounded-3xl border border-border shadow-sm">
               <h2 className="font-serif font-bold text-2xl md:text-3xl text-primary mb-6">
                 {t("course_detail.curriculum", "The curriculum")}
               </h2>
-              <div className="space-y-5">
+              <Accordion type="single" collapsible className="w-full space-y-3">
                 {course.curriculum.map((module, i) => (
-                  <div key={i} className="flex gap-5">
-                    <div className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold font-serif shrink-0">
-                      {i + 1}
-                    </div>
-                    <div className="pt-1.5">
-                      <h3 className="font-bold text-lg mb-1.5">{module.title}</h3>
-                      {module.description && (
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                          {module.description}
-                        </p>
-                      )}
-                    </div>
-                  </div>
+                  <AccordionItem
+                    key={i}
+                    value={`item-${i}`}
+                    className="border border-border/80 rounded-xl px-4 bg-background transition-custom hover:border-accent/30"
+                  >
+                    <AccordionTrigger className="hover:no-underline py-4">
+                      <div className="flex items-center gap-4 text-left">
+                        <div className="w-8 h-8 rounded-full bg-primary/5 text-primary flex items-center justify-center font-bold font-serif text-sm shrink-0 border border-primary/10">
+                          {i + 1}
+                        </div>
+                        <span className="font-bold font-serif text-base text-foreground leading-snug">
+                          {module.title}
+                        </span>
+                      </div>
+                    </AccordionTrigger>
+                    {module.description && (
+                      <AccordionContent className="pb-4 pt-1 pl-12 text-sm text-muted-foreground leading-relaxed font-sans">
+                        {module.description}
+                      </AccordionContent>
+                    )}
+                  </AccordionItem>
                 ))}
-              </div>
+              </Accordion>
 
               {/* Mid-page CTA */}
               <div className="mt-8 pt-8 border-t border-border">

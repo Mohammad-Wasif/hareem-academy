@@ -70,12 +70,6 @@ export default function PremiumImage({
   };
 
   useEffect(() => {
-    // If the freshness check is still resolving, we stay in the loading state
-    if (isVerifyingFreshness) {
-      setIsLoaded(false);
-      return;
-    }
-
     const rawUrl = assets[assetKey] || fallback;
     const updatedAt = assetsMetadata[assetKey]?.updatedAt;
 
@@ -98,13 +92,13 @@ export default function PremiumImage({
       setIsLoaded(true);
       setHasError(true);
     };
-  }, [assetKey, assets, assetsMetadata, isVerifyingFreshness, fallback, width]);
+  }, [assetKey, assets, assetsMetadata, fallback, width]);
 
   // Combined styling for dimension stability
   const containerClasses = `relative overflow-hidden select-none ${bgClass} ${roundedClass} ${widthClass} ${heightClass} ${aspectRatio}`;
 
-  // 1. Shimmer Skeleton State (Initial fresh-asset verification or Loading)
-  if (isVerifyingFreshness || (!currentSrc && !hasError)) {
+  // 1. Shimmer Skeleton State (Initial load before resolving source)
+  if (!currentSrc && !hasError) {
     return (
       <div className={containerClasses} aria-hidden="true">
         {/* Shimmer background animation */}

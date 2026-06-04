@@ -15,7 +15,7 @@ import {
   MessageSquare,
   GraduationCap,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import CourseCard from "@/components/CourseCard";
 import CTAGroup from "@/components/CTAGroup";
 import TestimonialCard from "@/components/TestimonialCard";
@@ -28,19 +28,36 @@ import { useSiteAssets } from "@/hooks/use-site-assets";
 import PremiumImage from "@/components/PremiumImage";
 
 /* ── Reusable animation variants ── */
-const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 },
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+    },
+  },
 };
 
-const staggerContainer = {
+const staggerContainer: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.1 } },
+  show: {
+    transition: {
+      staggerChildren: 0.12,
+    },
+  },
 };
 
-const fadeIn = {
+const fadeIn: Variants = {
   hidden: { opacity: 0 },
-  show: { opacity: 1 },
+  show: {
+    opacity: 1,
+    transition: {
+      duration: 1.2,
+      ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+    },
+  },
 };
 
 export default function Home() {
@@ -211,10 +228,10 @@ export default function Home() {
                 
                 {/* Trust rating & Student Avatars directly under CTAs */}
                 <div className="flex items-center gap-3 pt-1">
-                  <div className="flex -space-x-1.5">
-                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-emerald-100 border-2 border-background text-emerald-800 font-sans text-[9px] sm:text-[10px] font-bold flex items-center justify-center">A</div>
-                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-amber-100 border-2 border-background text-amber-800 font-sans text-[9px] sm:text-[10px] font-bold flex items-center justify-center">S</div>
-                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-rose-100 border-2 border-background text-rose-800 font-sans text-[9px] sm:text-[10px] font-bold flex items-center justify-center">M</div>
+                  <div className="flex -space-x-2">
+                    <div className="w-7 h-7 rounded-full bg-primary/5 border border-accent/40 text-primary font-serif text-[10px] font-bold flex items-center justify-center backdrop-blur shadow-sm select-none">H</div>
+                    <div className="w-7 h-7 rounded-full bg-primary/5 border border-accent/40 text-primary font-serif text-[10px] font-bold flex items-center justify-center backdrop-blur shadow-sm select-none">A</div>
+                    <div className="w-7 h-7 rounded-full bg-primary/5 border border-accent/40 text-primary font-serif text-[10px] font-bold flex items-center justify-center backdrop-blur shadow-sm select-none">S</div>
                   </div>
                   <div className="flex flex-col text-left">
                     <div className="flex gap-0.5 items-center">
@@ -396,91 +413,34 @@ export default function Home() {
       </div>
 
       {/* 2. PAIN */}
-      <section className="py-14 sm:py-16 lg:py-20 bg-background">
+      <section className="py-16 sm:py-20 lg:py-24 bg-background">
         <div className="container px-4 max-w-5xl mx-auto">
-          <motion.div
-            className="text-center max-w-2xl mx-auto mb-12"
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <span className="inline-block text-xs font-bold tracking-widest text-primary uppercase mb-3">
-              {t("home.pain.label", "We get it")}
-            </span>
-            <h2 className="font-serif font-bold text-3xl md:text-4xl text-foreground">
-              {t("home.pain.title", "Learning Quran shouldn't feel impossible.")}
-            </h2>
-          </motion.div>
-
-          <motion.div
-            className="grid md:grid-cols-3 gap-6"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-          >
-            {[
-              {
-                icon: HeartCrack,
-                title: t("home.pain.item1.title", "Mixed-gender classes feel uncomfortable"),
-                desc: t("home.pain.item1.desc", "You hesitate to turn on your camera or ask questions."),
-              },
-              {
-                icon: Clock,
-                title: t("home.pain.item2.title", "Local madrasas don't fit your schedule"),
-                desc: t("home.pain.item2.desc", "Between work, kids, and household — fixed timings just don't work."),
-              },
-              {
-                icon: BookOpen,
-                title: t("home.pain.item3.title", "You can read Arabic but don't understand it"),
-                desc: t("home.pain.item3.desc", "Reading without meaning leaves you spiritually disconnected."),
-              },
-            ].map((item, i) => (
-              <motion.div
-                key={i}
-                variants={fadeUp}
-                transition={{ duration: 0.45 }}
-                whileHover={{ y: -4, transition: { type: "spring", stiffness: 300 } }}
-                className="bg-card border border-border rounded-2xl p-8 sm:p-9 text-center flex flex-col justify-start min-h-[290px] sm:min-h-[310px]"
-              >
-                <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto bg-rose-100/60 text-rose-600 rounded-full flex items-center justify-center mb-5 shrink-0">
-                  <item.icon className="w-7 h-7 sm:w-8 sm:h-8" />
-                </div>
-                <h3 className="font-serif font-bold text-foreground text-lg sm:text-xl mb-1.5 leading-snug">{item.title}</h3>
-                <p className="text-sm sm:text-base text-muted-foreground font-sans leading-relaxed">{item.desc}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* 3. HOW ENROLLMENT WORKS */}
-      <section className="py-14 sm:py-16 lg:py-20 bg-card">
-        <div className="container px-4 max-w-6xl mx-auto">
-          <motion.div
-            className="text-center max-w-2xl mx-auto mb-12"
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <span className="inline-block text-xs font-bold tracking-widest text-primary uppercase mb-3">
-              {t("home.enrollment.label", "Steps")}
-            </span>
-            <h2 className="font-serif font-bold text-3xl md:text-4xl text-foreground">
-              {t("home.enrollment.title", "How Enrollment Works")}
-            </h2>
-          </motion.div>
-
-          <div className="relative">
-            {/* Horizontal timeline line for desktop */}
-            <div className="hidden md:block absolute top-[48px] left-[12%] right-[12%] h-[1px] bg-gradient-to-r from-accent/0 via-accent/40 to-accent/0 z-0" />
+          <div className="flex flex-col lg:flex-row gap-12 items-start">
             
+            {/* Left Sticky Pane */}
             <motion.div
-              className="grid sm:grid-cols-2 md:grid-cols-4 gap-8 relative z-10"
+              className="w-full lg:w-[38%] lg:sticky lg:top-28 space-y-5 text-left"
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <span className="inline-block text-xs font-bold tracking-[0.2em] text-primary uppercase font-display">
+                {t("home.pain.label", "We get it")}
+              </span>
+              <h2 className="font-serif font-light text-3xl sm:text-4xl md:text-5xl text-foreground leading-[1.15]">
+                {t("home.pain.title", "Learning Quran shouldn't feel impossible.")}
+              </h2>
+              <div className="h-[2px] w-12 bg-accent/60 rounded-full" />
+              <p className="text-sm text-muted-foreground leading-relaxed font-sans">
+                Traditional classes are often structured around rigid, outdated schedules and mixed-gender environments that make adult learners feel uncomfortable. We built a private, flexible, and interactive system designed specifically for sisters.
+              </p>
+            </motion.div>
+
+            {/* Right Staggered Pane */}
+            <motion.div
+              className="w-full lg:w-[62%] space-y-6 pt-0 lg:pt-4"
               variants={staggerContainer}
               initial="hidden"
               whileInView="show"
@@ -488,58 +448,142 @@ export default function Home() {
             >
               {[
                 {
-                  step: "01",
-                  icon: Search,
-                  title: t("home.enrollment.step1_title", "Choose Your Course"),
-                  desc: t("home.enrollment.step1_desc", "Browse Arabic & Urdu programs and select your preferred level and batch."),
+                  icon: HeartCrack,
+                  title: t("home.pain.item1.title", "Mixed-gender classes feel uncomfortable"),
+                  desc: t("home.pain.item1.desc", "You hesitate to turn on your camera or ask questions."),
+                  bgColor: "bg-rose-500/5",
+                  borderColor: "border-rose-500/10",
+                  iconColor: "text-rose-600"
                 },
                 {
-                  step: "02",
-                  icon: MessageSquare,
-                  title: t("home.enrollment.step2_title", "Connect With Our Team"),
-                  desc: t("home.enrollment.step2_desc", "Get guidance about timings, course structure, and learning path."),
+                  icon: Clock,
+                  title: t("home.pain.item2.title", "Local madrasas don't fit your schedule"),
+                  desc: t("home.pain.item2.desc", "Between work, kids, and household — fixed timings just don't work."),
+                  bgColor: "bg-amber-500/5",
+                  borderColor: "border-amber-500/10",
+                  iconColor: "text-amber-600"
                 },
                 {
-                  step: "03",
-                  icon: Video,
-                  title: t("home.enrollment.step3_title", "Attend a Trial Class"),
-                  desc: t("home.enrollment.step3_desc", "Experience the classroom environment before enrollment."),
+                  icon: BookOpen,
+                  title: t("home.pain.item3.title", "You can read Arabic but don't understand it"),
+                  desc: t("home.pain.item3.desc", "Reading without meaning leaves you spiritually disconnected."),
+                  bgColor: "bg-emerald-500/5",
+                  borderColor: "border-emerald-500/10",
+                  iconColor: "text-emerald-600"
                 },
-                {
-                  step: "04",
-                  icon: GraduationCap,
-                  title: t("home.enrollment.step4_title", "Begin Your Learning Journey"),
-                  desc: t("home.enrollment.step4_desc", "Start structured online learning with qualified female teachers."),
-                },
-              ].map((item, idx) => (
+              ].map((item, i) => (
                 <motion.div
-                  key={idx}
+                  key={i}
                   variants={fadeUp}
                   transition={{ duration: 0.45 }}
-                  whileHover={{ y: -4, transition: { type: "spring", stiffness: 300 } }}
-                  className="bg-background border border-primary/5 rounded-2xl p-6 text-center shadow-sm relative group hover:border-primary/10 transition-all duration-300"
+                  whileHover={{ x: 4, transition: { type: "spring", stiffness: 300 } }}
+                  className={`premium-card p-6 sm:p-8 flex flex-col sm:flex-row items-start gap-5 border ${item.borderColor}`}
                 >
-                  <span className="absolute top-4 right-4 font-serif font-bold text-accent/60 group-hover:text-accent transition-colors duration-300 text-sm tracking-widest">
-                    {item.step}
-                  </span>
-                  <div className="w-12 h-12 mx-auto bg-primary/[0.03] border border-primary/10 rounded-full flex items-center justify-center text-primary mb-4 shrink-0 shadow-inner group-hover:border-accent/40 group-hover:bg-accent/[0.03] transition-all duration-300">
-                    <item.icon className="w-5 h-5 text-accent" />
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-inner ${item.bgColor} ${item.iconColor}`}>
+                    <item.icon className="w-6 h-6" />
                   </div>
-                  <h3 className="font-serif font-bold text-base md:text-lg text-primary mb-2 leading-snug">
-                    {item.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-muted-foreground font-sans leading-relaxed max-w-[240px] mx-auto">
-                    {item.desc}
-                  </p>
+                  <div className="space-y-1.5 text-left">
+                    <h3 className="font-serif font-bold text-foreground text-lg sm:text-xl leading-snug">{item.title}</h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground font-sans leading-relaxed">{item.desc}</p>
+                  </div>
                 </motion.div>
               ))}
             </motion.div>
+
+          </div>
+        </div>
+      </section>
+
+
+      {/* 3. HOW ENROLLMENT WORKS */}
+      <section className="py-16 sm:py-20 lg:py-24 bg-card bg-arabesque-fade">
+        <div className="container px-4 max-w-4xl mx-auto">
+          <motion.div
+            className="text-center max-w-2xl mx-auto mb-16"
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <span className="inline-block text-xs font-bold tracking-[0.2em] text-[#ECC565] uppercase font-display mb-3">
+              {t("home.enrollment.label", "Steps")}
+            </span>
+            <h2 className="font-serif font-light text-3xl md:text-4xl text-foreground">
+              {t("home.enrollment.title", "How Enrollment Works")}
+            </h2>
+            <div className="h-[2px] w-12 bg-accent/60 mx-auto mt-4 rounded-full" />
+          </motion.div>
+
+          <div className="relative border-l border-accent/25 ml-4 sm:ml-8 pl-8 sm:pl-12 space-y-12">
+            
+            <motion.div
+              className="absolute left-[-1px] top-0 bottom-0 w-[1px] bg-gradient-to-b from-accent via-accent/30 to-accent/0"
+              initial={{ height: 0 }}
+              whileInView={{ height: "100%" }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.2, ease: "easeInOut" }}
+            />
+
+            {[
+              {
+                step: "01",
+                icon: Search,
+                title: t("home.enrollment.step1_title", "Choose Your Course"),
+                desc: t("home.enrollment.step1_desc", "Browse Arabic & Urdu programs and select your preferred level and batch."),
+              },
+              {
+                step: "02",
+                icon: MessageSquare,
+                title: t("home.enrollment.step2_title", "Connect With Our Team"),
+                desc: t("home.enrollment.step2_desc", "Get guidance about timings, course structure, and learning path."),
+              },
+              {
+                step: "03",
+                icon: Video,
+                title: t("home.enrollment.step3_title", "Attend a Trial Class"),
+                desc: t("home.enrollment.step3_desc", "Experience the classroom environment before enrollment."),
+              },
+              {
+                step: "04",
+                icon: GraduationCap,
+                title: t("home.enrollment.step4_title", "Begin Your Learning Journey"),
+                desc: t("home.enrollment.step4_desc", "Start structured online learning with qualified female teachers."),
+              },
+            ].map((item, idx) => (
+              <motion.div
+                key={idx}
+                variants={fadeUp}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                viewport={{ once: true }}
+                className="relative group text-left"
+              >
+                {/* Node Dot / Circle Indicator */}
+                <div className="absolute -left-[48px] sm:-left-[64px] top-0 w-8 h-8 rounded-full bg-background border-2 border-accent text-accent font-serif text-xs font-bold flex items-center justify-center shadow-sm group-hover:bg-accent group-hover:text-background group-hover:scale-110 transition-all duration-500 z-10 select-none">
+                  {item.step}
+                </div>
+
+                <div className="premium-card p-6 sm:p-8 border border-accent/5 hover:border-accent/30 transition-custom relative">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-9 h-9 rounded-lg bg-primary/5 flex items-center justify-center text-accent shrink-0">
+                      <item.icon className="w-5 h-5 text-accent" />
+                    </div>
+                    <h3 className="font-serif font-bold text-lg sm:text-xl text-primary">
+                      {item.title}
+                    </h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground font-sans leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
           </div>
 
-          <div className="flex justify-center mt-12">
+          <div className="flex justify-center mt-16">
             <Button
               variant="outline"
-              className="rounded-full border-primary/20 text-primary hover:bg-primary hover:text-white px-8 py-2 font-sans font-medium transition-all duration-300"
+              className="rounded-full border-primary/20 text-primary hover:bg-primary hover:text-white px-8 py-5 font-sans font-medium transition-all duration-300 shadow-sm"
               asChild
             >
               <Link href="/courses">
@@ -549,6 +593,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+
 
       {/* 4. COURSES */}
       <section className="py-14 sm:py-16 lg:py-20 bg-background relative overflow-hidden">
