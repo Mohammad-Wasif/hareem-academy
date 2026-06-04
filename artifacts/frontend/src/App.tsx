@@ -134,8 +134,8 @@ function AdminRoutes() {
           <Route path="/admin/login" component={AdminLogin} />
           <Route path="/admin" component={AdminDashboard} />
           <Route path="/admin/courses" component={AdminCourses} />
-          <Route path="/admin/courses/new" component={AdminCourseEdit} />
-          <Route path="/admin/courses/:id/edit" component={AdminCourseEdit} />
+          <Route path="/admin/courses/new" component={AdminCourses} />
+          <Route path="/admin/courses/:id/edit" component={AdminCourses} />
           <Route path="/admin/site-content" component={AdminSiteContent} />
           <Route path="/admin/media" component={AdminMedia} />
           <Route path="/admin/builder" component={AdminBuilder} />
