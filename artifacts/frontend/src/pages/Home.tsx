@@ -60,6 +60,29 @@ const fadeIn: Variants = {
   },
 };
 
+const splitWords = (text: string) => {
+  return text.split(" ").map((word, idx) => (
+    <span key={idx} className="inline-block overflow-hidden mr-[0.22em] pb-[0.05em] align-bottom">
+      <motion.span
+        className="inline-block"
+        variants={{
+          hidden: { y: "115%", opacity: 0 },
+          show: {
+            y: 0,
+            opacity: 1,
+            transition: {
+              duration: 0.85,
+              ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+            },
+          },
+        }}
+      >
+        {word}
+      </motion.span>
+    </span>
+  ));
+};
+
 export default function Home() {
   const { t, i18n } = useTranslation();
   const { assets } = useSiteAssets();
@@ -195,18 +218,29 @@ export default function Home() {
                 <span>{t("home.hero.privacy", "Women-Only • Live Online Arabic & Urdu Classes")}</span>
               </motion.div>
 
-              <motion.h1
-                variants={fadeUp}
-                transition={{ duration: 0.55, delay: 0.05 }}
-                className="text-[1.75rem] sm:text-4xl md:text-5xl lg:text-[3.5rem] font-serif font-bold text-foreground leading-[1.15] sm:leading-[1.12] tracking-[-0.02em] sm:tracking-tight"
-              >
-                {t("home.hero.title_prefix", "Structured Arabic & Urdu")}{" "}
+              <h1 className="text-[1.75rem] sm:text-4xl md:text-5xl lg:text-[3.5rem] font-serif font-bold text-foreground leading-[1.15] sm:leading-[1.12] tracking-[-0.02em] sm:tracking-tight">
+                {splitWords(t("home.hero.title_prefix", "Structured Arabic & Urdu"))}{" "}
                 <br className="hidden sm:inline" />
-                <span className="text-primary relative inline-block">
-                  {t("home.hero.title_highlight", "Learning for Sisters")}
-                  <span className="absolute bottom-1 left-0 w-full h-[3px] bg-accent/40 rounded-full" />
+                <span className="text-primary relative inline-block overflow-hidden vertical-align-bottom">
+                  <motion.span
+                    className="inline-block relative"
+                    variants={{
+                      hidden: { y: "115%", opacity: 0 },
+                      show: {
+                        y: 0,
+                        opacity: 1,
+                        transition: {
+                          duration: 0.9,
+                          ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+                        },
+                      },
+                    }}
+                  >
+                    {t("home.hero.title_highlight", "Learning for Sisters")}
+                    <span className="absolute bottom-1 left-0 w-full h-[3px] bg-accent/40 rounded-full" />
+                  </motion.span>
                 </span>
-              </motion.h1>
+              </h1>
 
               <motion.p
                 variants={fadeUp}

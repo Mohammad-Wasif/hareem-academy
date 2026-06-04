@@ -4,6 +4,28 @@ import CTAGroup from "@/components/CTAGroup";
 import TestimonialCard from "@/components/TestimonialCard";
 import { useTranslation } from "react-i18next";
 import { SEO } from "@/components/SEO";
+import { motion, type Variants } from "framer-motion";
+
+const staggerContainer: Variants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.06,
+    },
+  },
+};
+
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+    },
+  },
+};
 
 export default function Testimonials() {
   const { t, i18n } = useTranslation();
@@ -85,11 +107,18 @@ export default function Testimonials() {
             ))}
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <motion.div
+            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            variants={staggerContainer}
+            initial="hidden"
+            animate="show"
+          >
             {testimonials.map((t) => (
-              <TestimonialCard key={t.id} testimonial={t as any} />
+              <motion.div key={t.id} variants={fadeUp}>
+                <TestimonialCard testimonial={t as any} />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
 
         {/* Closing CTA */}

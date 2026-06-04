@@ -7,6 +7,28 @@ import { Button } from "@/components/ui/button";
 import { Sparkles, ShieldCheck, Award } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { SEO } from "@/components/SEO";
+import { motion, type Variants } from "framer-motion";
+
+const staggerContainer: Variants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.08,
+    },
+  },
+};
+
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+    },
+  },
+};
 
 export default function Courses() {
   const { t } = useTranslation();
@@ -121,11 +143,19 @@ export default function Courses() {
             ))}
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <motion.div
+            key={filter}
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+            variants={staggerContainer}
+            initial="hidden"
+            animate="show"
+          >
             {filteredCourses.map((course) => (
-              <CourseCard key={course.id} course={course} />
+              <motion.div key={course.id} variants={fadeUp}>
+                <CourseCard course={course} />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
 
         {!isLoading && filteredCourses.length === 0 && (

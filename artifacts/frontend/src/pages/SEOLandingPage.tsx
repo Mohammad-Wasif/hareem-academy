@@ -65,6 +65,29 @@ const fadeIn: Variants = {
   },
 };
 
+const splitWords = (text: string) => {
+  return text.split(" ").map((word, idx) => (
+    <span key={idx} className="inline-block overflow-hidden mr-[0.22em] pb-[0.05em] align-bottom">
+      <motion.span
+        className="inline-block"
+        variants={{
+          hidden: { y: "115%", opacity: 0 },
+          show: {
+            y: 0,
+            opacity: 1,
+            transition: {
+              duration: 0.85,
+              ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+            },
+          },
+        }}
+      >
+        {word}
+      </motion.span>
+    </span>
+  ));
+};
+
 export default function SEOLandingPage({ slug }: SEOLandingPageProps) {
   const pageData = seoLandingPages[slug];
   const { whatsappUrl } = useWhatsApp();
@@ -179,12 +202,9 @@ export default function SEOLandingPage({ slug }: SEOLandingPageProps) {
               <span>100% Sisters Only • Live Female Teachers</span>
             </motion.div>
 
-            <motion.h1
-              variants={fadeUp}
-              className="font-serif font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.12] max-w-4xl mx-auto text-foreground tracking-tight"
-            >
-              {pageData.heroTitle}
-            </motion.h1>
+            <h1 className="font-serif font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.12] max-w-4xl mx-auto text-foreground tracking-tight">
+              {splitWords(pageData.heroTitle)}
+            </h1>
 
             <motion.p
               variants={fadeUp}
@@ -377,10 +397,17 @@ export default function SEOLandingPage({ slug }: SEOLandingPageProps) {
               <div className="w-12 h-[3px] bg-[#ECC565] mx-auto rounded-full mt-4" />
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <motion.div
+              className="grid md:grid-cols-2 gap-6"
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-100px" }}
+            >
               {pageData.testimonials.map((testimonial, i) => (
-                <div 
+                <motion.div 
                   key={i} 
+                  variants={fadeUp}
                   className="premium-card p-6 sm:p-8 flex flex-col justify-between hover:scale-[1.01] transition-all duration-300"
                 >
                   <div className="space-y-4">
@@ -400,9 +427,9 @@ export default function SEOLandingPage({ slug }: SEOLandingPageProps) {
                       <p className="text-[10px] text-muted-foreground font-sans">{testimonial.location}</p>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
       )}
