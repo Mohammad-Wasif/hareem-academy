@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link, useLocation } from "wouter";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminApi } from "@/lib/adminApi";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
@@ -59,6 +59,7 @@ import {
   RotateCcw,
   MessageCircle,
   X,
+  Trash2,
 } from "lucide-react";
 import {
   Dialog,
@@ -79,23 +80,53 @@ interface LeadRecord {
   status: "New" | "Contacted" | "Trial" | "Enrolled";
   whatsappNumber: string;
   assignee?: string;
+  isEnrollment: boolean;
 }
 
 export default function AdminDashboard() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const queryClient = useQueryClient();
 
   // DASHBOARD STATE SIMULATION
-  // success = normal dashboard view with real + simulated data
-  // loading = renders skeleton loaders for all sections
-  // error = renders full error fallback screen with retry
-  // empty = renders empty state illustrations for lists/charts
   const [dashboardState, setDashboardState] = useState<"success" | "loading" | "error" | "empty">("success");
 
   // Fetch real counts from backend
   const { data: realData, isLoading: isRealLoading, refetch } = useQuery({
     queryKey: ["admin", "dashboard"],
     queryFn: () => adminApi.dashboard(),
+  });
+
+  // Fetch leads and enrollments from backend
+  const { data: dbLeads, refetch: refetchLeads } = useQuery({
+    queryKey: ["admin", "leads"],
+    queryFn: () => adminApi.listLeads(),
+  });
+
+  const { data: dbEnrollments, refetch: refetchEnrollments } = useQuery({
+    queryKey: ["admin", "enrollments"],
+    queryFn: () => adminApi.listEnrollments(),
+  });
+
+  // Mutations
+  const deleteLeadMut = useMutation({
+    mutationFn: (id: number) => adminApi.deleteLead(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "leads"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "dashboard"] });
+      toast({ title: "Lead Deleted", description: "Successfully removed lead record." });
+    },
+    onError: () => toast({ title: "Error", description: "Failed to delete lead.", variant: "destructive" })
+  });
+
+  const deleteEnrollmentMut = useMutation({
+    mutationFn: (id: number) => adminApi.deleteEnrollment(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "enrollments"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "dashboard"] });
+      toast({ title: "Enrollment Deleted", description: "Successfully removed enrollment record." });
+    },
+    onError: () => toast({ title: "Error", description: "Failed to delete enrollment.", variant: "destructive" })
   });
 
   // Local state controls
@@ -118,46 +149,128 @@ export default function AdminDashboard() {
   const [storageUsed, setStorageUsed] = useState(4.2);
   const [isOptimizingStorage, setIsOptimizingStorage] = useState(false);
 
-  // Task checklist state
-  const [tasks, setTasks] = useState([
-    { id: 1, text: "Review Fatima's Tajweed lead inquiry", checked: false },
-    { id: 2, text: "Optimize newly uploaded header graphics", checked: true },
-    { id: 3, text: "Approve FAQ translations for Urdu level 1", checked: false },
-    { id: 4, text: "Deploy robots.txt sitemap hotfix", checked: false },
-  ]);
+  // Task checklist state - Persisted in localStorage
+  const [tasks, setTasks] = useState<{ id: number; text: string; checked: boolean }[]>(() => {
+    try {
+      const saved = localStorage.getItem("hareem_dashboard_tasks");
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return [
+      { id: 1, text: "Review new Tajweed course enrollments", checked: false },
+      { id: 2, text: "Audit SEO metadata length on page builder", checked: true },
+      { id: 3, text: "Organize course thumbnail assets in media folder", checked: false },
+      { id: 4, text: "Publish latest landing page drafts", checked: false },
+    ];
+  });
 
-  // Lead record set - Combines backend leads & mock records
-  const [leads, setLeads] = useState<LeadRecord[]>([
-    { id: 101, fullName: "Sara Khan", course: "Quranic Arabic for Sisters", country: "UK", time: "10 mins ago", status: "New", whatsappNumber: "447712345678", assignee: "Unassigned" },
-    { id: 102, fullName: "Aisha Fatima", course: "Urdu Language Beginners", country: "US", time: "45 mins ago", status: "Contacted", whatsappNumber: "13125550190", assignee: "Teacher Ayesha" },
-    { id: 103, fullName: "Maryam Omer", course: "Tajweed Foundations", country: "CA", time: "2 hours ago", status: "Trial", whatsappNumber: "14165550143", assignee: "Teacher Zainab" },
-    { id: 104, fullName: "Zainab Rashid", course: "Quranic Arabic for Sisters", country: "AE", time: "4 hours ago", status: "Enrolled", whatsappNumber: "971501234567", assignee: "Admin Sarah" },
-    { id: 105, fullName: "Sumayya Noor", course: "Urdu Language Beginners", country: "IN", time: "1 day ago", status: "New", whatsappNumber: "919876543210", assignee: "Unassigned" },
-    { id: 106, fullName: "Hafsa Siddiqui", course: "Tajweed Foundations", country: "SA", time: "2 days ago", status: "Trial", whatsappNumber: "966501234567", assignee: "Teacher Zainab" },
-    { id: 107, fullName: "Yasmin Yusuf", course: "Quranic Arabic for Sisters", country: "UK", time: "3 days ago", status: "Contacted", whatsappNumber: "447788990011", assignee: "Admin Sarah" },
-  ]);
+  const saveTasks = (newTasks: typeof tasks) => {
+    setTasks(newTasks);
+    try {
+      localStorage.setItem("hareem_dashboard_tasks", JSON.stringify(newTasks));
+    } catch {}
+  };
 
-  // Synchronize leads with backend if they arrive
-  useEffect(() => {
-    if (realData?.recentEnrollments && realData.recentEnrollments.length > 0) {
-      const formatted = realData.recentEnrollments.map((e, index) => ({
-        id: e.id,
-        fullName: e.fullName,
-        course: e.courseSlug.replace(/-/g, " "),
-        country: e.city || "IN",
-        time: new Date(e.createdAt).toLocaleDateString(),
-        status: "Enrolled" as const,
-        whatsappNumber: "919999999999",
-        assignee: "Admin Sarah",
-      }));
-      // Merge with unique IDs
-      setLeads((prev) => {
-        const merged = [...formatted, ...prev.filter(p => p.id > 100)];
-        const unique = Array.from(new Map(merged.map(item => [item.fullName, item])).values());
-        return unique;
+  const [newTaskText, setNewTaskText] = useState("");
+
+  const handleAddTask = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTaskText.trim()) return;
+    const item = { id: Date.now(), text: newTaskText.trim(), checked: false };
+    const next = [...tasks, item];
+    saveTasks(next);
+    setNewTaskText("");
+    toast({ title: "Task Added", description: "Successfully added to your checklist." });
+  };
+
+  const handleDeleteTask = (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const next = tasks.filter((t) => t.id !== id);
+    saveTasks(next);
+    toast({ title: "Task Removed", description: "Removed task from checklist." });
+  };
+
+  const handleToggleTask = (id: number) => {
+    const next = tasks.map((t) => (t.id === id ? { ...t, checked: !t.checked } : t));
+    saveTasks(next);
+  };
+
+  // Local assignee overrides persisted in localStorage
+  const [assigneeOverrides, setAssigneeOverrides] = useState<Record<string, string>>(() => {
+    try {
+      const saved = localStorage.getItem("hareem_leads_assignees");
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  const handleAssignLead = (id: number, isEnrollment: boolean) => {
+    const key = `${isEnrollment ? 'e' : 'l'}-${id}`;
+    const current = assigneeOverrides[key] || "Unassigned";
+    const assignees = ["Teacher Ayesha", "Teacher Zainab", "Admin Sarah", "Unassigned"];
+    const next = assignees[(assignees.indexOf(current) + 1) % assignees.length];
+
+    const updated = { ...assigneeOverrides, [key]: next };
+    setAssigneeOverrides(updated);
+    try {
+      localStorage.setItem("hareem_leads_assignees", JSON.stringify(updated));
+    } catch {}
+
+    toast({
+      title: "Assignee Updated",
+      description: `Inquiry successfully assigned to ${next}.`,
+    });
+  };
+
+  // Combined Leads lists from Database and Local State
+  const leads = useMemo<LeadRecord[]>(() => {
+    const list: LeadRecord[] = [];
+
+    // Map DB Leads
+    if (dbLeads) {
+      dbLeads.forEach((l) => {
+        list.push({
+          id: l.id,
+          fullName: l.fullName || "Anonymous Inquirer",
+          course: l.source || "Landing Page Link",
+          country: "IN",
+          time: new Date(l.createdAt).toLocaleDateString(),
+          status: "New",
+          whatsappNumber: l.whatsappNumber,
+          assignee: assigneeOverrides[`l-${l.id}`] || "Unassigned",
+          isEnrollment: false,
+        });
       });
     }
-  }, [realData]);
+
+    // Map DB Enrollments
+    if (dbEnrollments) {
+      dbEnrollments.forEach((e) => {
+        list.push({
+          id: e.id,
+          fullName: e.fullName,
+          course: e.courseSlug.replace(/-/g, " "),
+          country: e.country || e.city || "IN",
+          time: new Date(e.createdAt).toLocaleDateString(),
+          status: "Enrolled",
+          whatsappNumber: e.whatsappNumber,
+          assignee: assigneeOverrides[`e-${e.id}`] || "Admin Sarah",
+          isEnrollment: true,
+        });
+      });
+    }
+
+    // If both databases are empty AND sandbox State is NOT empty, we can show a few templates
+    if (list.length === 0 && dashboardState !== "empty") {
+      return [
+        { id: 1001, fullName: "Sara Khan (Sample)", course: "Quranic Arabic for Sisters", country: "UK", time: "10 mins ago", status: "New", whatsappNumber: "447712345678", assignee: "Unassigned", isEnrollment: false },
+        { id: 1002, fullName: "Aisha Fatima (Sample)", course: "Urdu Language Beginners", country: "US", time: "45 mins ago", status: "Contacted", whatsappNumber: "13125550190", assignee: "Teacher Ayesha", isEnrollment: false },
+        { id: 1003, fullName: "Maryam Omer (Sample)", course: "Tajweed Foundations", country: "CA", time: "2 hours ago", status: "Trial", whatsappNumber: "14165550143", assignee: "Teacher Zainab", isEnrollment: false },
+      ];
+    }
+
+    return list;
+  }, [dbLeads, dbEnrollments, assigneeOverrides, dashboardState]);
 
   // Quick Action triggers
   const triggerRebuild = () => {
@@ -303,52 +416,31 @@ export default function AdminDashboard() {
 
   // Lead processing action triggers
   const handleLeadAction = (id: number, action: "Assign" | "WhatsApp" | "Archive" | "Open") => {
-    if (action === "Archive") {
-      setLeads((prev) => prev.filter((l) => l.id !== id));
-      toast({
-        title: "Lead Archived",
-        description: "Lead inquiry moved successfully to archives.",
-      });
-    } else if (action === "WhatsApp") {
-      const target = leads.find((l) => l.id === id);
-      if (target) {
-        toast({
-          title: "Launching WhatsApp Chat",
-          description: `Routing to +${target.whatsappNumber}`,
-        });
-        window.open(`https://wa.me/${target.whatsappNumber}?text=Assalamu%20Alaikum%20${encodeURIComponent(target.fullName)},%20this%20is%20Hareem%20Academy.`, "_blank");
-      }
-    } else if (action === "Assign") {
-      const assignees = ["Teacher Ayesha", "Teacher Zainab", "Admin Sarah"];
-      setLeads((prev) =>
-        prev.map((l) => {
-          if (l.id === id) {
-            const next = assignees[(assignees.indexOf(l.assignee || "") + 1) % assignees.length];
-            toast({
-              title: "Assignee Updated",
-              description: `Lead successfully assigned to ${next}.`,
-            });
-            return { ...l, assignee: next };
-          }
-          return l;
-        })
-      );
-    } else if (action === "Open") {
-      const target = leads.find((l) => l.id === id);
-      if (target) {
-        toast({
-          title: `Student File: ${target.fullName}`,
-          description: `Course: ${target.course} | Status: ${target.status} | Whatsapp: +${target.whatsappNumber}`,
-        });
-      }
-    }
-  };
+    const target = leads.find((l) => l.id === id);
+    if (!target) return;
 
-  // Toggle tasks check
-  const handleToggleTask = (id: number) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, checked: !t.checked } : t))
-    );
+    if (action === "Archive") {
+      if (target.id >= 1000) {
+        toast({ title: "Sample Inquiry Removed", description: "Successfully archived sample lead." });
+      } else if (target.isEnrollment) {
+        deleteEnrollmentMut.mutate(target.id);
+      } else {
+        deleteLeadMut.mutate(target.id);
+      }
+    } else if (action === "WhatsApp") {
+      toast({
+        title: "Launching WhatsApp Chat",
+        description: `Routing to +${target.whatsappNumber}`,
+      });
+      window.open(`https://wa.me/${target.whatsappNumber.replace(/\D/g, "")}?text=Assalamu%20Alaikum%20${encodeURIComponent(target.fullName)},%20this%20is%20Hareem%20Academy.`, "_blank");
+    } else if (action === "Assign") {
+      handleAssignLead(target.id, target.isEnrollment);
+    } else if (action === "Open") {
+      toast({
+        title: `Student File: ${target.fullName}`,
+        description: `Course: ${target.course} | Status: ${target.status} | Whatsapp: +${target.whatsappNumber}`,
+      });
+    }
   };
 
   // Leads pagination & filtering logic
@@ -372,74 +464,87 @@ export default function AdminDashboard() {
   const maxPages = Math.ceil(filteredLeads.length / 4) || 1;
 
   // KPI metadata
-  const kpiCards = [
-    {
-      key: "visitors",
-      title: "Visitors",
-      value: dateRange === "today" ? "450" : dateRange === "30d" ? "14,400" : dateRange === "ytd" ? "124,000" : "3,200",
-      change: "+12.4%",
-      isPositive: true,
-      lastUpdated: "5 minutes ago",
-      sparkline: sparklineData.visitors,
-      icon: Eye,
-      description: "Unique browser visits across all academy landing pages and locales.",
-    },
-    {
-      key: "enrollments",
-      title: "Enrollments",
-      value: dateRange === "today" ? "3" : dateRange === "30d" ? "54" : dateRange === "ytd" ? "390" : "18",
-      change: "+8.2%",
-      isPositive: true,
-      lastUpdated: "Just now",
-      sparkline: sparklineData.enrollments,
-      icon: Users,
-      description: "Students who completed enrollment deposits and secured course seats.",
-    },
-    {
-      key: "views",
-      title: "Course Views",
-      value: dateRange === "today" ? "1,200" : dateRange === "30d" ? "42,000" : dateRange === "ytd" ? "345,000" : "8,400",
-      change: "+18.7%",
-      isPositive: true,
-      lastUpdated: "12 mins ago",
-      sparkline: sparklineData.views,
-      icon: BookOpen,
-      description: "Total course overview brochure sheets loaded by prospective candidates.",
-    },
-    {
-      key: "clicks",
-      title: "WhatsApp Clicks",
-      value: dateRange === "today" ? "45" : dateRange === "30d" ? "1,450" : dateRange === "ytd" ? "11,200" : "842",
-      change: "+24.3%",
-      isPositive: true,
-      lastUpdated: "2 mins ago",
-      sparkline: sparklineData.clicks,
-      icon: MessageCircle,
-      description: "Unique taps on the floating 'Chat with Advisor' WhatsApp widget anchors.",
-    },
-    {
-      key: "pages",
-      title: "Published Pages",
-      value: String(realData?.counts.courses ? realData.counts.courses * 2 + 10 : 24),
-      change: "+2 new YTD",
-      isPositive: true,
-      lastUpdated: "3 days ago",
-      sparkline: sparklineData.pages,
-      icon: Globe,
-      description: "Localized landing pages, blog templates, and content assets indexed online.",
-    },
-    {
-      key: "conversion",
-      title: "Conversion Rate",
-      value: dateRange === "today" ? "4.2%" : dateRange === "30d" ? "3.5%" : dateRange === "ytd" ? "3.1%" : "3.8%",
-      change: "+4.1%",
-      isPositive: true,
-      lastUpdated: "Just now",
-      sparkline: sparklineData.conversion,
-      icon: Award,
-      description: "Percentage ratio of incoming website traffic converting to registered leads.",
-    },
-  ];
+  // KPI metadata
+  const kpiCards = useMemo(() => {
+    const courseCount = realData?.counts?.courses ?? 0;
+    const enrollmentCount = realData?.counts?.enrollments ?? 0;
+    const leadsCount = realData?.counts?.leads ?? 0;
+
+    // Estimate conversions and visitors based on counts
+    const estimatedVisitors = leadsCount * 12 + 120;
+    const estimatedViews = courseCount * 25 + 75;
+    const estimatedClicks = leadsCount * 2 + 14;
+    const conversionRate = estimatedVisitors > 0 ? ((enrollmentCount / estimatedVisitors) * 100).toFixed(1) + "%" : "3.8%";
+
+    return [
+      {
+        key: "visitors",
+        title: "Estimated Visitors",
+        value: String(estimatedVisitors),
+        change: "+12.4%",
+        isPositive: true,
+        lastUpdated: "5 minutes ago",
+        sparkline: sparklineData.visitors,
+        icon: Eye,
+        description: "Estimated browser visits across all academy landing pages.",
+      },
+      {
+        key: "enrollments",
+        title: "Enrollments",
+        value: String(enrollmentCount),
+        change: enrollmentCount > 0 ? `+${enrollmentCount} Active` : "0 Active",
+        isPositive: true,
+        lastUpdated: "Just now",
+        sparkline: sparklineData.enrollments,
+        icon: Users,
+        description: "Students who completed enrollment deposits and secured course seats.",
+      },
+      {
+        key: "views",
+        title: "Course Views",
+        value: String(estimatedViews),
+        change: "+18.7%",
+        isPositive: true,
+        lastUpdated: "12 mins ago",
+        sparkline: sparklineData.views,
+        icon: BookOpen,
+        description: "Estimated total course overview brochure sheets loaded by prospective candidates.",
+      },
+      {
+        key: "clicks",
+        title: "WhatsApp Clicks",
+        value: String(estimatedClicks),
+        change: "+24.3%",
+        isPositive: true,
+        lastUpdated: "2 mins ago",
+        sparkline: sparklineData.clicks,
+        icon: MessageCircle,
+        description: "Unique taps on the floating 'Chat with Advisor' WhatsApp widget anchors.",
+      },
+      {
+        key: "pages",
+        title: "Published Pages",
+        value: String(courseCount * 2 + 3),
+        change: `+${courseCount} Course Landers`,
+        isPositive: true,
+        lastUpdated: "3 days ago",
+        sparkline: sparklineData.pages,
+        icon: Globe,
+        description: "Localized landing pages, blog templates, and content assets indexed online.",
+      },
+      {
+        key: "conversion",
+        title: "Conversion Rate",
+        value: conversionRate,
+        change: "+4.1%",
+        isPositive: true,
+        lastUpdated: "Just now",
+        sparkline: sparklineData.conversion,
+        icon: Award,
+        description: "Percentage ratio of incoming website traffic converting to registered leads.",
+      },
+    ];
+  }, [realData, sparklineData]);
 
   // System Health nodes
   const healthNodes = [
@@ -793,7 +898,7 @@ export default function AdminDashboard() {
                     <tbody className="divide-y divide-[#0F4D36]/5">
                       {paginatedLeads.length > 0 ? (
                         paginatedLeads.map((lead) => (
-                          <tr key={lead.id} className="hover:bg-[#FAF7F0]/20 transition-colors">
+                          <tr key={`${lead.isEnrollment ? 'enroll' : 'lead'}-${lead.id}`} className="hover:bg-[#FAF7F0]/20 transition-colors">
                             <td className="px-5 py-3">
                               <div className="font-bold text-[#0F4D36]">{lead.fullName}</div>
                               <div className="text-[9px] text-muted-foreground flex items-center gap-1 mt-0.5">
@@ -1166,22 +1271,50 @@ export default function AdminDashboard() {
               </span>
             </CardHeader>
             <CardContent className="p-4 space-y-3">
-              {tasks.map((task) => (
-                <div
-                  key={task.id}
-                  onClick={() => handleToggleTask(task.id)}
-                  className="flex items-start gap-3 p-2.5 rounded-lg hover:bg-[#FAF7F0] cursor-pointer transition-colors"
-                >
-                  <button className={`w-4.5 h-4.5 rounded border flex items-center justify-center mt-0.5 ${
-                    task.checked ? "bg-[#0F4D36] border-[#0F4D36] text-white" : "border-[#0F4D36]/20 bg-white"
-                  }`}>
-                    {task.checked && <Check className="w-3 h-3" />}
-                  </button>
-                  <span className={`text-xs text-[#0F4D36] ${task.checked ? "line-through opacity-50" : "font-medium"}`}>
-                    {task.text}
-                  </span>
+              <form onSubmit={handleAddTask} className="flex gap-2 mb-2">
+                <input
+                  type="text"
+                  placeholder="Add operational task..."
+                  value={newTaskText}
+                  onChange={(e) => setNewTaskText(e.target.value)}
+                  className="flex-1 text-xs h-8 px-2.5 rounded-lg border border-[#0F4D36]/10 focus:outline-none focus:border-[#D6B25E]/50 focus:ring-1 focus:ring-[#D6B25E]/20"
+                />
+                <Button type="submit" size="sm" className="h-8 px-3 bg-[#0F4D36] text-[#D6B25E] hover:bg-[#0F4D36]/90 border border-transparent">
+                  <Plus className="w-3.5 h-3.5" />
+                </Button>
+              </form>
+
+              {tasks.length === 0 ? (
+                <div className="text-center py-4 text-xs text-muted-foreground">No tasks left! Add one above.</div>
+              ) : (
+                <div className="space-y-1">
+                  {tasks.map((task) => (
+                    <div
+                      key={task.id}
+                      onClick={() => handleToggleTask(task.id)}
+                      className="group flex items-center justify-between p-1.5 rounded-lg hover:bg-[#FAF7F0] cursor-pointer transition-colors"
+                    >
+                      <div className="flex items-start gap-2.5 min-w-0">
+                        <button className={`w-4.5 h-4.5 rounded border flex items-center justify-center shrink-0 mt-0.5 ${
+                          task.checked ? "bg-[#0F4D36] border-[#0F4D36] text-white" : "border-[#0F4D36]/20 bg-white"
+                        }`}>
+                          {task.checked && <Check className="w-3 h-3" />}
+                        </button>
+                        <span className={`text-xs text-[#0F4D36] truncate ${task.checked ? "line-through opacity-50" : "font-medium"}`}>
+                          {task.text}
+                        </span>
+                      </div>
+                      <button
+                        onClick={(e) => handleDeleteTask(task.id, e)}
+                        className="p-1 hover:bg-red-50 text-muted-foreground hover:text-red-600 rounded opacity-0 group-hover:opacity-100 transition-all shrink-0"
+                        title="Delete Task"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </CardContent>
           </Card>
 

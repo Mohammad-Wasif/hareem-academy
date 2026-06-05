@@ -60,6 +60,7 @@ const NAV = [
   { href: "/admin/builder", label: "Page Builder", icon: FileText },
   { href: "/admin/site-content", label: "Site Content", icon: Globe },
   { href: "/admin/media", label: "Media Manager", icon: ImageIcon },
+  { href: "/admin/settings", label: "Settings", icon: Settings },
   { href: "/admin/enrollments", label: "Enrollments", icon: Users },
   { href: "/admin/form-fields", label: "Form Fields", icon: ListChecks },
   { href: "/admin/contacts", label: "Messages", icon: MessageSquare },
@@ -222,6 +223,12 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       return {
         title: "Media Manager",
         subtitle: "Upload and compress assets, graphics, and video content.",
+      };
+    }
+    if (location.startsWith("/admin/settings")) {
+      return {
+        title: "Platform Control Center",
+        subtitle: "Manage academy identity, branding, configurations, domains, and deployments.",
       };
     }
     return {
@@ -695,7 +702,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={() => setLocation("/admin/site-content")}
+                  onClick={() => setLocation("/admin/settings")}
                   className="rounded-lg text-xs hover:bg-[#FAF7F0] focus:bg-[#FAF7F0] text-[#0F4D36] p-2.5 flex items-center gap-2 cursor-pointer"
                 >
                   <Settings className="w-4.5 h-4.5 text-[#D6B25E]" />

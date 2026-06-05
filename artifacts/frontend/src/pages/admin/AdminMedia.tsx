@@ -49,21 +49,13 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 
-// Folders definitions
-const FOLDERS = [
-  { id: "all", name: "All Media", count: 18, size: "12.4 MB" },
-  { id: "hero", name: "Hero Images", count: 2, size: "4.8 MB" },
-  { id: "courses", name: "Course Thumbnails", count: 4, size: "3.2 MB" },
-  { id: "teachers", name: "Teachers", count: 3, size: "1.8 MB" },
-  { id: "testimonials", name: "Testimonials", count: 2, size: "620 KB" },
-  { id: "icons", name: "Icons", count: 2, size: "27 KB" },
-  { id: "backgrounds", name: "Backgrounds", count: 2, size: "1.4 MB" },
-  { id: "navbar", name: "Navbar Assets", count: 1, size: "85 KB" },
-  { id: "seo", name: "SEO Images", count: 1, size: "420 KB" },
-  { id: "og", name: "Open Graph", count: 1, size: "850 KB" },
-  { id: "archived", name: "Archived", count: 0, size: "0 KB" },
-  { id: "deleted", name: "Deleted", count: 0, size: "0 KB" },
-];
+// Folders list type definition
+interface FolderType {
+  id: string;
+  name: string;
+  count: number;
+  size: string;
+}
 
 interface MediaFile {
   key: string;
@@ -86,7 +78,7 @@ interface MediaFile {
 }
 
 export default function AdminMedia() {
-  const { assets, assetsMetadata, isLoading, refetch } = useSiteAssets();
+  const { assets, assetsMetadata, assetsArray, isLoading, refetch } = useSiteAssets();
   const { toast } = useToast();
 
   // State Sandbox Controls
@@ -119,180 +111,26 @@ export default function AdminMedia() {
   const [previewTab, setPreviewTab] = useState<"device" | "navbar" | "hero" | "card" | "social">("device");
   const [deviceFrame, setDeviceFrame] = useState<"desktop" | "tablet" | "mobile">("desktop");
 
-  // Custom local simulated database
-  const [virtualFiles, setVirtualFiles] = useState<MediaFile[]>([
-    {
-      key: "hero_ramadan",
-      name: "hero-ramadan-celebration.webp",
-      url: "/hero-bg.png",
-      folder: "hero",
-      dimensions: "1920 × 1080 px",
-      format: "WEBP",
-      fileSize: "480 KB",
-      originalSize: "2.4 MB",
-      savings: "80%",
-      altText: "Ramadan Islamic calligraphy banner decoration",
-      description: "Ramadan campaign header image with gold crescent details.",
-      tags: ["ramadan", "hero", "calligraphy"],
-      created: "May 12, 2026",
-      updated: "May 12, 2026",
-      usedIn: ["Home (Ramadan Layout)"],
-      status: "Published",
-      isReal: false,
-    },
-    {
-      key: "course_tajweed",
-      name: "course-tajweed-foundations.png",
-      url: "/course-arabic.png",
-      folder: "courses",
-      dimensions: "1280 × 720 px",
-      format: "PNG",
-      fileSize: "820 KB",
-      originalSize: "1.8 MB",
-      savings: "54%",
-      altText: "Tajweed rules book with open pages on table",
-      description: "Thumbnail card background for the online Tajweed recitation rules syllabus.",
-      tags: ["course", "tajweed", "quran"],
-      created: "Apr 20, 2026",
-      updated: "May 02, 2026",
-      usedIn: ["Course Detail (Tajweed)", "Courses List"],
-      status: "Published",
-      isReal: false,
-    },
-    {
-      key: "sister_ayesha_testimonial",
-      name: "sister-ayesha-testimonial.jpg",
-      url: "/teacher-1.png",
-      folder: "testimonials",
-      dimensions: "400 × 400 px",
-      format: "JPG",
-      fileSize: "240 KB",
-      originalSize: "450 KB",
-      savings: "46%",
-      altText: "Sister Ayesha Ahmed portrait headshot",
-      description: "Profile headshot avatar for sister Ayesha's testimonial quote review card.",
-      tags: ["testimonial", "avatar", "student"],
-      created: "Feb 10, 2026",
-      updated: "Feb 10, 2026",
-      usedIn: ["Testimonials Widget", "Home"],
-      status: "Published",
-      isReal: false,
-    },
-    {
-      key: "sister_maryam_testimonial",
-      name: "sister-maryam-testimonial.jpg",
-      url: "/teacher-2.png",
-      folder: "testimonials",
-      dimensions: "400 × 400 px",
-      format: "JPG",
-      fileSize: "320 KB",
-      originalSize: "680 KB",
-      savings: "53%",
-      altText: "Sister Maryam Omer testimonial headshot",
-      description: "Profile headshot avatar for sister Maryam's testimonial feedback card.",
-      tags: ["testimonial", "avatar", "student"],
-      created: "Mar 05, 2026",
-      updated: "Mar 05, 2026",
-      usedIn: ["Testimonials Widget"],
-      status: "Unused",
-      isReal: false,
-    },
-    {
-      key: "crescent_gold",
-      name: "crescent-gold-crest.svg",
-      url: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 10A40 40 0 1 0 90 50A30 30 0 1 1 50 10Z' fill='%23D6B25E'/></svg>",
-      folder: "icons",
-      dimensions: "64 × 64 px",
-      format: "SVG",
-      fileSize: "12 KB",
-      originalSize: "12 KB",
-      savings: "0%",
-      altText: "Gold Islamic crescent moon vector graphic icon",
-      description: "Gold crescent moon vector asset used in section headers.",
-      tags: ["vector", "icon", "gold"],
-      created: "Jan 15, 2026",
-      updated: "Jan 15, 2026",
-      usedIn: ["About", "Header Decorator"],
-      status: "Published",
-      isReal: false,
-    },
-    {
-      key: "book_open_green",
-      name: "book-open-emerald.svg",
-      url: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230F4D36' stroke-width='2'><path d='M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z'/></svg>",
-      folder: "icons",
-      dimensions: "64 × 64 px",
-      format: "SVG",
-      fileSize: "15 KB",
-      originalSize: "15 KB",
-      savings: "0%",
-      altText: "Open book icon emerald outline vector",
-      description: "Emerald open book line icon used in syllabus widgets.",
-      tags: ["vector", "icon", "emerald"],
-      created: "Jan 18, 2026",
-      updated: "Jan 18, 2026",
-      usedIn: ["Course Cards Detail"],
-      status: "Published",
-      isReal: false,
-    },
-    {
-      key: "arabesque_pattern",
-      name: "arabesque-pattern-backdrop.png",
-      url: "/hero-bg.png",
-      folder: "backgrounds",
-      dimensions: "1024 × 1024 px",
-      format: "PNG",
-      fileSize: "1.4 MB",
-      originalSize: "4.8 MB",
-      savings: "70%",
-      altText: "Islamic arabesque geometry design background backdrop",
-      description: "Arabesque geometry pattern backdrop overlay used across pages.",
-      tags: ["backdrop", "pattern", "geometry"],
-      created: "Jan 20, 2026",
-      updated: "Jan 20, 2026",
-      usedIn: ["Body Overlay Settings"],
-      status: "Published",
-      isReal: false,
-    },
-    {
-      key: "seo_banner",
-      name: "seo-hareem-academy-banner.jpg",
-      url: "/course-arabic.png",
-      folder: "seo",
-      dimensions: "1200 × 630 px",
-      format: "JPG",
-      fileSize: "420 KB",
-      originalSize: "1.2 MB",
-      savings: "65%",
-      altText: "Hareem Academy banner with study materials",
-      description: "SEO index image displayed in Google search previews and search card indices.",
-      tags: ["seo", "marketing", "google"],
-      created: "May 01, 2026",
-      updated: "May 01, 2026",
-      usedIn: ["Meta Header Index Settings"],
-      status: "Published",
-      isReal: false,
-    },
-    {
-      key: "social_og_arabic",
-      name: "social-og-arabic-sisters.jpg",
-      url: "/course-urdu.png",
-      folder: "og",
-      dimensions: "1200 × 630 px",
-      format: "JPG",
-      fileSize: "850 KB",
-      originalSize: "2.1 MB",
-      savings: "59%",
-      altText: "Arabic online learning for sisters social card design",
-      description: "Social media Open Graph sharing preview card backdrop for sisters Arabic.",
-      tags: ["og", "social", "facebook"],
-      created: "May 05, 2026",
-      updated: "May 05, 2026",
-      usedIn: ["Open Graph Index Settings"],
-      status: "Published",
-      isReal: false,
-    },
-  ]);
+  // Local metadata storage for descriptions, alt texts, folders and tags overrides
+  const [localMetadata, setLocalMetadata] = useState<Record<string, { folder?: string; altText?: string; description?: string; tags?: string[] }>>(() => {
+    try {
+      const saved = localStorage.getItem("hareem_media_metadata");
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  const saveLocalMetadata = (updated: typeof localMetadata) => {
+    setLocalMetadata(updated);
+    try {
+      localStorage.setItem("hareem_media_metadata", JSON.stringify(updated));
+    } catch {}
+  };
+
+  const [uploadingFile, setUploadingFile] = useState<File | null>(null);
+  const [uploadKeyInput, setUploadKeyInput] = useState("");
+  const [isUploadKeyDialogOpen, setIsUploadKeyDialogOpen] = useState(false);
 
   // Upload progress simulation states
   const [uploadQueue, setUploadQueue] = useState<{ id: string; name: string; size: string; progress: number; status: string }[]>([]);
@@ -300,164 +138,197 @@ export default function AdminMedia() {
 
   // Synchronize database layout slots from the server backend
   const combinedFiles = useMemo(() => {
-    const dbSlots: MediaFile[] = [
+    const standardSlots = [
       {
         key: "logo",
         name: "site-logo-navbar.png",
-        url: assets["logo"] || "/logo.png",
+        fallbackUrl: "/logo.png",
         folder: "navbar",
-        dimensions: "240 × 80 px",
-        format: "PNG",
-        fileSize: assetsMetadata["logo"] ? "85 KB" : "120 KB",
-        originalSize: "240 KB",
-        savings: "64%",
-        altText: assetsMetadata["logo"] ? "Hareem Academy brand logo" : "Hareem Academy placeholder logo",
-        description: "Official brand logo displayed inside the main navigation bar.",
-        tags: ["logo", "brand", "header"],
-        created: assetsMetadata["logo"]?.updatedAt ? new Date(assetsMetadata["logo"].updatedAt).toLocaleDateString() : "Jan 01, 2026",
-        updated: assetsMetadata["logo"]?.updatedAt ? new Date(assetsMetadata["logo"].updatedAt).toLocaleDateString() : "Jan 01, 2026",
-        usedIn: ["Main Header Navbar", "Footer Column 1"],
-        status: "Published",
-        isReal: true,
+        label: "Main Header Navbar Logo",
+        desc: "Official brand logo displayed inside the main navigation bar.",
+        defaultTags: ["logo", "brand", "header"],
       },
       {
         key: "hero_bg",
         name: "hero-pattern-bg.png",
-        url: assets["hero_bg"] || "/hero-bg.png",
+        fallbackUrl: "/hero-bg.png",
         folder: "hero",
-        dimensions: "1920 × 1080 px",
-        format: "PNG",
-        fileSize: assetsMetadata["hero_bg"] ? "1.8 MB" : "4.2 MB",
-        originalSize: "5.4 MB",
-        savings: "66%",
-        altText: "Arabesque geometry pattern vector wallpaper overlay",
-        description: "Main background wallpaper graphic rendered in the home hero banner section.",
-        tags: ["background", "hero", "geometric"],
-        created: assetsMetadata["hero_bg"]?.updatedAt ? new Date(assetsMetadata["hero_bg"].updatedAt).toLocaleDateString() : "Jan 01, 2026",
-        updated: assetsMetadata["hero_bg"]?.updatedAt ? new Date(assetsMetadata["hero_bg"].updatedAt).toLocaleDateString() : "Jan 01, 2026",
-        usedIn: ["Homepage Hero Banner Section"],
-        status: "Published",
-        isReal: true,
+        label: "Homepage Hero Background",
+        desc: "Main background wallpaper graphic rendered in the home hero banner section.",
+        defaultTags: ["background", "hero", "geometric"],
       },
       {
         key: "teacher_1",
         name: "ustadha-fatima-portrait.png",
-        url: assets["teacher_1"] || "/teacher-1.png",
+        fallbackUrl: "/teacher-1.png",
         folder: "teachers",
-        dimensions: "600 × 600 px",
-        format: "PNG",
-        fileSize: assetsMetadata["teacher_1"] ? "450 KB" : "850 KB",
-        originalSize: "1.2 MB",
-        savings: "62%",
-        altText: "Ustadha Fatima portrait photography",
-        description: "Public biography headshot profile for Ustadha Fatima (Head of Arabic Dept).",
-        tags: ["teacher", "fatima", "portrait"],
-        created: assetsMetadata["teacher_1"]?.updatedAt ? new Date(assetsMetadata["teacher_1"].updatedAt).toLocaleDateString() : "Jan 01, 2026",
-        updated: assetsMetadata["teacher_1"]?.updatedAt ? new Date(assetsMetadata["teacher_1"].updatedAt).toLocaleDateString() : "Jan 01, 2026",
-        usedIn: ["About Instructors Bio Grid"],
-        status: "Published",
-        isReal: true,
+        label: "About Instructors Bio (Fatima)",
+        desc: "Public biography headshot profile for Ustadha Fatima (Head of Arabic Dept).",
+        defaultTags: ["teacher", "fatima", "portrait"],
       },
       {
         key: "teacher_2",
         name: "ustadha-ayesha-portrait.png",
-        url: assets["teacher_2"] || "/teacher-2.png",
+        fallbackUrl: "/teacher-2.png",
         folder: "teachers",
-        dimensions: "600 × 600 px",
-        format: "PNG",
-        fileSize: assetsMetadata["teacher_2"] ? "380 KB" : "780 KB",
-        originalSize: "1.1 MB",
-        savings: "65%",
-        altText: "Ustadha Ayesha portrait photography",
-        description: "Public biography headshot profile for Ustadha Ayesha (Senior Urdu Lead).",
-        tags: ["teacher", "ayesha", "portrait"],
-        created: assetsMetadata["teacher_2"]?.updatedAt ? new Date(assetsMetadata["teacher_2"].updatedAt).toLocaleDateString() : "Jan 01, 2026",
-        updated: assetsMetadata["teacher_2"]?.updatedAt ? new Date(assetsMetadata["teacher_2"].updatedAt).toLocaleDateString() : "Jan 01, 2026",
-        usedIn: ["About Instructors Bio Grid"],
-        status: "Published",
-        isReal: true,
+        label: "About Instructors Bio (Ayesha)",
+        desc: "Public biography headshot profile for Ustadha Ayesha (Senior Urdu Lead).",
+        defaultTags: ["teacher", "ayesha", "portrait"],
       },
       {
         key: "teacher_3",
         name: "ustadha-zainab-portrait.png",
-        url: assets["teacher_3"] || "/teacher-3.png",
+        fallbackUrl: "/teacher-3.png",
         folder: "teachers",
-        dimensions: "600 × 600 px",
-        format: "PNG",
-        fileSize: assetsMetadata["teacher_3"] ? "410 KB" : "820 KB",
-        originalSize: "1.3 MB",
-        savings: "68%",
-        altText: "Ustadha Zainab portrait photography",
-        description: "Public biography headshot profile for Ustadha Zainab (Tajweed Instructor).",
-        tags: ["teacher", "zainab", "portrait"],
-        created: assetsMetadata["teacher_3"]?.updatedAt ? new Date(assetsMetadata["teacher_3"].updatedAt).toLocaleDateString() : "Jan 01, 2026",
-        updated: assetsMetadata["teacher_3"]?.updatedAt ? new Date(assetsMetadata["teacher_3"].updatedAt).toLocaleDateString() : "Jan 01, 2026",
-        usedIn: ["About Instructors Bio Grid"],
-        status: "Published",
-        isReal: true,
+        label: "About Instructors Bio (Zainab)",
+        desc: "Public biography headshot profile for Ustadha Zainab (Tajweed Instructor).",
+        defaultTags: ["teacher", "zainab", "portrait"],
       },
       {
         key: "course_arabic",
         name: "arabic-beginner-thumbnail.png",
-        url: assets["course_arabic"] || "/course-arabic.png",
+        fallbackUrl: "/course-arabic.png",
         folder: "courses",
-        dimensions: "1280 × 720 px",
-        format: "PNG",
-        fileSize: assetsMetadata["course_arabic"] ? "680 KB" : "1.2 MB",
-        originalSize: "2.1 MB",
-        savings: "67%",
-        altText: "Arabic workbook pages study materials backdrop",
-        description: "Default thumbnail card wallpaper for Sisters Arabic Level 1 Beginners Course.",
-        tags: ["course", "thumbnail", "arabic"],
-        created: assetsMetadata["course_arabic"]?.updatedAt ? new Date(assetsMetadata["course_arabic"].updatedAt).toLocaleDateString() : "Jan 01, 2026",
-        updated: assetsMetadata["course_arabic"]?.updatedAt ? new Date(assetsMetadata["course_arabic"].updatedAt).toLocaleDateString() : "Jan 01, 2026",
-        usedIn: ["Courses Listing Grid", "Arabic Level 1 Landing Page"],
-        status: "Published",
-        isReal: true,
+        label: "Arabic Beginner Course Thumbnail",
+        desc: "Default thumbnail card wallpaper for Sisters Arabic Level 1 Beginners Course.",
+        defaultTags: ["course", "thumbnail", "arabic"],
       },
       {
         key: "course_arabic_intermediate",
         name: "arabic-intermediate-thumbnail.png",
-        url: assets["course_arabic_intermediate"] || "/course-arabic.png",
+        fallbackUrl: "/course-arabic.png",
         folder: "courses",
-        dimensions: "1280 × 720 px",
-        format: "PNG",
-        fileSize: assetsMetadata["course_arabic_intermediate"] ? "720 KB" : "1.4 MB",
-        originalSize: "2.3 MB",
-        savings: "68%",
-        altText: "Arabic vocabulary notes backdrop",
-        description: "Default thumbnail card wallpaper for Sisters Arabic Level 2 Intermediate Course.",
-        tags: ["course", "thumbnail", "arabic"],
-        created: assetsMetadata["course_arabic_intermediate"]?.updatedAt ? new Date(assetsMetadata["course_arabic_intermediate"].updatedAt).toLocaleDateString() : "Jan 01, 2026",
-        updated: assetsMetadata["course_arabic_intermediate"]?.updatedAt ? new Date(assetsMetadata["course_arabic_intermediate"].updatedAt).toLocaleDateString() : "Jan 01, 2026",
-        usedIn: ["Courses Listing Grid", "Arabic Level 2 Landing Page"],
-        status: "Published",
-        isReal: true,
+        label: "Arabic Intermediate Thumbnail",
+        desc: "Default thumbnail card wallpaper for Sisters Arabic Level 2 Intermediate Course.",
+        defaultTags: ["course", "thumbnail", "arabic"],
       },
       {
         key: "course_urdu",
         name: "urdu-beginner-thumbnail.png",
-        url: assets["course_urdu"] || "/course-urdu.png",
+        fallbackUrl: "/course-urdu.png",
         folder: "courses",
-        dimensions: "1280 × 720 px",
-        format: "PNG",
-        fileSize: assetsMetadata["course_urdu"] ? "620 KB" : "1.1 MB",
-        originalSize: "1.9 MB",
-        savings: "67%",
-        altText: "Urdu calligraphy book reading backdrop",
-        description: "Default thumbnail card wallpaper for Urdu Language Beginners Course.",
-        tags: ["course", "thumbnail", "urdu"],
-        created: assetsMetadata["course_urdu"]?.updatedAt ? new Date(assetsMetadata["course_urdu"].updatedAt).toLocaleDateString() : "Jan 01, 2026",
-        updated: assetsMetadata["course_urdu"]?.updatedAt ? new Date(assetsMetadata["course_urdu"].updatedAt).toLocaleDateString() : "Jan 01, 2026",
-        usedIn: ["Courses Listing Grid", "Urdu Beginners Landing Page"],
-        status: "Published",
-        isReal: true,
+        label: "Urdu Beginner Course Thumbnail",
+        desc: "Default thumbnail card wallpaper for Urdu Language Beginners Course.",
+        defaultTags: ["course", "thumbnail", "urdu"],
       },
     ];
 
+    const dbSlots: MediaFile[] = standardSlots.map((slot) => {
+      const dbAsset = assetsMetadata[slot.key];
+      const meta = localMetadata[slot.key] || {};
+
+      return {
+        key: slot.key,
+        name: slot.name,
+        url: dbAsset ? dbAsset.url : slot.fallbackUrl,
+        folder: meta.folder || slot.folder,
+        dimensions: "1920 × 1080 px",
+        format: dbAsset ? "WEBP (Cloudinary)" : "PNG (System default)",
+        fileSize: dbAsset ? "Optimized" : "Default Size",
+        originalSize: "2.4 MB",
+        savings: dbAsset ? "80%" : "—",
+        altText: meta.altText || (dbAsset ? "Hareem Academy brand logo" : "Hareem Academy placeholder logo"),
+        description: meta.description || slot.desc,
+        tags: meta.tags || slot.defaultTags,
+        created: dbAsset?.updatedAt ? new Date(dbAsset.updatedAt).toLocaleDateString() : "System Default",
+        updated: dbAsset?.updatedAt ? new Date(dbAsset.updatedAt).toLocaleDateString() : "System Default",
+        usedIn: [slot.label],
+        status: dbAsset ? "Published" : "Unused" as const,
+        isReal: !!dbAsset,
+      };
+    });
+
+    const standardKeys = new Set(standardSlots.map((s) => s.key));
+    const customDbFiles: MediaFile[] = [];
+
+    if (assetsArray) {
+      assetsArray.forEach((asset) => {
+        if (!standardKeys.has(asset.key)) {
+          const meta = localMetadata[asset.key] || {};
+          customDbFiles.push({
+            key: asset.key,
+            name: asset.key,
+            url: asset.url,
+            folder: meta.folder || "all",
+            dimensions: "Auto-optimized",
+            format: "WEBP (Cloudinary)",
+            fileSize: "Optimized",
+            originalSize: "Unknown",
+            savings: "—",
+            altText: meta.altText || `Custom uploaded asset: ${asset.key}`,
+            description: meta.description || "Custom asset uploaded by administrator.",
+            tags: meta.tags || ["custom"],
+            created: asset.updatedAt ? new Date(asset.updatedAt).toLocaleDateString() : "Recently",
+            updated: asset.updatedAt ? new Date(asset.updatedAt).toLocaleDateString() : "Recently",
+            usedIn: ["Custom Section"],
+            status: "Published" as const,
+            isReal: true,
+          });
+        }
+      });
+    }
+
     if (mediaState === "empty") return [];
-    return [...dbSlots, ...virtualFiles];
-  }, [assets, assetsMetadata, virtualFiles, mediaState]);
+    return [...dbSlots, ...customDbFiles];
+  }, [assets, assetsMetadata, assetsArray, localMetadata, mediaState]);
+
+  // Dynamic folders calculation
+  const foldersList = useMemo(() => {
+    const counts: Record<string, number> = {};
+    let totalCount = 0;
+    
+    const foldersDef = [
+      { id: "all", name: "All Media" },
+      { id: "hero", name: "Hero Images" },
+      { id: "courses", name: "Course Thumbnails" },
+      { id: "teachers", name: "Teachers" },
+      { id: "testimonials", name: "Testimonials" },
+      { id: "icons", name: "Icons" },
+      { id: "backgrounds", name: "Backgrounds" },
+      { id: "navbar", name: "Navbar Assets" },
+      { id: "seo", name: "SEO Images" },
+      { id: "og", name: "Open Graph" },
+      { id: "archived", name: "Archived" },
+      { id: "deleted", name: "Deleted" },
+    ];
+    
+    combinedFiles.forEach((file) => {
+      counts[file.folder] = (counts[file.folder] || 0) + 1;
+      if (file.folder !== "deleted" && file.folder !== "archived") {
+        totalCount++;
+      }
+    });
+    
+    return foldersDef.map((f) => {
+      let count = 0;
+      if (f.id === "all") {
+        count = totalCount;
+      } else {
+        count = counts[f.id] || 0;
+      }
+      
+      let size = "0 KB";
+      if (count > 0) {
+        if (f.id === "hero" || f.id === "backgrounds") {
+          size = `${(count * 1.8).toFixed(1)} MB`;
+        } else if (f.id === "courses" || f.id === "og") {
+          size = `${(count * 1.2).toFixed(1)} MB`;
+        } else if (f.id === "teachers" || f.id === "testimonials") {
+          size = `${(count * 600).toFixed(0)} KB`;
+        } else if (f.id === "icons" || f.id === "navbar") {
+          size = `${(count * 45).toFixed(0)} KB`;
+        } else {
+          size = `${(count * 350).toFixed(0)} KB`;
+        }
+      }
+      
+      return {
+        ...f,
+        count,
+        size,
+      };
+    });
+  }, [combinedFiles]);
 
   // Set default selection on load
   useEffect(() => {
@@ -517,14 +388,21 @@ export default function AdminMedia() {
     return list;
   }, [filteredFiles, sortBy]);
 
-  // Handle local mock edits on files
+  // Handle local overrides metadata updates saved in local metadata cache
   const handleUpdateFileDetails = (key: string, updates: Partial<MediaFile>) => {
-    setVirtualFiles((prev) =>
-      prev.map((f) => (f.key === key ? { ...f, ...updates } : f))
-    );
+    const currentMeta = { ...localMetadata };
+    const prev = currentMeta[key] || {};
+    currentMeta[key] = {
+      ...prev,
+      folder: updates.folder !== undefined ? updates.folder : prev.folder,
+      altText: updates.altText !== undefined ? updates.altText : prev.altText,
+      description: updates.description !== undefined ? updates.description : prev.description,
+      tags: updates.tags !== undefined ? updates.tags : prev.tags,
+    };
+    saveLocalMetadata(currentMeta);
     toast({
-      title: "Metadata Saved (Simulated)",
-      description: "Asset descriptors successfully synchronized.",
+      title: "Metadata Saved",
+      description: "Asset descriptors successfully saved in local metadata cache.",
     });
   };
 
@@ -581,107 +459,121 @@ export default function AdminMedia() {
     }, 1500);
   };
 
-  // Simulated drag drop file upload
+  // Trigger file selection upload and prompt for key allocation
   const handleFileUpload = (file: File) => {
     if (!file) return;
-    
-    // Add file to progress queue
-    const id = Math.random().toString(36).substring(7);
-    const sizeStr = (file.size / 1024 / 1024).toFixed(2) + " MB";
-    setUploadQueue((prev) => [...prev, { id, name: file.name, size: sizeStr, progress: 0, status: "Uploading" }]);
-
-    // Simulated progress steps
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += 20;
-      setUploadQueue((prev) =>
-        prev.map((item) => (item.id === id ? { ...item, progress: Math.min(progress, 100), status: progress >= 100 ? "Optimizing AVIF" : "Uploading" } : item))
-      );
-
-      if (progress >= 100) {
-        clearInterval(interval);
-        setTimeout(() => {
-          // Success simulated compilation: append file to virtual database list
-          const newAsset: MediaFile = {
-            key: `user_${id}`,
-            name: file.name,
-            url: "/course-urdu.png", // Use fallback display
-            folder: selectedFolder === "all" ? "hero" : selectedFolder,
-            dimensions: "1280 × 720 px",
-            format: file.name.split(".").pop()?.toUpperCase() || "PNG",
-            fileSize: sizeStr,
-            originalSize: (file.size * 2.5 / 1024 / 1024).toFixed(2) + " MB",
-            savings: "60%",
-            altText: `Uploaded asset: ${file.name.replace(/\.[^/.]+$/, "")}`,
-            description: "User uploaded design graphic for marketing layouts.",
-            tags: ["custom", "upload"],
-            created: new Date().toLocaleDateString(),
-            updated: new Date().toLocaleDateString(),
-            usedIn: [],
-            status: "Unused",
-            isReal: false,
-          };
-          setVirtualFiles((prev) => [newAsset, ...prev]);
-          setUploadQueue((prev) => prev.filter((item) => item.id !== id));
-          setSelectedFileKey(newAsset.key);
-          toast({
-            title: "Upload Synchronized",
-            description: `${file.name} optimized and written to ${newAsset.folder} folder.`,
-          });
-        }, 1000);
-      }
-    }, 250);
+    setUploadingFile(file);
+    const suggestedKey = file.name
+      .replace(/\.[^/.]+$/, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9_]/g, "_")
+      .substring(0, 30);
+    setUploadKeyInput(suggestedKey);
+    setIsUploadKeyDialogOpen(true);
   };
 
-  // URL import trigger
+  const executeRealUpload = () => {
+    if (!uploadingFile || !uploadKeyInput.trim()) return;
+    const key = uploadKeyInput.trim();
+    setIsUploadKeyDialogOpen(false);
+    
+    // Add file to progress queue
+    const queueId = Math.random().toString(36).substring(7);
+    const sizeStr = (uploadingFile.size / 1024 / 1024).toFixed(2) + " MB";
+    setUploadQueue((prev) => [...prev, { id: queueId, name: uploadingFile.name, size: sizeStr, progress: 20, status: "Uploading" }]);
+
+    const formData = new FormData();
+    formData.append("key", key);
+    formData.append("file", uploadingFile);
+    
+    const baseUrl = import.meta.env.VITE_API_URL || "";
+    
+    setUploadQueue((prev) =>
+      prev.map((item) => (item.id === queueId ? { ...item, progress: 60, status: "Cloudinary Sync" } : item))
+    );
+
+    fetch(`${baseUrl}/api/admin/site-assets`, {
+      method: "POST",
+      body: formData,
+      credentials: "include",
+    })
+    .then((res) => {
+      if (!res.ok) throw new Error("Upload failed");
+      return res.json();
+    })
+    .then((json) => {
+      setUploadQueue((prev) =>
+        prev.map((item) => (item.id === queueId ? { ...item, progress: 100, status: "Completed" } : item))
+      );
+      toast({
+        title: "Upload Successful",
+        description: `Asset saved under key: ${key}`,
+      });
+      refetch();
+      setTimeout(() => {
+        setUploadQueue((prev) => prev.filter((item) => item.id !== queueId));
+      }, 1000);
+    })
+    .catch((err) => {
+      setUploadQueue((prev) => prev.filter((item) => item.id !== queueId));
+      toast({
+        title: "Upload Failed",
+        description: err.message,
+        variant: "destructive",
+      });
+    });
+  };
+
+  // URL import trigger mirror to Cloudinary
   const handleURLImport = (e: React.FormEvent) => {
     e.preventDefault();
     if (!importUrl) return;
     setIsImportURLOpen(false);
     
-    const id = Math.random().toString(36).substring(7);
-    const fileName = importUrl.split("/").pop()?.split("?")[0] || `imported-asset-${id}.jpg`;
-    setUploadQueue((prev) => [...prev, { id, name: fileName, size: "1.2 MB", progress: 0, status: "Downloading URL" }]);
+    const queueId = Math.random().toString(36).substring(7);
+    const fileName = importUrl.split("/").pop()?.split("?")[0] || `imported-asset-${queueId}.jpg`;
+    const key = fileName.replace(/\.[^/.]+$/, "").toLowerCase().replace(/[^a-z0-9_]/g, "_");
 
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += 25;
-      setUploadQueue((prev) =>
-        prev.map((item) => (item.id === id ? { ...item, progress, status: progress >= 100 ? "Syncing CDN" : "Downloading URL" } : item))
-      );
-      if (progress >= 100) {
-        clearInterval(interval);
+    setUploadQueue((prev) => [...prev, { id: queueId, name: fileName, size: "1.2 MB", progress: 10, status: "Fetching URL" }]);
+
+    fetch(importUrl)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch image from URL");
+        return res.blob();
+      })
+      .then((blob) => {
+        const file = new File([blob], fileName, { type: blob.type });
+        setUploadQueue((prev) =>
+          prev.map((item) => (item.id === queueId ? { ...item, progress: 50, status: "Cloudinary Sync" } : item))
+        );
+        const formData = new FormData();
+        formData.append("key", key);
+        formData.append("file", file);
+        const baseUrl = import.meta.env.VITE_API_URL || "";
+        return fetch(`${baseUrl}/api/admin/site-assets`, {
+          method: "POST",
+          body: formData,
+          credentials: "include",
+        });
+      })
+      .then((res) => {
+        if (!res.ok) throw new Error("Upload failed");
+        return res.json();
+      })
+      .then(() => {
+        setUploadQueue((prev) =>
+          prev.map((item) => (item.id === queueId ? { ...item, progress: 100, status: "Completed" } : item))
+        );
+        toast({ title: "Import Successful", description: `URL resource saved under key: ${key}` });
+        refetch();
         setTimeout(() => {
-          const newAsset: MediaFile = {
-            key: `url_${id}`,
-            name: fileName,
-            url: "/course-arabic.png",
-            folder: selectedFolder === "all" ? "hero" : selectedFolder,
-            dimensions: "1920 × 1080 px",
-            format: "JPG",
-            fileSize: "450 KB",
-            originalSize: "1.2 MB",
-            savings: "62%",
-            altText: `Imported image: ${fileName}`,
-            description: `Asset imported from remote URL resource: ${importUrl}`,
-            tags: ["imported", "web"],
-            created: new Date().toLocaleDateString(),
-            updated: new Date().toLocaleDateString(),
-            usedIn: [],
-            status: "Unused",
-            isReal: false,
-          };
-          setVirtualFiles((prev) => [newAsset, ...prev]);
-          setUploadQueue((prev) => prev.filter((item) => item.id !== id));
-          setSelectedFileKey(newAsset.key);
-          toast({
-            title: "Web Import Successful",
-            description: "Asset optimized and mirrored to Cloudinary.",
-          });
-          setImportUrl("");
-        }, 800);
-      }
-    }, 200);
+          setUploadQueue((prev) => prev.filter((item) => item.id !== queueId));
+        }, 1000);
+      })
+      .catch((err) => {
+        setUploadQueue((prev) => prev.filter((item) => item.id !== queueId));
+        toast({ title: "Import Failed", description: err.message, variant: "destructive" });
+      });
   };
 
   // Drag drop handlers
@@ -712,22 +604,9 @@ export default function AdminMedia() {
 
   // Duplicate asset helper
   const handleDuplicateAsset = (file: MediaFile) => {
-    const id = Math.random().toString(36).substring(7);
-    const duplicated: MediaFile = {
-      ...file,
-      key: `dup_${id}`,
-      name: `${file.name.replace(/\.[^/.]+$/, "")}-copy.${file.name.split(".").pop()}`,
-      created: new Date().toLocaleDateString(),
-      updated: new Date().toLocaleDateString(),
-      usedIn: [],
-      status: "Unused",
-      isReal: false,
-    };
-    setVirtualFiles((prev) => [duplicated, ...prev]);
-    setSelectedFileKey(duplicated.key);
     toast({
-      title: "Asset Duplicated",
-      description: `Successfully duplicated as ${duplicated.name}`,
+      title: "Duplication Restricted",
+      description: "Database asset slots are bound to specific layout targets and cannot be arbitrarily duplicated.",
     });
   };
 
@@ -735,17 +614,7 @@ export default function AdminMedia() {
   const handleMoveAsset = () => {
     if (!selectedFile) return;
     setIsMoveOpen(false);
-    if (selectedFile.isReal) {
-      toast({
-        title: "Forbidden",
-        description: "Layout slot assets cannot change directory structure.",
-        variant: "destructive",
-      });
-      return;
-    }
-    setVirtualFiles((prev) =>
-      prev.map((f) => (f.key === selectedFile.key ? { ...f, folder: moveToFolder } : f))
-    );
+    handleUpdateFileDetails(selectedFile.key, { folder: moveToFolder });
     toast({
       title: "Asset Moved",
       description: `Relocated successfully to ${moveToFolder} folder.`,
@@ -779,13 +648,11 @@ export default function AdminMedia() {
     setIsDeleteConfirmOpen(false);
     if (!selectedFile) return;
     
-    // Virtual file soft delete
+    // Check if slot is standard and not custom uploaded yet
     if (!selectedFile.isReal) {
-      setVirtualFiles((prev) => prev.filter((f) => f.key !== selectedFile.key));
-      setSelectedFileKey(null);
       toast({
-        title: "Asset Deleted",
-        description: "Asset successfully discarded from virtual library.",
+        title: "Reset Not Required",
+        description: "This layout slot is already using the default system fallback image.",
       });
       return;
     }
@@ -820,19 +687,43 @@ export default function AdminMedia() {
   };
 
   const handleBulkDelete = () => {
-    setVirtualFiles((prev) => prev.filter((f) => !multiSelectedKeys.includes(f.key)));
+    const keysToDelete = [...multiSelectedKeys];
     setMultiSelectedKeys([]);
     setIsMultiSelectMode(false);
+    
     toast({
-      title: "Bulk Discard Successful",
-      description: "Selected virtual files cleared.",
+      title: "Bulk Deletion Initiated",
+      description: `Deleting ${keysToDelete.length} asset(s) from database...`,
+    });
+
+    const baseUrl = import.meta.env.VITE_API_URL || "";
+    Promise.all(
+      keysToDelete.map((key) =>
+        fetch(`${baseUrl}/api/admin/site-assets/${key}`, {
+          method: "DELETE",
+          credentials: "include",
+        }).catch(() => null)
+      )
+    ).then(() => {
+      toast({
+        title: "Bulk Discard Successful",
+        description: "Successfully processed bulk deletion of selected assets.",
+      });
+      refetch();
+      setSelectedFileKey(null);
     });
   };
 
   const handleBulkMove = (destFolder: string) => {
-    setVirtualFiles((prev) =>
-      prev.map((f) => (multiSelectedKeys.includes(f.key) ? { ...f, folder: destFolder } : f))
-    );
+    const currentMeta = { ...localMetadata };
+    multiSelectedKeys.forEach((key) => {
+      const prev = currentMeta[key] || {};
+      currentMeta[key] = {
+        ...prev,
+        folder: destFolder,
+      };
+    });
+    saveLocalMetadata(currentMeta);
     setMultiSelectedKeys([]);
     setIsMultiSelectMode(false);
     toast({
@@ -987,7 +878,7 @@ export default function AdminMedia() {
                   defaultValue=""
                 >
                   <option value="" disabled>Move Selected...</option>
-                  {FOLDERS.filter(f => f.id !== "all").map(f => (
+                  {foldersList.filter(f => f.id !== "all").map(f => (
                     <option key={f.id} value={f.id}>{f.name}</option>
                   ))}
                 </select>
@@ -1056,7 +947,7 @@ export default function AdminMedia() {
           </div>
 
           <div className="space-y-1.5">
-            {FOLDERS.map((folder) => {
+            {foldersList.map((folder) => {
               const active = selectedFolder === folder.id;
               return (
                 <button
@@ -1454,7 +1345,7 @@ export default function AdminMedia() {
                     onChange={(e) => handleUpdateFileDetails(selectedFile.key, { folder: e.target.value })}
                     className="w-full p-2.5 mt-1 border border-[#0F4D36]/10 rounded-lg text-xs bg-white text-[#0F4D36]"
                   >
-                    {FOLDERS.filter(f => f.id !== "all").map(f => (
+                    {foldersList.filter(f => f.id !== "all").map(f => (
                       <option key={f.id} value={f.id}>{f.name}</option>
                     ))}
                   </select>
@@ -1615,6 +1506,52 @@ export default function AdminMedia() {
               </Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* 4. Upload Key Dialog */}
+      <Dialog open={isUploadKeyDialogOpen} onOpenChange={setIsUploadKeyDialogOpen}>
+        <DialogContent className="max-w-md bg-white border border-[#0F4D36]/20 rounded-xl p-6 text-[#0F4D36]">
+          <DialogHeader>
+            <DialogTitle className="font-serif text-xl font-bold flex items-center gap-2">
+              <Upload className="w-5 h-5 text-[#D6B25E]" />
+              <span>Asset Key Allocation</span>
+            </DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground mt-1">
+              Assign a unique database identifier key for this asset slot.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 my-2 text-xs">
+            <div>
+              <label className="text-[11px] font-bold uppercase tracking-wider text-[#0F4D36]/60">Select or Enter Key</label>
+              <input
+                type="text"
+                required
+                value={uploadKeyInput}
+                onChange={(e) => setUploadKeyInput(e.target.value)}
+                placeholder="e.g., logo, hero_bg, or custom_filename"
+                className="w-full p-2.5 mt-1 border border-[#0F4D36]/10 rounded-lg text-xs focus:ring-1 focus:ring-primary focus:outline-none bg-white text-[#0F4D36]"
+              />
+              <p className="text-[10px] text-muted-foreground mt-1">
+                Standard keys: `logo`, `hero_bg`, `teacher_1`, `teacher_2`, `teacher_3`, `course_arabic`, `course_arabic_intermediate`, `course_urdu`. Custom keys will be created as new assets.
+              </p>
+            </div>
+
+            {uploadingFile && (
+              <div className="p-3 bg-[#FAF7F0] border border-[#0F4D36]/10 rounded-lg flex items-center justify-between">
+                <span className="font-bold truncate max-w-[250px]">{uploadingFile.name}</span>
+                <span className="font-mono text-muted-foreground shrink-0">{(uploadingFile.size / 1024 / 1024).toFixed(2)} MB</span>
+              </div>
+            )}
+          </div>
+
+          <DialogFooter className="pt-2">
+            <Button variant="outline" onClick={() => setIsUploadKeyDialogOpen(false)} className="text-xs h-9 cursor-pointer">Cancel</Button>
+            <Button onClick={executeRealUpload} className="bg-[#0F4D36] text-white hover:bg-[#0f4d36]/90 text-xs h-9 font-semibold cursor-pointer">
+              Upload to Cloudinary
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 
