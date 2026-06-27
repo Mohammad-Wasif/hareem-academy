@@ -5,6 +5,10 @@ export interface SiteAsset {
   key: string;
   url: string;
   publicId: string;
+  title?: string | null;
+  description?: string | null;
+  altText?: string | null;
+  tags?: string | null;
   updatedAt?: string;
 }
 

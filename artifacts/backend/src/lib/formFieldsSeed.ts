@@ -78,7 +78,7 @@ export async function ensureBuiltInEnrollmentFields() {
         eq(formFieldsTable.isBuiltIn, true),
       ),
     );
-  const present = new Set(existing.map((r) => r.fieldKey));
+  const present = new Set(existing.map((r: any) => r.fieldKey));
   const toInsert = BUILT_IN_ENROLLMENT_FIELDS.filter(
     (f) => !present.has(f.fieldKey),
   );

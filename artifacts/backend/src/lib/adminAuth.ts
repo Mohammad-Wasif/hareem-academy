@@ -11,14 +11,8 @@ export function requireAdmin(
   res: Response,
   next: NextFunction,
 ) {
-  // Check session first (for local dev)
+  // Check session
   if (req.session?.isAdmin) {
-    return next();
-  }
-
-  // Fallback to header (for production cross-domain)
-  const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
-  if (req.headers["x-admin-password"] === adminPassword) {
     return next();
   }
 

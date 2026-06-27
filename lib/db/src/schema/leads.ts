@@ -6,6 +6,7 @@ export const leadsTable = pgTable("leads", {
   whatsappNumber: text("whatsapp_number").notNull(),
   email: text("email"),
   source: text("source").notNull(),
+  assignedTo: text("assigned_to"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

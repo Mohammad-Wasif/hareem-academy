@@ -18,30 +18,31 @@ import {
 } from "../lib/formFieldsSeed";
 
 import bcrypt from "bcrypt";
+import rateLimit from "express-rate-limit";
+import { siteSettingsTable, dashboardTasksTable, siteAssetsTable } from "@workspace/db";
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 5, // Limit each IP to 5 login requests per window (15 mins)
+  message: { error: "Too many login attempts, please try again after 15 minutes" },
+  standardHeaders: "draft-7", // Set `RateLimit` headers
+  legacyHeaders: false, // Disable the `X-RateLimit` headers
+});
 
 const router: IRouter = Router();
 
-router.post("/admin/login", async (req, res) => {
+router.post("/admin/login", loginLimiter, async (req, res) => {
   const { username, password } = req.body ?? {};
   
   const hash = process.env["ADMIN_PASSWORD_HASH"];
-  const plain = process.env["ADMIN_PASSWORD"];
   
-  if (!hash && !plain) {
+  if (!hash) {
     return res.status(500).json({ error: "Admin credentials not configured" });
   }
 
   let isValid = false;
   if (username === "admin") {
-    if (hash) {
-      isValid = await bcrypt.compare(password, hash);
-    } else if (plain) {
-      // Temporary fallback for migration
-      isValid = password === plain;
-      if (isValid) {
-        req.log.warn("Admin logged in using plain-text password. Please configure ADMIN_PASSWORD_HASH.");
-      }
-    }
+    isValid = await bcrypt.compare(password, hash);
   }
 
   if (!isValid) {
@@ -131,9 +132,9 @@ router.get("/admin/dashboard", requireAdmin, async (req, res) => {
         faqs: f.length,
       },
       recentEnrollments: e
-        .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+        .sort((a: any, b: any) => b.createdAt.getTime() - a.createdAt.getTime())
         .slice(0, 5)
-        .map((r) => ({
+        .map((r: any) => ({
           id: r.id,
           fullName: r.fullName,
           courseSlug: r.courseSlug,
@@ -154,7 +155,7 @@ router.get("/admin/enrollments", requireAdmin, async (req, res) => {
       .from(enrollmentsTable)
       .orderBy(desc(enrollmentsTable.createdAt));
     return res.json(
-      rows.map((r) => ({
+      rows.map((r: any) => ({
         id: r.id,
         fullName: r.fullName,
         age: r.age,
@@ -164,6 +165,7 @@ router.get("/admin/enrollments", requireAdmin, async (req, res) => {
         courseSlug: r.courseSlug,
         notes: r.notes ?? null,
         customData: r.customData ?? {},
+        assignedTo: r.assignedTo ?? null,
         createdAt: r.createdAt.toISOString(),
       })),
     );
@@ -192,7 +194,7 @@ router.get("/admin/contacts", requireAdmin, async (req, res) => {
       .from(contactMessagesTable)
       .orderBy(desc(contactMessagesTable.createdAt));
     return res.json(
-      rows.map((r) => ({
+      rows.map((r: any) => ({
         id: r.id,
         fullName: r.fullName,
         email: r.email ?? null,
@@ -226,12 +228,13 @@ router.get("/admin/leads", requireAdmin, async (req, res) => {
       .from(leadsTable)
       .orderBy(desc(leadsTable.createdAt));
     return res.json(
-      rows.map((r) => ({
+      rows.map((r: any) => ({
         id: r.id,
         fullName: r.fullName ?? null,
         whatsappNumber: r.whatsappNumber,
         email: r.email ?? null,
         source: r.source,
+        assignedTo: r.assignedTo ?? null,
         createdAt: r.createdAt.toISOString(),
       })),
     );
@@ -411,7 +414,7 @@ router.get("/admin/testimonials", requireAdmin, async (req, res) => {
       .from(testimonialsTable)
       .orderBy(desc(testimonialsTable.featured), desc(testimonialsTable.id));
     return res.json(
-      rows.map((t) => ({
+      rows.map((t: any) => ({
         id: t.id,
         studentName: t.studentName,
         location: t.location ?? null,
@@ -528,7 +531,7 @@ router.get("/admin/faqs", requireAdmin, async (req, res) => {
       .from(faqsTable)
       .orderBy(asc(faqsTable.sortOrder), asc(faqsTable.id));
     return res.json(
-      rows.map((f) => ({
+      rows.map((f: any) => ({
         id: f.id,
         question: f.question,
         question_ur: f.question_ur ?? null,
@@ -751,6 +754,198 @@ router.delete("/admin/form-fields/:id", requireAdmin, async (req, res) => {
     return res.json({ ok: true });
   } catch (err) {
     return res.status(500).json({ error: "Failed" });
+  }
+});
+
+// PUT /api/admin/leads/:id/assign - Assign lead to teacher
+router.put("/admin/leads/:id/assign", requireAdmin, async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const { assignedTo } = req.body ?? {};
+
+    const [row] = await db
+      .update(leadsTable)
+      .set({ assignedTo: assignedTo || null })
+      .where(eq(leadsTable.id, id))
+      .returning();
+
+    if (!row) {
+      return res.status(404).json({ error: "Lead not found" });
+    }
+
+    return res.json(row);
+  } catch (error) {
+    req.log.error({ error, id: req.params.id }, "Failed to assign lead");
+    return res.status(500).json({ error: "Failed to assign lead" });
+  }
+});
+
+// PUT /api/admin/enrollments/:id/assign - Assign enrollment to teacher
+router.put("/api/admin/enrollments/:id/assign", requireAdmin, async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const { assignedTo } = req.body ?? {};
+
+    const [row] = await db
+      .update(enrollmentsTable)
+      .set({ assignedTo: assignedTo || null })
+      .where(eq(enrollmentsTable.id, id))
+      .returning();
+
+    if (!row) {
+      return res.status(404).json({ error: "Enrollment not found" });
+    }
+
+    return res.json(row);
+  } catch (error) {
+    req.log.error({ error, id: req.params.id }, "Failed to assign enrollment");
+    return res.status(500).json({ error: "Failed to assign enrollment" });
+  }
+});
+
+// GET /api/admin/tasks - List dashboard tasks
+router.get("/admin/tasks", requireAdmin, async (req, res) => {
+  try {
+    const rows = await db
+      .select()
+      .from(dashboardTasksTable)
+      .orderBy(asc(dashboardTasksTable.createdAt));
+    return res.json(rows);
+  } catch (error) {
+    req.log.error({ error }, "Failed to list dashboard tasks");
+    return res.status(500).json({ error: "Failed to list tasks" });
+  }
+});
+
+// POST /api/admin/tasks - Create dashboard task
+router.post("/admin/tasks", requireAdmin, async (req, res) => {
+  try {
+    const { text } = req.body ?? {};
+    if (!text) {
+      return res.status(400).json({ error: "Task text is required" });
+    }
+
+    const [row] = await db
+      .insert(dashboardTasksTable)
+      .values({ text })
+      .returning();
+
+    return res.status(201).json(row);
+  } catch (error) {
+    req.log.error({ error }, "Failed to create dashboard task");
+    return res.status(500).json({ error: "Failed to create task" });
+  }
+});
+
+// PUT /api/admin/tasks/:id - Toggle task completion or edit text
+router.put("/admin/tasks/:id", requireAdmin, async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const { text, completed } = req.body ?? {};
+
+    const [row] = await db
+      .update(dashboardTasksTable)
+      .set({
+        ...(text !== undefined ? { text } : {}),
+        ...(completed !== undefined ? { completed } : {}),
+      })
+      .where(eq(dashboardTasksTable.id, id))
+      .returning();
+
+    if (!row) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    return res.json(row);
+  } catch (error) {
+    req.log.error({ error, id: req.params.id }, "Failed to update dashboard task");
+    return res.status(500).json({ error: "Failed to update task" });
+  }
+});
+
+// DELETE /api/admin/tasks/:id - Delete dashboard task
+router.delete("/api/admin/tasks/:id", requireAdmin, async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const [row] = await db
+      .delete(dashboardTasksTable)
+      .where(eq(dashboardTasksTable.id, id))
+      .returning();
+
+    if (!row) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    return res.json({ ok: true, id });
+  } catch (error) {
+    req.log.error({ error, id: req.params.id }, "Failed to delete dashboard task");
+    return res.status(500).json({ error: "Failed to delete task" });
+  }
+});
+
+// GET /api/admin/settings - Retrieve site settings
+router.get("/admin/settings", requireAdmin, async (req, res) => {
+  try {
+    const rows = await db.select().from(siteSettingsTable);
+    return res.json(rows);
+  } catch (error) {
+    req.log.error({ error }, "Failed to fetch settings");
+    return res.status(500).json({ error: "Failed to fetch settings" });
+  }
+});
+
+// PUT /api/admin/settings/:key - Save/update settings category
+router.put("/api/admin/settings/:key", requireAdmin, async (req, res) => {
+  try {
+    const key = req.params.key as string;
+    const { value } = req.body ?? {};
+
+    if (!value) {
+      return res.status(400).json({ error: "Settings value is required" });
+    }
+
+    const [row] = await db
+      .insert(siteSettingsTable)
+      .values({ key, value })
+      .onConflictDoUpdate({
+        target: siteSettingsTable.key,
+        set: { value, updatedAt: new Date() },
+      })
+      .returning();
+
+    return res.json(row);
+  } catch (error) {
+    req.log.error({ error, key: req.params.key }, "Failed to update site settings");
+    return res.status(500).json({ error: "Failed to update settings" });
+  }
+});
+
+// PUT /api/admin/site-assets/:key/metadata - Update media asset details
+router.put("/api/admin/site-assets/:key/metadata", requireAdmin, async (req, res) => {
+  try {
+    const key = req.params.key as string;
+    const { title, description, altText, tags } = req.body ?? {};
+
+    const [row] = await db
+      .update(siteAssetsTable)
+      .set({
+        title: title !== undefined ? title : null,
+        description: description !== undefined ? description : null,
+        altText: altText !== undefined ? altText : null,
+        tags: tags !== undefined ? tags : null,
+        updatedAt: new Date(),
+      })
+      .where(eq(siteAssetsTable.key, key))
+      .returning();
+
+    if (!row) {
+      return res.status(404).json({ error: "Asset not found" });
+    }
+
+    return res.json(row);
+  } catch (error) {
+    req.log.error({ error, key: req.params.key }, "Failed to update site asset metadata");
+    return res.status(500).json({ error: "Failed to update asset metadata" });
   }
 });
 

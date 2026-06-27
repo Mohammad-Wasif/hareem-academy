@@ -6,21 +6,16 @@ async function request<T>(
   path: string,
   init?: RequestInit,
 ): Promise<T> {
-  const adminPassword = localStorage.getItem("admin_password");
   console.log("Admin Request:", `${BASE}${path}`);
   const res = await fetch(`${BASE}${path}`, {
     credentials: "include",
     ...init,
     headers: {
       "Content-Type": "application/json",
-      ...(adminPassword ? { "x-admin-password": adminPassword } : {}),
       ...(init?.headers || {}),
     },
   });
   if (!res.ok) {
-    if (res.status === 401) {
-      localStorage.removeItem("admin_password");
-    }
     let msg = `Request failed (${res.status})`;
     try {
       const body = await res.json();
@@ -35,14 +30,10 @@ async function request<T>(
 export const adminApi = {
   me: () => request<{ isAdmin: boolean }>("/admin/me"),
   login: async (username: string, password: string) => {
-    const res = await request<{ ok: true }>("/admin/login", {
+    return await request<{ ok: true }>("/admin/login", {
       method: "POST",
       body: JSON.stringify({ username, password }),
     });
-    if (res.ok) {
-      localStorage.setItem("admin_password", password);
-    }
-    return res;
   },
   logout: () => request<{ ok: true }>("/admin/logout", { method: "POST" }),
 
@@ -133,6 +124,72 @@ export const adminApi = {
     }),
   deleteFormField: (id: number) =>
     request<{ ok: true }>(`/admin/form-fields/${id}`, { method: "DELETE" }),
+
+  // Lead Assignee
+  assignLead: (id: number, assignedTo: string | null) =>
+    request<any>(`/admin/leads/${id}/assign`, {
+      method: "PUT",
+      body: JSON.stringify({ assignedTo }),
+    }),
+  assignEnrollment: (id: number, assignedTo: string | null) =>
+    request<any>(`/admin/enrollments/${id}/assign`, {
+      method: "PUT",
+      body: JSON.stringify({ assignedTo }),
+    }),
+
+  // Dashboard Tasks
+  listTasks: () => request<any[]>("/admin/tasks"),
+  createTask: (text: string) =>
+    request<any>("/admin/tasks", {
+      method: "POST",
+      body: JSON.stringify({ text }),
+    }),
+  updateTask: (id: number, data: { text?: string; completed?: boolean }) =>
+    request<any>(`/admin/tasks/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    }),
+  deleteTask: (id: number) =>
+    request<{ ok: true }>(`/admin/tasks/${id}`, { method: "DELETE" }),
+
+  // Site Settings
+  getSettings: () => request<{ key: string; value: any }[]>("/admin/settings"),
+  updateSettings: (key: string, value: any) =>
+    request<any>(`/admin/settings/${key}`, {
+      method: "PUT",
+      body: JSON.stringify({ value }),
+    }),
+
+  // Landing Pages
+  listLandingPages: () => request<any[]>("/admin/landing-pages"),
+  getLandingPage: (slug: string) => request<any>(`/landing-pages/${slug}`),
+  createLandingPage: (data: { slug: string; title: string; metaDescription?: string; config: any }) =>
+    request<any>("/admin/landing-pages", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  updateLandingPage: (slug: string, data: { title: string; metaDescription?: string; config: any }) =>
+    request<any>(`/admin/landing-pages/${slug}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    }),
+  deleteLandingPage: (slug: string) =>
+    request<{ ok: true }>(`/admin/landing-pages/${slug}`, { method: "DELETE" }),
+
+  // Media Asset Metadata
+  updateAssetMetadata: (
+    key: string,
+    metadata: {
+      title?: string | null;
+      description?: string | null;
+      altText?: string | null;
+      tags?: string | null;
+    },
+  ) =>
+    request<any>(`/admin/site-assets/${key}/metadata`, {
+      method: "PUT",
+      body: JSON.stringify(metadata),
+    }),
 };
 
 export type FormFieldType =
@@ -170,6 +227,7 @@ export type AdminEnrollment = {
   courseSlug: string;
   notes: string | null;
   customData: Record<string, string>;
+  assignedTo?: string | null;
   createdAt: string;
 };
 
@@ -189,6 +247,7 @@ export type AdminLead = {
   whatsappNumber: string;
   email: string | null;
   source: string;
+  assignedTo?: string | null;
   createdAt: string;
 };
 

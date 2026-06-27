@@ -21,7 +21,7 @@ router.get("/form-fields/:formKey", async (req, res) => {
       )
       .orderBy(asc(formFieldsTable.sortOrder), asc(formFieldsTable.id));
     res.json(
-      rows.map((f) => ({
+      rows.map((f: any) => ({
         id: f.id,
         formKey: f.formKey,
         fieldKey: f.fieldKey,

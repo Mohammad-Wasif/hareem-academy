@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { useSiteAssets } from "@/hooks/use-site-assets";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { adminApi } from "@/lib/adminApi";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Settings,
@@ -316,16 +317,44 @@ export default function AdminSettings() {
   const [previewDevice, setPreviewDevice] = useState<"desktop" | "tablet" | "mobile">("desktop");
   const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
 
-  // Initialize from LocalStorage
+  // Initialize from database settings_v1, fall back to local storage then defaults
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("hareem_settings_v1");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        setSettings(parsed);
-        setDraftSettings(parsed);
-      }
-    } catch {}
+    let active = true;
+    adminApi.getSettings()
+      .then((rows) => {
+        if (!active) return;
+        const dbSettingsRow = rows.find((r) => r.key === "settings_v1");
+        if (dbSettingsRow && dbSettingsRow.value) {
+          const val = dbSettingsRow.value as SettingsState;
+          setSettings(val);
+          setDraftSettings(val);
+        } else {
+          // Fall back to local storage
+          try {
+            const saved = localStorage.getItem("hareem_settings_v1");
+            if (saved) {
+              const parsed = JSON.parse(saved);
+              setSettings(parsed);
+              setDraftSettings(parsed);
+            }
+          } catch {}
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch settings from database:", err);
+        // Fall back to local storage
+        try {
+          const saved = localStorage.getItem("hareem_settings_v1");
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            setSettings(parsed);
+            setDraftSettings(parsed);
+          }
+        } catch {}
+      });
+    return () => {
+      active = false;
+    };
   }, []);
 
   // Check if dirty
@@ -344,24 +373,26 @@ export default function AdminSettings() {
   // Toolbar Actions
   const handleSave = () => {
     setIsSaving(true);
-    setTimeout(() => {
-      try {
-        localStorage.setItem("hareem_settings_v1", JSON.stringify(draftSettings));
+    adminApi.updateSettings("settings_v1", draftSettings)
+      .then(() => {
+        try {
+          localStorage.setItem("hareem_settings_v1", JSON.stringify(draftSettings));
+        } catch {}
         setSettings(draftSettings);
         setIsSaving(false);
         toast({
           title: "Draft Saved",
-          description: "Temporary system settings successfully updated in local workspace cache.",
+          description: "System settings successfully updated in the PostgreSQL database.",
         });
-      } catch {
+      })
+      .catch((err) => {
         setIsSaving(false);
         toast({
           title: "Save Failed",
-          description: "Could not save configuration details.",
+          description: err.message || "Could not save configuration details to database.",
           variant: "destructive",
         });
-      }
-    }, 800);
+      });
   };
 
   const handleReset = () => {

@@ -12,6 +12,7 @@ import adminRouter from "./admin";
 
 import siteContentRouter from "./siteContent";
 import siteAssetsRouter from "./siteAssets";
+import landingPagesRouter from "./landingPages";
 
 const router: IRouter = Router();
 
@@ -27,6 +28,7 @@ router.use(formFieldsRouter);
 router.use(adminRouter);
 router.use(siteContentRouter);
 router.use(siteAssetsRouter);
+router.use(landingPagesRouter);
 
 export default router;
 

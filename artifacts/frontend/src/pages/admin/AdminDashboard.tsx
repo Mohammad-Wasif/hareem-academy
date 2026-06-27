@@ -149,77 +149,83 @@ export default function AdminDashboard() {
   const [storageUsed, setStorageUsed] = useState(4.2);
   const [isOptimizingStorage, setIsOptimizingStorage] = useState(false);
 
-  // Task checklist state - Persisted in localStorage
-  const [tasks, setTasks] = useState<{ id: number; text: string; checked: boolean }[]>(() => {
-    try {
-      const saved = localStorage.getItem("hareem_dashboard_tasks");
-      if (saved) return JSON.parse(saved);
-    } catch {}
-    return [
-      { id: 1, text: "Review new Tajweed course enrollments", checked: false },
-      { id: 2, text: "Audit SEO metadata length on page builder", checked: true },
-      { id: 3, text: "Organize course thumbnail assets in media folder", checked: false },
-      { id: 4, text: "Publish latest landing page drafts", checked: false },
-    ];
+  // Task checklist state - Persisted in Database
+  const { data: dbTasks } = useQuery({
+    queryKey: ["admin", "tasks"],
+    queryFn: () => adminApi.listTasks(),
   });
 
-  const saveTasks = (newTasks: typeof tasks) => {
-    setTasks(newTasks);
-    try {
-      localStorage.setItem("hareem_dashboard_tasks", JSON.stringify(newTasks));
-    } catch {}
-  };
+  const tasks = dbTasks?.map((t: any) => ({
+    id: t.id,
+    text: t.text,
+    checked: t.completed,
+  })) || [];
 
   const [newTaskText, setNewTaskText] = useState("");
 
-  const handleAddTask = (e: React.FormEvent) => {
+  const handleAddTask = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTaskText.trim()) return;
-    const item = { id: Date.now(), text: newTaskText.trim(), checked: false };
-    const next = [...tasks, item];
-    saveTasks(next);
-    setNewTaskText("");
-    toast({ title: "Task Added", description: "Successfully added to your checklist." });
-  };
-
-  const handleDeleteTask = (id: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-    const next = tasks.filter((t) => t.id !== id);
-    saveTasks(next);
-    toast({ title: "Task Removed", description: "Removed task from checklist." });
-  };
-
-  const handleToggleTask = (id: number) => {
-    const next = tasks.map((t) => (t.id === id ? { ...t, checked: !t.checked } : t));
-    saveTasks(next);
-  };
-
-  // Local assignee overrides persisted in localStorage
-  const [assigneeOverrides, setAssigneeOverrides] = useState<Record<string, string>>(() => {
     try {
-      const saved = localStorage.getItem("hareem_leads_assignees");
-      return saved ? JSON.parse(saved) : {};
+      await adminApi.createTask(newTaskText.trim());
+      queryClient.invalidateQueries({ queryKey: ["admin", "tasks"] });
+      setNewTaskText("");
+      toast({ title: "Task Added", description: "Successfully added to your checklist." });
     } catch {
-      return {};
+      toast({ title: "Error", description: "Failed to add task.", variant: "destructive" });
     }
-  });
+  };
 
-  const handleAssignLead = (id: number, isEnrollment: boolean) => {
-    const key = `${isEnrollment ? 'e' : 'l'}-${id}`;
-    const current = assigneeOverrides[key] || "Unassigned";
+  const handleDeleteTask = async (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await adminApi.deleteTask(id);
+      queryClient.invalidateQueries({ queryKey: ["admin", "tasks"] });
+      toast({ title: "Task Removed", description: "Removed task from checklist." });
+    } catch {
+      toast({ title: "Error", description: "Failed to delete task.", variant: "destructive" });
+    }
+  };
+
+  const handleToggleTask = async (id: number) => {
+    const task = tasks.find((t) => t.id === id);
+    if (!task) return;
+    try {
+      await adminApi.updateTask(id, { completed: !task.checked });
+      queryClient.invalidateQueries({ queryKey: ["admin", "tasks"] });
+    } catch {
+      toast({ title: "Error", description: "Failed to update task.", variant: "destructive" });
+    }
+  };
+
+  const handleAssignLead = async (id: number, isEnrollment: boolean) => {
+    const listToSearch = isEnrollment ? dbEnrollments : dbLeads;
+    const currentRecord = listToSearch?.find((item) => item.id === id);
+    const defaultAssignee = isEnrollment ? "Admin Sarah" : "Unassigned";
+    const current = currentRecord?.assignedTo || defaultAssignee;
+
     const assignees = ["Teacher Ayesha", "Teacher Zainab", "Admin Sarah", "Unassigned"];
     const next = assignees[(assignees.indexOf(current) + 1) % assignees.length];
 
-    const updated = { ...assigneeOverrides, [key]: next };
-    setAssigneeOverrides(updated);
     try {
-      localStorage.setItem("hareem_leads_assignees", JSON.stringify(updated));
-    } catch {}
-
-    toast({
-      title: "Assignee Updated",
-      description: `Inquiry successfully assigned to ${next}.`,
-    });
+      if (isEnrollment) {
+        await adminApi.assignEnrollment(id, next === "Unassigned" ? null : next);
+        refetchEnrollments();
+      } else {
+        await adminApi.assignLead(id, next === "Unassigned" ? null : next);
+        refetchLeads();
+      }
+      toast({
+        title: "Assignee Updated",
+        description: `Inquiry successfully assigned to ${next}.`,
+      });
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: "Failed to update assignee in database.",
+        variant: "destructive",
+      });
+    }
   };
 
   // Combined Leads lists from Database and Local State
@@ -237,7 +243,7 @@ export default function AdminDashboard() {
           time: new Date(l.createdAt).toLocaleDateString(),
           status: "New",
           whatsappNumber: l.whatsappNumber,
-          assignee: assigneeOverrides[`l-${l.id}`] || "Unassigned",
+          assignee: l.assignedTo || "Unassigned",
           isEnrollment: false,
         });
       });
@@ -254,7 +260,7 @@ export default function AdminDashboard() {
           time: new Date(e.createdAt).toLocaleDateString(),
           status: "Enrolled",
           whatsappNumber: e.whatsappNumber,
-          assignee: assigneeOverrides[`e-${e.id}`] || "Admin Sarah",
+          assignee: e.assignedTo || "Admin Sarah",
           isEnrollment: true,
         });
       });
@@ -270,7 +276,7 @@ export default function AdminDashboard() {
     }
 
     return list;
-  }, [dbLeads, dbEnrollments, assigneeOverrides, dashboardState]);
+  }, [dbLeads, dbEnrollments, dashboardState]);
 
   // Quick Action triggers
   const triggerRebuild = () => {

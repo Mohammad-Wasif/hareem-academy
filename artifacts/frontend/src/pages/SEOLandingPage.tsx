@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { SEO } from "@/components/SEO";
+import { adminApi } from "@/lib/adminApi";
 import { seoLandingPages } from "@/data/seoLandingPages";
 import { Button } from "@/components/ui/button";
 import {
@@ -94,17 +95,37 @@ export default function SEOLandingPage({ slug }: SEOLandingPageProps) {
   const [localPageData, setLocalPageData] = useState<any>(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem("hareem_landing_pages");
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (parsed[slug]) {
-          setLocalPageData(parsed[slug]);
+    let active = true;
+    adminApi.getLandingPage(slug)
+      .then((data) => {
+        if (!active) return;
+        if (data) {
+          setLocalPageData({
+            slug: data.slug,
+            title: data.title,
+            metaDescription: data.metaDescription || "",
+            ...data.config,
+          });
         }
-      } catch (e) {
-        console.error("Error loading local page layout:", e);
-      }
-    }
+      })
+      .catch((err) => {
+        console.warn("Could not load landing page from database, falling back to local storage:", err);
+        if (!active) return;
+        const saved = localStorage.getItem("hareem_landing_pages");
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            if (parsed[slug]) {
+              setLocalPageData(parsed[slug]);
+            }
+          } catch (e) {
+            console.error("Error loading local page layout:", e);
+          }
+        }
+      });
+    return () => {
+      active = false;
+    };
   }, [slug]);
 
   const basePageData = seoLandingPages[slug];

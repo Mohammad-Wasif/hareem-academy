@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { adminApi } from "@/lib/adminApi";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -114,64 +115,152 @@ export default function AdminBuilder() {
   // Sandbox Simulator state
   const [sandboxState, setSandboxState] = useState<"success" | "loading" | "error" | "empty">("success");
 
-  // Load from local storage or defaults on mount
+  // Load from database (with local storage as backup)
   useEffect(() => {
-    const saved = localStorage.getItem("hareem_landing_pages");
-    let loadedPages: Record<string, ExtendedPageConfig> = {};
-    if (saved) {
+    let active = true;
+    
+    const loadData = async () => {
       try {
-        loadedPages = JSON.parse(saved);
-      } catch (e) {
-        console.error("Failed to parse pages:", e);
+        const rows = await adminApi.listLandingPages();
+        if (!active) return;
+        
+        let loadedPages: Record<string, ExtendedPageConfig> = {};
+        rows.forEach((row: any) => {
+          const config = row.config || {};
+          loadedPages[row.slug] = {
+            ...config,
+            slug: row.slug,
+            title: row.title,
+            metaDescription: row.metaDescription || "",
+            activeVariant: config.activeVariant as "a" | "b" | undefined,
+          };
+        });
+
+        // Check if primary static defaults are in database. If not, we will insert them into the DB dynamically.
+        for (const [slug, cfg] of Object.entries(seoLandingPages)) {
+          if (!loadedPages[slug]) {
+            const pageData = {
+              sections: [
+                { id: "hero", name: "Hero Banner", visible: true, score: 98 },
+                { id: "overview", name: "AI Overview", visible: true, score: 92 },
+                { id: "benefits", name: "Core Benefits", visible: true, score: 95 },
+                { id: "moat", name: "Privacy Moat", visible: true, score: 90 },
+                { id: "curriculum", name: "Curriculum Roadmap", visible: true, score: 94 },
+                { id: "testimonials", name: "Student Reviews", visible: true, score: 88 },
+                { id: "faqs", name: "FAQs Accordion", visible: true, score: 91 },
+                { id: "related", name: "Internal Navigation", visible: true, score: 85 },
+                { id: "cta", name: "Footer Closing CTA", visible: true, score: 97 },
+              ],
+              variants: {
+                a: {
+                  heroTitle: cfg.heroTitle,
+                  heroSubtitle: cfg.heroSubtitle,
+                  primaryCTA: cfg.primaryCTA,
+                },
+                b: {
+                  heroTitle: cfg.heroTitle + " — 100% Sisters-Only Online",
+                  heroSubtitle: cfg.heroSubtitle + " Speak directly to certified female native Arabic tutors.",
+                  primaryCTA: "Book Free Demo Session",
+                },
+              },
+              activeVariant: "a",
+              versionHistory: [
+                { timestamp: new Date().toISOString().replace("T", " ").substring(0, 16), title: "Initial Database Migration", editor: "System Admin" },
+              ],
+              ...cfg,
+            };
+            
+            try {
+              // Create it in the database
+              await adminApi.createLandingPage({
+                slug,
+                title: cfg.title,
+                metaDescription: cfg.metaDescription || "",
+                config: pageData,
+              });
+              
+              loadedPages[slug] = {
+                ...pageData,
+                slug,
+                title: cfg.title,
+                metaDescription: cfg.metaDescription || "",
+                activeVariant: pageData.activeVariant as "a" | "b" | undefined,
+              };
+            } catch (err) {
+              console.error("Failed to seed page in database:", err);
+            }
+          }
+        }
+
+        setPages(loadedPages);
+        if (loadedPages[selectedSlug]) {
+          setActivePage(loadedPages[selectedSlug]);
+          setHistoryStack([loadedPages[selectedSlug]]);
+          setHistoryIndex(0);
+        }
+      } catch (err) {
+        console.error("Failed to fetch landing pages, falling back to local storage:", err);
+        // Local storage fallback
+        const saved = localStorage.getItem("hareem_landing_pages");
+        let loadedPages: Record<string, ExtendedPageConfig> = {};
+        if (saved) {
+          try {
+            loadedPages = JSON.parse(saved);
+          } catch (e) {}
+        }
+        
+        // Hydrate with static defaults
+        Object.entries(seoLandingPages).forEach(([slug, cfg]) => {
+          if (!loadedPages[slug]) {
+            loadedPages[slug] = {
+              ...cfg,
+              sections: [
+                { id: "hero", name: "Hero Banner", visible: true, score: 98 },
+                { id: "overview", name: "AI Overview", visible: true, score: 92 },
+                { id: "benefits", name: "Core Benefits", visible: true, score: 95 },
+                { id: "moat", name: "Privacy Moat", visible: true, score: 90 },
+                { id: "curriculum", name: "Curriculum Roadmap", visible: true, score: 94 },
+                { id: "testimonials", name: "Student Reviews", visible: true, score: 88 },
+                { id: "faqs", name: "FAQs Accordion", visible: true, score: 91 },
+                { id: "related", name: "Internal Navigation", visible: true, score: 85 },
+                { id: "cta", name: "Footer Closing CTA", visible: true, score: 97 },
+              ],
+              variants: {
+                a: {
+                  heroTitle: cfg.heroTitle,
+                  heroSubtitle: cfg.heroSubtitle,
+                  primaryCTA: cfg.primaryCTA,
+                },
+                b: {
+                  heroTitle: cfg.heroTitle + " — 100% Sisters-Only Online",
+                  heroSubtitle: cfg.heroSubtitle + " Speak directly to certified female native Arabic tutors.",
+                  primaryCTA: "Book Free Demo Session",
+                },
+              },
+              activeVariant: "a",
+              versionHistory: [
+                { timestamp: "2026-06-04 18:30", title: "Original Hardcoded Imports", editor: "System Migration" },
+              ],
+            };
+          }
+        });
+        
+        if (active) {
+          setPages(loadedPages);
+          if (loadedPages[selectedSlug]) {
+            setActivePage(loadedPages[selectedSlug]);
+            setHistoryStack([loadedPages[selectedSlug]]);
+            setHistoryIndex(0);
+          }
+        }
       }
-    }
-
-    // Hydrate with static defaults if missing
-    Object.entries(seoLandingPages).forEach(([slug, cfg]) => {
-      if (!loadedPages[slug]) {
-        loadedPages[slug] = {
-          ...cfg,
-          sections: [
-            { id: "hero", name: "Hero Banner", visible: true, score: 98 },
-            { id: "overview", name: "AI Overview", visible: true, score: 92 },
-            { id: "benefits", name: "Core Benefits", visible: true, score: 95 },
-            { id: "moat", name: "Privacy Moat", visible: true, score: 90 },
-            { id: "curriculum", name: "Curriculum Roadmap", visible: true, score: 94 },
-            { id: "testimonials", name: "Student Reviews", visible: true, score: 88 },
-            { id: "faqs", name: "FAQs Accordion", visible: true, score: 91 },
-            { id: "related", name: "Internal Navigation", visible: true, score: 85 },
-            { id: "cta", name: "Footer Closing CTA", visible: true, score: 97 },
-          ],
-          variants: {
-            a: {
-              heroTitle: cfg.heroTitle,
-              heroSubtitle: cfg.heroSubtitle,
-              primaryCTA: cfg.primaryCTA,
-            },
-            b: {
-              heroTitle: cfg.heroTitle + " — 100% Sisters-Only Online",
-              heroSubtitle: cfg.heroSubtitle + " Speak directly to certified female native Arabic tutors.",
-              primaryCTA: "Book Free Demo Session",
-            },
-          },
-          activeVariant: "a",
-          versionHistory: [
-            { timestamp: "2026-06-04 18:30", title: "Original Hardcoded Imports", editor: "System Migration" },
-            { timestamp: "2026-06-04 22:15", title: "Refined SEO Metadata description", editor: "Senior Designer" },
-          ],
-        };
-      }
-    });
-
-    setPages(loadedPages);
-    localStorage.setItem("hareem_landing_pages", JSON.stringify(loadedPages));
-
-    if (loadedPages[selectedSlug]) {
-      setActivePage(loadedPages[selectedSlug]);
-      // Initialize history stack
-      setHistoryStack([loadedPages[selectedSlug]]);
-      setHistoryIndex(0);
-    }
+    };
+    
+    loadData();
+    
+    return () => {
+      active = false;
+    };
   }, []);
 
   // Update active page configuration and push to history
@@ -248,13 +337,23 @@ export default function AdminBuilder() {
   };
 
   // Save changes to draft
-  const handleSaveDraft = () => {
+  const handleSaveDraft = async () => {
     if (!activePage) return;
-    toast.success("Changes saved as Draft in local library!");
+    try {
+      const { slug, title, metaDescription, ...config } = activePage;
+      await adminApi.updateLandingPage(slug, {
+        title,
+        metaDescription: metaDescription || "",
+        config,
+      });
+      toast.success("Changes saved successfully in the database!");
+    } catch (err: any) {
+      toast.error(`Failed to save draft: ${err.message}`);
+    }
   };
 
   // Publish changes
-  const handlePublishPage = () => {
+  const handlePublishPage = async () => {
     if (!activePage) return;
     const timestamp = new Date().toISOString().replace("T", " ").substring(0, 16);
     const historyItem = {
@@ -264,17 +363,28 @@ export default function AdminBuilder() {
     };
     const nextHistory = [...(activePage.versionHistory || []), historyItem];
     const nextPage = { ...activePage, versionHistory: nextHistory };
-    updateActivePage(nextPage);
-    toast.success(`Successfully published page "${activePage.title}" to CDN edge routers!`, {
-      action: {
-        label: "Open Live",
-        onClick: () => window.open(`/${activePage.slug}`, "_blank"),
-      },
-    });
+    
+    try {
+      const { slug, title, metaDescription, ...config } = nextPage;
+      await adminApi.updateLandingPage(slug, {
+        title,
+        metaDescription: metaDescription || "",
+        config,
+      });
+      updateActivePage(nextPage);
+      toast.success(`Successfully published page "${activePage.title}" to database!`, {
+        action: {
+          label: "Open Live",
+          onClick: () => window.open(`/${activePage.slug}`, "_blank"),
+        },
+      });
+    } catch (err: any) {
+      toast.error(`Failed to publish page: ${err.message}`);
+    }
   };
 
   // Create custom new landing page
-  const handleCreateNewPage = (e: React.FormEvent) => {
+  const handleCreateNewPage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (pages[newPageForm.slug]) {
       toast.error("A page with this URL slug already exists!");
@@ -299,46 +409,65 @@ export default function AdminBuilder() {
         { id: "cta", name: "Footer Closing CTA", visible: true, score: 95 },
       ],
       versionHistory: [
-        { timestamp: "2026-06-05 00:30", title: "Initial Builder Setup", editor: "System Admin" }
+        { timestamp: new Date().toISOString().replace("T", " ").substring(0, 16), title: "Initial Builder Setup", editor: "System Admin" }
       ]
     };
 
-    setPages((prev) => {
-      const next = { ...prev, [newPage.slug]: newPage };
-      localStorage.setItem("hareem_landing_pages", JSON.stringify(next));
-      return next;
-    });
+    try {
+      const { slug, title, metaDescription, ...config } = newPage;
+      await adminApi.createLandingPage({
+        slug,
+        title,
+        metaDescription: metaDescription || "",
+        config,
+      });
 
-    setSelectedSlug(newPage.slug);
-    setActivePage(newPage);
-    setHistoryStack([newPage]);
-    setHistoryIndex(0);
-    setIsNewPageOpen(false);
-    toast.success(`Created page ${newPage.title} successfully.`);
+      setPages((prev) => {
+        const next = { ...prev, [newPage.slug]: newPage };
+        localStorage.setItem("hareem_landing_pages", JSON.stringify(next));
+        return next;
+      });
+
+      setSelectedSlug(newPage.slug);
+      setActivePage(newPage);
+      setHistoryStack([newPage]);
+      setHistoryIndex(0);
+      setIsNewPageOpen(false);
+      toast.success(`Created page ${newPage.title} successfully.`);
+    } catch (err: any) {
+      toast.error(`Failed to create page: ${err.message}`);
+    }
   };
 
   // Delete active page config
-  const handleDeletePage = () => {
+  const handleDeletePage = async () => {
     if (!activePage) return;
     if (["learn-arabic-online-for-sisters", "arabic-classes-for-muslim-women"].includes(activePage.slug)) {
       toast.error("Cannot delete primary system SEO landing pages!");
       return;
     }
-    const nextPages = { ...pages };
-    delete nextPages[activePage.slug];
-    localStorage.setItem("hareem_landing_pages", JSON.stringify(nextPages));
-    setPages(nextPages);
+    
+    try {
+      await adminApi.deleteLandingPage(activePage.slug);
+      
+      const nextPages = { ...pages };
+      delete nextPages[activePage.slug];
+      localStorage.setItem("hareem_landing_pages", JSON.stringify(nextPages));
+      setPages(nextPages);
 
-    const fallbackSlug = Object.keys(nextPages)[0];
-    setSelectedSlug(fallbackSlug);
-    setActivePage(nextPages[fallbackSlug]);
-    setHistoryStack([nextPages[fallbackSlug]]);
-    setHistoryIndex(0);
-    toast.success("Page deleted from custom configs.");
+      const fallbackSlug = Object.keys(nextPages)[0];
+      setSelectedSlug(fallbackSlug);
+      setActivePage(nextPages[fallbackSlug]);
+      setHistoryStack([nextPages[fallbackSlug]]);
+      setHistoryIndex(0);
+      toast.success("Page deleted from database.");
+    } catch (err: any) {
+      toast.error(`Failed to delete page: ${err.message}`);
+    }
   };
 
   // Duplicate active layout configurations
-  const handleDuplicatePage = () => {
+  const handleDuplicatePage = async () => {
     if (!activePage) return;
     const duplicatedSlug = `${activePage.slug}-copy`;
     if (pages[duplicatedSlug]) {
@@ -350,19 +479,32 @@ export default function AdminBuilder() {
       slug: duplicatedSlug,
       title: `${activePage.title} (Copy)`,
       versionHistory: [
-        { timestamp: "2026-06-05 00:30", title: "Duplicated Setup", editor: "System Admin" }
+        { timestamp: new Date().toISOString().replace("T", " ").substring(0, 16), title: "Duplicated Setup", editor: "System Admin" }
       ]
     };
-    setPages((prev) => {
-      const next = { ...prev, [duplicatedSlug]: duplicatedPage };
-      localStorage.setItem("hareem_landing_pages", JSON.stringify(next));
-      return next;
-    });
-    setSelectedSlug(duplicatedSlug);
-    setActivePage(duplicatedPage);
-    setHistoryStack([duplicatedPage]);
-    setHistoryIndex(0);
-    toast.success(`Duplicated layout as: ${duplicatedPage.title}`);
+
+    try {
+      const { slug, title, metaDescription, ...config } = duplicatedPage;
+      await adminApi.createLandingPage({
+        slug,
+        title,
+        metaDescription: metaDescription || "",
+        config,
+      });
+
+      setPages((prev) => {
+        const next = { ...prev, [duplicatedSlug]: duplicatedPage };
+        localStorage.setItem("hareem_landing_pages", JSON.stringify(next));
+        return next;
+      });
+      setSelectedSlug(duplicatedSlug);
+      setActivePage(duplicatedPage);
+      setHistoryStack([duplicatedPage]);
+      setHistoryIndex(0);
+      toast.success(`Duplicated layout as: ${duplicatedPage.title}`);
+    } catch (err: any) {
+      toast.error(`Failed to duplicate page: ${err.message}`);
+    }
   };
 
   // SEO score auditor utility

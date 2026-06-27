@@ -11,7 +11,7 @@ router.get("/faqs", async (req, res) => {
       .from(faqsTable)
       .orderBy(asc(faqsTable.sortOrder), asc(faqsTable.id));
     res.json(
-      rows.map((f) => ({
+      rows.map((f: any) => ({
         id: f.id,
         question: f.question,
         question_ur: f.question_ur ?? undefined,

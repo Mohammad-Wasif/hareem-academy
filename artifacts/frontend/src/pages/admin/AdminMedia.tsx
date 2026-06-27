@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { useSiteAssets } from "@/hooks/use-site-assets";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { adminApi } from "@/lib/adminApi";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Loader2,
@@ -227,9 +228,9 @@ export default function AdminMedia() {
         fileSize: dbAsset ? "Optimized" : "Default Size",
         originalSize: "2.4 MB",
         savings: dbAsset ? "80%" : "—",
-        altText: meta.altText || (dbAsset ? "Hareem Academy brand logo" : "Hareem Academy placeholder logo"),
-        description: meta.description || slot.desc,
-        tags: meta.tags || slot.defaultTags,
+        altText: dbAsset?.altText || meta.altText || (dbAsset ? "Hareem Academy brand logo" : "Hareem Academy placeholder logo"),
+        description: dbAsset?.description || meta.description || slot.desc,
+        tags: dbAsset?.tags ? dbAsset.tags.split(",") : (meta.tags || slot.defaultTags),
         created: dbAsset?.updatedAt ? new Date(dbAsset.updatedAt).toLocaleDateString() : "System Default",
         updated: dbAsset?.updatedAt ? new Date(dbAsset.updatedAt).toLocaleDateString() : "System Default",
         usedIn: [slot.label],
@@ -255,9 +256,9 @@ export default function AdminMedia() {
             fileSize: "Optimized",
             originalSize: "Unknown",
             savings: "—",
-            altText: meta.altText || `Custom uploaded asset: ${asset.key}`,
-            description: meta.description || "Custom asset uploaded by administrator.",
-            tags: meta.tags || ["custom"],
+            altText: asset.altText || meta.altText || `Custom uploaded asset: ${asset.key}`,
+            description: asset.description || meta.description || "Custom asset uploaded by administrator.",
+            tags: asset.tags ? asset.tags.split(",") : (meta.tags || ["custom"]),
             created: asset.updatedAt ? new Date(asset.updatedAt).toLocaleDateString() : "Recently",
             updated: asset.updatedAt ? new Date(asset.updatedAt).toLocaleDateString() : "Recently",
             usedIn: ["Custom Section"],
@@ -400,10 +401,36 @@ export default function AdminMedia() {
       tags: updates.tags !== undefined ? updates.tags : prev.tags,
     };
     saveLocalMetadata(currentMeta);
-    toast({
-      title: "Metadata Saved",
-      description: "Asset descriptors successfully saved in local metadata cache.",
-    });
+
+    // If the file exists in our database, sync to backend
+    const dbAsset = assetsMetadata[key];
+    if (dbAsset) {
+      adminApi.updateAssetMetadata(key, {
+        title: updates.name !== undefined ? updates.name : (dbAsset.title || key),
+        altText: updates.altText !== undefined ? updates.altText : (dbAsset.altText || null),
+        description: updates.description !== undefined ? updates.description : (dbAsset.description || null),
+        tags: updates.tags !== undefined ? updates.tags.join(",") : (dbAsset.tags || null),
+      })
+      .then(() => {
+        refetch();
+        toast({
+          title: "Database Synced",
+          description: "Asset metadata successfully updated in the PostgreSQL database.",
+        });
+      })
+      .catch((err) => {
+        toast({
+          title: "Database Sync Failed",
+          description: err.message,
+          variant: "destructive",
+        });
+      });
+    } else {
+      toast({
+        title: "Metadata Saved Locally",
+        description: "Asset descriptors saved in local metadata cache (will sync on next upload).",
+      });
+    }
   };
 
   // Keyboard navigation listener (Arrow keys browse assets in grid)
@@ -447,15 +474,7 @@ export default function AdminMedia() {
     setTimeout(() => {
       setIsGeneratingAlt(false);
       const generated = `Luxury Islamic editorial design showing ${selectedFile.tags.join(" and ")} themed layout pattern`;
-      if (selectedFile.isReal) {
-        toast({
-          title: "Alt Text Generated",
-          description: "Populated descriptive tags successfully.",
-        });
-        // Real logic could dispatch to DB
-      } else {
-        handleUpdateFileDetails(selectedFile.key, { altText: generated });
-      }
+      handleUpdateFileDetails(selectedFile.key, { altText: generated });
     }, 1500);
   };
 

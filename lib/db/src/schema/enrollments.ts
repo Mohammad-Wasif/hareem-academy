@@ -20,6 +20,7 @@ export const enrollmentsTable = pgTable("enrollments", {
     .$type<Record<string, string>>()
     .notNull()
     .default({}),
+  assignedTo: text("assigned_to"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

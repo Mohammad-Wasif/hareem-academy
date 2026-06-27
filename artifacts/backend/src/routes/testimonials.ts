@@ -11,7 +11,7 @@ router.get("/testimonials", async (req, res) => {
       .from(testimonialsTable)
       .orderBy(desc(testimonialsTable.featured), desc(testimonialsTable.id));
     res.json(
-      rows.map((t) => ({
+      rows.map((t: any) => ({
         id: t.id,
         studentName: t.studentName,
         location: t.location ?? undefined,

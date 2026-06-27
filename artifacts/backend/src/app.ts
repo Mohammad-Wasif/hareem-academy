@@ -1,6 +1,7 @@
 import * as Sentry from "@sentry/node";
 import express, { type Express } from "express";
 import cors from "cors";
+import helmet from "helmet";
 import session from "express-session";
 import pinoHttp from "pino-http";
 import router from "./routes";
@@ -42,7 +43,37 @@ app.use(
     },
   }),
 );
-app.use(cors({ origin: true, credentials: true }));
+app.use(helmet());
+
+const allowedOrigins = [
+  process.env.VITE_APP_URL,
+  process.env.VITE_SITE_URL,
+  "http://localhost:5173",
+  "http://localhost:4173",
+].filter(Boolean) as string[];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, postman)
+      if (!origin) return callback(null, true);
+      
+      const isAllowed = allowedOrigins.includes(origin) || 
+        (process.env.NODE_ENV !== "production" && (
+          origin.startsWith("http://localhost:") || 
+          origin.startsWith("http://127.0.0.1:")
+        ));
+
+      if (isAllowed) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -64,7 +95,7 @@ app.use(
     }),
     cookie: {
       httpOnly: true,
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
       maxAge: 1000 * 60 * 60 * 24 * 7,
     },
