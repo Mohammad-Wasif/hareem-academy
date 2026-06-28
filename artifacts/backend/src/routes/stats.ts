@@ -24,9 +24,9 @@ router.get("/stats", async (req, res) => {
       })
       .from(testimonialsTable);
 
-    const baseStudents = 480;
+    const baseStudents = 50;
     const baseBatches = 6;
-    const baseCountries = 12;
+    const baseCountries = 2;
 
     res.json({
       totalStudents: baseStudents + (enrollmentCount?.count ?? 0),

@@ -133,11 +133,14 @@
     @apply border-border;
   }
   body {
-    @apply font-sans antialiased bg-background text-foreground selection:bg-accent/30 overflow-x-hidden;
+    @apply font-sans antialiased bg-background text-foreground selection:bg-accent/30 overflow-x-hidden text-base font-medium;
     max-width: 100vw;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif;
+    @apply font-serif font-bold;
+  }
+  p {
+    @apply font-medium leading-relaxed;
   }
 
   /* Automatically use Arabic/Urdu font for appropriate languages */

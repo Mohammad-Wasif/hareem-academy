@@ -14,8 +14,9 @@ export default function Footer() {
     <footer className="bg-primary text-primary-foreground py-16 border-t border-primary-foreground/10">
       <div className="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12">
         <div className="space-y-6">
-          <Link href="/" className="inline-block">
-            <img src={logoSrc} alt="Hareem Academy" className="h-20 w-auto object-contain" />
+          <Link href="/" className="flex items-center gap-3">
+            <img src={logoSrc} alt="Hareem Academy" className="h-16 w-auto object-contain" />
+            <span className="font-serif font-bold text-2xl text-accent tracking-wide">Hareem Academy</span>
           </Link>
           <p className="text-primary-foreground/80 font-medium text-sm leading-relaxed">
             Structured online Arabic and Urdu classes taught by qualified female teachers designed exclusively for sisters.

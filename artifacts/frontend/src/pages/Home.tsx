@@ -84,6 +84,25 @@ const splitWords = (text: string) => {
   ));
 };
 
+function AnimatedCounter({ target, duration = 1500 }: { target: number; duration?: number }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let startTimestamp: number | null = null;
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      setCount(Math.floor(progress * target));
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    window.requestAnimationFrame(step);
+  }, [target, duration]);
+
+  return <>{count}</>;
+}
+
 export default function Home() {
   const { assets } = useSiteAssets();
   const { data: courses = [] } = useListCourses();
@@ -305,7 +324,7 @@ export default function Home() {
                       ))}
                       <span className="text-[10px] sm:text-[11px] font-bold text-foreground ml-1">4.9/5</span>
                     </div>
-                    <span className="text-[9px] sm:text-[10px] font-medium text-muted-foreground">Loved by 500+ sisters worldwide</span>
+                    <span className="text-[9px] sm:text-[10px] font-medium text-muted-foreground">Loved by 100+ sisters</span>
                   </div>
                 </div>
               </motion.div>
@@ -318,7 +337,7 @@ export default function Home() {
               >
                 <div className="text-center sm:text-left border-r border-primary/10 last:border-r-0 pr-2">
                   <p className="text-lg sm:text-2xl md:text-3xl font-sans font-black text-foreground tracking-tight">
-                    {stats?.totalStudents || "480"}+
+                    <AnimatedCounter target={Number(stats?.totalStudents || 50)} />+
                   </p>
                   <p className="text-[9px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 font-sans font-medium leading-tight">
                     Sisters Learning
@@ -326,7 +345,7 @@ export default function Home() {
                 </div>
                 <div className="text-center sm:text-left border-r border-primary/10 last:border-r-0 px-1 sm:px-4">
                   <p className="text-lg sm:text-2xl md:text-3xl font-sans font-black text-foreground tracking-tight">
-                    {stats?.countriesReached || "12"}+
+                    <AnimatedCounter target={Number(stats?.countriesReached || 2)} />+
                   </p>
                   <p className="text-[9px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 font-sans font-medium leading-tight">
                     Countries Reached
@@ -765,9 +784,7 @@ export default function Home() {
             ))}
           </motion.div>
 
-          <div className="flex justify-center mt-10">
-            <CTAGroup variant="hero" align="center" theme="dark" trialMode />
-          </div>
+
         </div>
       </section>
 
@@ -832,20 +849,9 @@ export default function Home() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h2 className="font-serif font-bold text-2xl md:text-3xl mb-6">
+            <h2 className="font-serif font-bold text-2xl md:text-3xl">
               Experience the beauty of the language.
             </h2>
-            <div className="bg-background p-5 sm:p-8 rounded-2xl border border-primary/10 shadow-sm">
-              <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">
-                Arabic Script
-              </div>
-              <p className="font-arabic text-2xl sm:text-3xl md:text-4xl leading-relaxed text-foreground" dir="rtl">
-                بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
-              </p>
-              <p className="text-sm text-muted-foreground mt-4">
-                In the name of Allah, the Entirely Merciful, the Especially Merciful.
-              </p>
-            </div>
           </motion.div>
         </div>
       </section>
