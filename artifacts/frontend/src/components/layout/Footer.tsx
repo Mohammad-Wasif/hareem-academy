@@ -2,12 +2,10 @@ import { Link } from "wouter";
 import { FaWhatsapp, FaInstagram, FaFacebook } from "react-icons/fa";
 import { Mail, MapPin } from "lucide-react";
 import logo from "@assets/IMG_20260507_171922.png";
-import { useTranslation } from "react-i18next";
 import { useSiteAssets } from "@/hooks/use-site-assets";
 import { useWhatsApp } from "@/hooks/use-whatsapp";
 
 export default function Footer() {
-  const { t } = useTranslation();
   const { assets } = useSiteAssets();
   const logoSrc = assets["logo"] || logo;
   const { whatsappNumber, whatsappUrl } = useWhatsApp();
@@ -20,7 +18,7 @@ export default function Footer() {
             <img src={logoSrc} alt="Hareem Academy" className="h-20 w-auto object-contain" />
           </Link>
           <p className="text-primary-foreground/80 font-medium text-sm leading-relaxed">
-            {t("footer.tagline")}
+            Structured online Arabic and Urdu classes taught by qualified female teachers designed exclusively for sisters.
           </p>
           <div className="flex items-center gap-4">
             <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-accent hover:text-accent/80 transition-colors">
@@ -36,18 +34,18 @@ export default function Footer() {
         </div>
 
         <div>
-          <h4 className="font-serif font-bold text-lg text-accent mb-6">{t("footer.links")}</h4>
+          <h4 className="font-serif font-bold text-lg text-accent mb-6">Quick Links</h4>
           <ul className="space-y-4">
-            <li><Link href="/about" className="text-primary-foreground/80 hover:text-accent transition-colors">{t("nav.about")}</Link></li>
-            <li><Link href="/courses" className="text-primary-foreground/80 hover:text-accent transition-colors">{t("nav.courses")}</Link></li>
-            <li><Link href="/testimonials" className="text-primary-foreground/80 hover:text-accent transition-colors">{t("nav.testimonials")}</Link></li>
-            <li><Link href="/faqs" className="text-primary-foreground/80 hover:text-accent transition-colors">{t("nav.faqs")}</Link></li>
-            <li><Link href="/contact" className="text-primary-foreground/80 hover:text-accent transition-colors">{t("nav.contact")}</Link></li>
+            <li><Link href="/about" className="text-primary-foreground/80 hover:text-accent transition-colors">About Us</Link></li>
+            <li><Link href="/courses" className="text-primary-foreground/80 hover:text-accent transition-colors">Our Courses</Link></li>
+            <li><Link href="/testimonials" className="text-primary-foreground/80 hover:text-accent transition-colors">Testimonials</Link></li>
+            <li><Link href="/faqs" className="text-primary-foreground/80 hover:text-accent transition-colors">FAQs</Link></li>
+            <li><Link href="/contact" className="text-primary-foreground/80 hover:text-accent transition-colors">Contact Us</Link></li>
           </ul>
         </div>
 
         <div>
-          <h4 className="font-serif font-bold text-lg text-accent mb-6">{t("footer.legal")}</h4>
+          <h4 className="font-serif font-bold text-lg text-accent mb-6">Legal</h4>
           <ul className="space-y-4">
             <li><Link href="/privacy" className="text-primary-foreground/80 hover:text-accent transition-colors">Privacy Policy</Link></li>
             <li><Link href="/terms" className="text-primary-foreground/80 hover:text-accent transition-colors">Terms of Service</Link></li>
@@ -56,7 +54,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h4 className="font-serif font-bold text-lg text-accent mb-6">{t("nav.contact")}</h4>
+          <h4 className="font-serif font-bold text-lg text-accent mb-6">Contact Us</h4>
           <ul className="space-y-4 text-primary-foreground/80">
             <li className="flex items-start gap-3">
               <FaWhatsapp className="h-5 w-5 text-accent shrink-0 mt-0.5" />
@@ -79,7 +77,7 @@ export default function Footer() {
       </div>
       
       <div className="container mx-auto px-4 mt-16 pt-8 border-t border-primary-foreground/10 text-center text-primary-foreground/60 text-sm">
-        <p>{t("footer.copyright", { year: new Date().getFullYear() })}</p>
+        <p>© {new Date().getFullYear()} Hareem Academy. All rights reserved.</p>
       </div>
     </footer>
   );

@@ -76,9 +76,6 @@
   },
   "dependencies": {
     "@sentry/react": "^10.53.1",
-    "i18next": "^26.0.8",
-    "i18next-browser-languagedetector": "^8.2.1",
-    "react-helmet-async": "^3.0.0",
-    "react-i18next": "^17.0.6"
+    "react-helmet-async": "^3.0.0"
   }
 }

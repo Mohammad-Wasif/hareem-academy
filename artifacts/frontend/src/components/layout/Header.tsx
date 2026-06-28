@@ -7,13 +7,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import EnrollmentModal from "@/components/EnrollmentModal";
 import { useWhatsApp } from "@/hooks/use-whatsapp";
 import staticLogo from "@assets/IMG_20260507_171922.png";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
-import { useTranslation } from "react-i18next";
 import { useSiteAssets } from "@/hooks/use-site-assets";
 import PremiumImage from "@/components/PremiumImage";
 
 export default function Header() {
-  const { t } = useTranslation();
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -34,12 +31,12 @@ export default function Header() {
   }, [location]);
 
   const navItems = [
-    { label: t("nav.home"), href: "/" },
-    { label: t("nav.about"), href: "/about" },
-    { label: t("nav.courses"), href: "/courses" },
-    { label: t("nav.testimonials"), href: "/testimonials" },
-    { label: t("nav.faqs"), href: "/faqs" },
-    { label: t("nav.contact"), href: "/contact" },
+    { label: "Home", href: "/" },
+    { label: "About Us", href: "/about" },
+    { label: "Our Courses", href: "/courses" },
+    { label: "Testimonials", href: "/testimonials" },
+    { label: "FAQs", href: "/faqs" },
+    { label: "Contact Us", href: "/contact" },
   ];
 
   return (
@@ -78,14 +75,12 @@ export default function Header() {
             />
           </motion.div>
           <span className="whitespace-nowrap font-serif font-bold text-xs sm:text-base md:text-lg lg:text-xl tracking-[0.06em] sm:tracking-[0.12em] text-[#ECC565] group-hover:text-[#ECC565]/90 transition-colors uppercase">
-            {t("common.site_name", "Hareem Academy")}
+            Hareem Academy
           </span>
         </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-6">
-          <LanguageSwitcher />
-
           {navItems.map((item) => {
             const isActive = location === item.href;
             return (
@@ -120,14 +115,13 @@ export default function Header() {
 
           <EnrollmentModal mode="trial">
             <Button className="bg-[#ECC565] text-[#0F4D36] hover:bg-[#ECC565]/90 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 font-sans text-sm rounded-lg px-4.5 h-9 font-semibold shadow-sm cursor-pointer">
-              {t("common.book_trial", "Begin Your Journey")}
+              Begin Your Journey
             </Button>
           </EnrollmentModal>
         </nav>
 
         {/* Mobile Trigger */}
         <div className="flex items-center gap-2 md:hidden">
-          <LanguageSwitcher />
           <motion.button
             className="p-2 text-[#ECC565] rounded-lg hover:bg-white/10 transition-colors"
             onClick={() => setIsOpen(!isOpen)}
@@ -210,7 +204,7 @@ export default function Header() {
                     className="bg-[#ECC565] text-[#0F4D36] hover:bg-[#ECC565]/90 rounded-lg w-full font-sans h-10 text-base shadow-sm font-semibold cursor-pointer"
                     onClick={() => setIsOpen(false)}
                   >
-                    {t("common.book_trial", "Begin Your Journey")}
+                    Begin Your Journey
                   </Button>
                 </EnrollmentModal>
                 <Button

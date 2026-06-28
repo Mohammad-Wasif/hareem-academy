@@ -82,7 +82,6 @@ interface SettingsState {
   logoPosition: "left" | "center";
   showCTA: boolean;
   ctaText: string;
-  showLanguageSwitcher: boolean;
   showMobileMenu: boolean;
 
   // Footer
@@ -220,7 +219,6 @@ export default function AdminSettings() {
     logoPosition: "left",
     showCTA: true,
     ctaText: "Explore Courses",
-    showLanguageSwitcher: true,
     showMobileMenu: true,
 
     // Footer
@@ -942,18 +940,7 @@ export default function AdminSettings() {
                       />
                     </div>
 
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="font-bold">Language Switcher</div>
-                        <div className="text-[10px] text-muted-foreground">Show translation dropdown.</div>
-                      </div>
-                      <input
-                        type="checkbox"
-                        checked={draftSettings.showLanguageSwitcher}
-                        onChange={(e) => updateDraftField("showLanguageSwitcher", e.target.checked)}
-                        className="w-4 h-4 rounded"
-                      />
-                    </div>
+
 
                     <div className="flex items-center justify-between">
                       <div>

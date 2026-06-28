@@ -2,19 +2,16 @@ import { Link } from "wouter";
 import { Clock, GraduationCap, Video, Users, Flame, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { Course } from "@workspace/api-client-react";
-import { useTranslation } from "react-i18next";
 import { useSiteAssets } from "@/hooks/use-site-assets";
 import PremiumImage from "@/components/PremiumImage";
 
 export default function CourseCard({ course }: { course: Course }) {
-  const { i18n, t } = useTranslation();
-  const lang = i18n.language;
   const { assets } = useSiteAssets();
 
-  // Select localized fields
-  const title = lang === "ur" ? (course as any).title_ur || course.title : course.title;
-  const summary = lang === "ur" ? (course as any).summary_ur || course.summary : course.summary;
-  const timings = lang === "ur" ? (course as any).timings_ur || course.timings : course.timings;
+  // Select fields
+  const title = course.title;
+  const summary = course.summary;
+  const timings = course.timings;
 
   const lowSeats =
     typeof course.seatsRemaining === "number" && course.seatsRemaining > 0 && course.seatsRemaining <= 8;
@@ -62,7 +59,7 @@ export default function CourseCard({ course }: { course: Course }) {
         {lowSeats && (
           <div className="absolute top-3 right-3 z-10 bg-rose-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1 animate-pulse">
             <Flame className="w-3 h-3" />
-            {course.seatsRemaining} {t("courses.seats_left", "seats left")}
+            {course.seatsRemaining} seats left
           </div>
         )}
 
@@ -102,12 +99,12 @@ export default function CourseCard({ course }: { course: Course }) {
           <div className="grid grid-cols-2 gap-x-3 gap-y-2 text-xs mb-5 mt-auto">
             <div className="flex items-center gap-1.5 text-foreground/80">
               <Clock className="w-3.5 h-3.5 text-primary" />
-              <span>{course.durationMonths} {t("courses.months", "months")}</span>
+              <span>{course.durationMonths} months</span>
             </div>
             {course.platform && (
               <div className="flex items-center gap-1.5 text-foreground/80">
                 <Video className="w-3.5 h-3.5 text-primary" />
-                <span>{t("courses.live_on", "Live on")} {course.platform}</span>
+                <span>Live on {course.platform}</span>
               </div>
             )}
             <div className="flex items-center gap-1.5 text-foreground/80">
@@ -116,7 +113,7 @@ export default function CourseCard({ course }: { course: Course }) {
             </div>
             <div className="flex items-center gap-1.5 text-foreground/80">
               <Users className="w-3.5 h-3.5 text-primary" />
-              <span>{t("courses.sisters_only", "Sisters only")}</span>
+              <span>Sisters only</span>
             </div>
           </div>
         </div>
@@ -126,14 +123,14 @@ export default function CourseCard({ course }: { course: Course }) {
           <div>
             <div className="font-serif font-bold text-2xl text-primary leading-none">
               {course.currency} {course.feeMonthly}
-              <span className="text-xs font-sans font-normal text-muted-foreground">/{t("courses.mo", "mo")}</span>
+              <span className="text-xs font-sans font-normal text-muted-foreground">/mo</span>
             </div>
             <div className="text-[10px] text-muted-foreground mt-1 uppercase tracking-wider">
-              {t("courses.free_trial", "Free trial available")}
+              Free trial available
             </div>
           </div>
           <span className="text-primary font-bold text-sm group-hover:translate-x-1 transition-transform whitespace-nowrap">
-            {t("courses.see_curriculum", "See Full Curriculum")} →
+            See Full Curriculum →
           </span>
         </div>
       </motion.div>

@@ -1,6 +1,5 @@
 import { Star, Quote } from "lucide-react";
 import { getFlag, getInitials, getAvatarColor } from "@/lib/country";
-import { useTranslation } from "react-i18next";
 
 export type TestimonialProps = {
   testimonial: {
@@ -20,14 +19,11 @@ export type TestimonialProps = {
 };
 
 export default function TestimonialCard({ testimonial: t }: TestimonialProps) {
-  const { i18n } = useTranslation();
-  const lang = i18n.language;
-  
   const palette = getAvatarColor(t.studentName);
   const flag = getFlag(t.location || "");
   
-  const localizedQuote = lang === "ur" ? t.quote_ur || t.quote : t.quote;
-  const localizedBottom = lang === "ur" ? t.bottomText_ur : t.bottomText;
+  const localizedQuote = t.quote;
+  const localizedBottom = t.bottomText;
 
   return (
     <div

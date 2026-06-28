@@ -1158,7 +1158,6 @@ export default function AdminDashboard() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {[
                     { label: "Upload Hero", icon: ImageIcon, desc: "Add banner graphics", action: () => setLocation("/admin/media") },
-                    { label: "Publish Page", icon: Globe, desc: "Deploy localized page", action: () => setLocation("/admin/site-content") },
                     { label: "Create Course", icon: BookOpen, desc: "Draft syllabus syllabus", action: () => setLocation("/admin/courses/new") },
                     { label: "Testimonials", icon: Star, desc: "Approve social feedback", action: () => setLocation("/admin/testimonials") },
                     { label: "Generate SEO", icon: Sparkles, desc: "Automate meta tags", action: triggerSEOAudit },

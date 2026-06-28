@@ -6,11 +6,9 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import CTAGroup from "@/components/CTAGroup";
-import { useTranslation } from "react-i18next";
 import { SEO } from "@/components/SEO";
 
 export default function Faqs() {
-  const { t, i18n } = useTranslation();
   const { data: faqs = [], isLoading } = useListFaqs();
 
   // Group FAQs by category
@@ -48,10 +46,10 @@ export default function Faqs() {
     "@type": "FAQPage",
     "mainEntity": faqs.map((faq: any) => ({
       "@type": "Question",
-      "name": i18n.language === 'ur' ? faq.question_ur || faq.question : faq.question,
+      "name": faq.question,
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": i18n.language === 'ur' ? faq.answer_ur || faq.answer : faq.answer
+        "text": faq.answer
       }
     }))
   };
@@ -67,16 +65,16 @@ export default function Faqs() {
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-14 space-y-5">
           <span className="inline-block text-xs font-bold tracking-widest text-primary uppercase">
-            {t("faqs_page.hero.label", "Frequently Asked Questions")}
+            Frequently Asked Questions
           </span>
           <h1 className="font-serif font-bold text-4xl md:text-5xl text-foreground">
-            {t("faqs_page.hero.title", "We've got answers.")}
+            We've got answers.
           </h1>
           <p className="text-lg text-muted-foreground">
-            {t("faqs_page.hero.subtitle", "Everything you need to know about Hareem Academy — from enrollment to class schedules.")}
+            Everything you need to know about Hareem Academy — from enrollment to class schedules.
             {" "}
             <a href="/contact" className="text-primary font-medium hover:underline">
-              {t("faqs_page.hero.contact_link", "Contact us")}
+              Contact us
             </a>
             .
           </p>
@@ -84,10 +82,10 @@ export default function Faqs() {
 
         {/* FAQ accordion grouped by category */}
         {isLoading ? (
-          <div className="text-center py-20 text-muted-foreground">{t("faqs_page.loading", "Loading FAQs...")}</div>
+          <div className="text-center py-20 text-muted-foreground">Loading FAQs...</div>
         ) : faqs.length === 0 ? (
           <div className="text-center py-20 text-muted-foreground">
-            {t("faqs_page.no_results", "No FAQs available at the moment.")}
+            No FAQs available at the moment.
           </div>
         ) : (
           <div className="space-y-12">
@@ -99,8 +97,8 @@ export default function Faqs() {
                 </h2>
                 <Accordion type="single" collapsible className="w-full space-y-3">
                   {grouped[category].map((faq: any, index: number) => {
-                    const question = i18n.language === 'ur' ? faq.question_ur || faq.question : faq.question;
-                    const answer = i18n.language === 'ur' ? faq.answer_ur || faq.answer : faq.answer;
+                    const question = faq.question;
+                    const answer = faq.answer;
                     
                     return (
                       <AccordionItem
@@ -108,10 +106,10 @@ export default function Faqs() {
                         value={`${category}-${index}`}
                         className="bg-card border border-border rounded-xl px-6"
                       >
-                        <AccordionTrigger className={`hover:no-underline font-bold text-left py-4 ${i18n.language !== 'en' ? 'font-urdu' : ''}`}>
+                        <AccordionTrigger className="hover:no-underline font-bold text-left py-4">
                           {question}
                         </AccordionTrigger>
-                        <AccordionContent className={`text-muted-foreground pb-4 leading-relaxed ${i18n.language !== 'en' ? 'font-urdu' : ''}`}>
+                        <AccordionContent className="text-muted-foreground pb-4 leading-relaxed">
                           {answer}
                         </AccordionContent>
                       </AccordionItem>
@@ -126,10 +124,10 @@ export default function Faqs() {
         {/* CTA */}
         <div className="mt-20 text-center space-y-6">
           <h2 className="font-serif font-bold text-2xl md:text-3xl text-foreground">
-            {t("faqs_page.cta.title", "Still have questions?")}
+            Still have questions?
           </h2>
           <p className="text-muted-foreground max-w-lg mx-auto">
-            {t("faqs_page.cta.subtitle", "We're always happy to help. Reach out on WhatsApp or book a free trial to experience our classes first-hand.")}
+            We're always happy to help. Reach out on WhatsApp or book a free trial to experience our classes first-hand.
           </p>
           <div className="flex justify-center">
             <CTAGroup align="center" />

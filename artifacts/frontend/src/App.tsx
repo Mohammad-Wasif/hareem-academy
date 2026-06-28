@@ -43,12 +43,11 @@ const AdminLeads = React.lazy(() => import("@/pages/admin/AdminLeads"));
 const AdminTestimonials = React.lazy(() => import("@/pages/admin/AdminTestimonials"));
 const AdminFaqs = React.lazy(() => import("@/pages/admin/AdminFaqs"));
 const AdminFormFields = React.lazy(() => import("@/pages/admin/AdminFormFields"));
-const AdminSiteContent = React.lazy(() => import("@/pages/admin/AdminSiteContent"));
+
 const AdminMedia = React.lazy(() => import("@/pages/admin/AdminMedia"));
 const AdminBuilder = React.lazy(() => import("@/pages/admin/AdminBuilder"));
 const AdminSettings = React.lazy(() => import("@/pages/admin/AdminSettings"));
 
-import { I18nInitializer } from "@/components/I18nInitializer";
 
 const queryClient = new QueryClient();
 
@@ -103,7 +102,7 @@ function AdminRoutes() {
           <Route path="/admin/courses" component={AdminCourses} />
           <Route path="/admin/courses/new" component={AdminCourses} />
           <Route path="/admin/courses/:id/edit" component={AdminCourses} />
-          <Route path="/admin/site-content" component={AdminSiteContent} />
+
           <Route path="/admin/media" component={AdminMedia} />
           <Route path="/admin/builder" component={AdminBuilder} />
           <Route path="/admin/settings" component={AdminSettings} />
@@ -132,14 +131,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <MediaProvider>
-        <I18nInitializer>
-          <TooltipProvider>
-            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-              <Router />
-            </WouterRouter>
-            <Toaster />
-          </TooltipProvider>
-        </I18nInitializer>
+        <TooltipProvider>
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+            <Router />
+          </WouterRouter>
+          <Toaster />
+        </TooltipProvider>
       </MediaProvider>
     </QueryClientProvider>
   );

@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { useTranslation } from "react-i18next";
 import Header from "./Header";
 import Footer from "./Footer";
 import WhatsAppButton from "../WhatsAppButton";
@@ -8,10 +7,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useLocation } from "wouter";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const { t } = useTranslation();
   const [location] = useLocation();
-  const themePreset = t("common.theme_preset", "emerald");
-  const glowPreset = t("common.glow_preset", "classic");
+  const themePreset = "emerald";
+  const glowPreset = "classic";
 
   return (
     <div className={`flex flex-col min-h-[100dvh] bg-background theme-${themePreset} glow-${glowPreset}`}>

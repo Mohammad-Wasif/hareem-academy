@@ -24,7 +24,6 @@ import { Button } from "@/components/ui/button";
 import { useListCourses, useListTestimonials, useGetSiteStats } from "@workspace/api-client-react";
 import { adminApi } from "@/lib/adminApi";
 
-import { useTranslation } from "react-i18next";
 import { SEO } from "@/components/SEO";
 import { useSiteAssets } from "@/hooks/use-site-assets";
 import PremiumImage from "@/components/PremiumImage";
@@ -86,9 +85,7 @@ const splitWords = (text: string) => {
 };
 
 export default function Home() {
-  const { t, i18n } = useTranslation();
   const { assets } = useSiteAssets();
-  const lang = i18n.language;
   const { data: courses = [] } = useListCourses();
   const { data: testimonials = [] } = useListTestimonials();
   const { data: stats } = useGetSiteStats();
@@ -105,8 +102,6 @@ export default function Home() {
         console.warn("Could not load homepage config overrides:", err);
       });
   }, []);
-
-
 
   const organizationSchema = {
     "@context": "https://schema.org",
@@ -210,11 +205,8 @@ export default function Home() {
       style={homeConfig?.theme ? { backgroundColor } as React.CSSProperties : undefined}
     >
       <SEO
-        title={homeConfig?.title || t("home.seo.title", "Online Quran Classes for Sisters")}
-        description={homeConfig?.metaDescription || t(
-          "home.seo.description",
-          "Live, female-only online Quran and Arabic classes. Learn Tajweed and meaning in a comfortable, judgment-free environment."
-        )}
+        title={homeConfig?.title || "Online Quran Classes for Sisters"}
+        description={homeConfig?.metaDescription || "Live, female-only online Quran and Arabic classes. Learn Tajweed and meaning in a comfortable, judgment-free environment."}
         schema={[organizationSchema, localBusinessSchema, faqSchema]}
       />
 
@@ -251,7 +243,7 @@ export default function Home() {
                 className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-[3px] sm:px-3 sm:py-1 rounded-full bg-primary/[0.03] border border-primary/8 text-primary/95 font-sans font-semibold text-[10px] sm:text-xs tracking-wide capitalize"
               >
                 <ShieldCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5" style={{ color: accentColor || "#D6B25E" }} />
-                <span style={{ color: primaryColor }}>{homeConfig?.geoContext || t("home.hero.privacy", "Women-Only • Live Online Arabic & Urdu Classes")}</span>
+                <span style={{ color: primaryColor }}>{homeConfig?.geoContext || "Women-Only • Live Online Arabic & Urdu Classes"}</span>
               </motion.div>
 
               <h1 className="text-[1.75rem] sm:text-4xl md:text-5xl lg:text-[3.5rem] font-serif font-bold text-foreground leading-[1.15] sm:leading-[1.12] tracking-[-0.02em] sm:tracking-tight" style={{ color: primaryColor }}>
@@ -259,7 +251,7 @@ export default function Home() {
                   splitWords(homeConfig.heroTitle)
                 ) : (
                   <>
-                    {splitWords(t("home.hero.title_prefix", "Structured Arabic & Urdu"))}{" "}
+                    {splitWords("Structured Arabic & Urdu")}{" "}
                     <br className="hidden sm:inline" />
                     <span className="text-primary relative inline-block overflow-hidden vertical-align-bottom">
                       <motion.span
@@ -276,7 +268,7 @@ export default function Home() {
                           },
                         }}
                       >
-                        {t("home.hero.title_highlight", "Learning for Sisters")}
+                        Learning for Sisters
                         <span className="absolute bottom-1 left-0 w-full h-[3px] bg-accent/40 rounded-full" />
                       </motion.span>
                     </span>
@@ -289,10 +281,7 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: 0.1 }}
                 className="text-[0.8125rem] sm:text-base text-muted-foreground max-w-[92%] sm:max-w-xl leading-[1.6] sm:leading-relaxed font-sans"
               >
-                {homeConfig?.heroSubtitle || t(
-                  "home.hero.subtitle",
-                  "Live online Arabic and Urdu classes taught by qualified female teachers through structured, beginner-friendly lessons designed for sisters worldwide."
-                )}
+                {homeConfig?.heroSubtitle || "Live online Arabic and Urdu classes taught by qualified female teachers through structured, beginner-friendly lessons designed for sisters worldwide."}
               </motion.p>
 
               <motion.div 
@@ -316,7 +305,7 @@ export default function Home() {
                       ))}
                       <span className="text-[10px] sm:text-[11px] font-bold text-foreground ml-1">4.9/5</span>
                     </div>
-                    <span className="text-[9px] sm:text-[10px] font-medium text-muted-foreground">{t("home.hero.trust_note", "Loved by 500+ sisters worldwide")}</span>
+                    <span className="text-[9px] sm:text-[10px] font-medium text-muted-foreground">Loved by 500+ sisters worldwide</span>
                   </div>
                 </div>
               </motion.div>
@@ -332,7 +321,7 @@ export default function Home() {
                     {stats?.totalStudents || "480"}+
                   </p>
                   <p className="text-[9px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 font-sans font-medium leading-tight">
-                    {t("home.hero.stats.students", "Sisters Learning")}
+                    Sisters Learning
                   </p>
                 </div>
                 <div className="text-center sm:text-left border-r border-primary/10 last:border-r-0 px-1 sm:px-4">
@@ -340,16 +329,16 @@ export default function Home() {
                     {stats?.countriesReached || "12"}+
                   </p>
                   <p className="text-[9px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 font-sans font-medium leading-tight">
-                    {t("home.hero.stats.countries", "Countries Reached")}
+                    Countries Reached
                   </p>
                 </div>
                 <div className="text-center sm:text-left pl-1 sm:pl-4">
                   <p className="text-lg sm:text-2xl md:text-3xl font-sans font-black text-foreground tracking-tight flex items-center justify-center sm:justify-start gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-                    <span>{t("home.hero.stats.live_label", "Live")}</span>
+                    <span>Live</span>
                   </p>
                   <p className="text-[9px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 font-sans font-medium leading-tight">
-                    {t("home.hero.stats.classes", "Interactive Classes")}
+                    Interactive Classes
                   </p>
                 </div>
               </motion.div>
@@ -367,7 +356,7 @@ export default function Home() {
                   <PremiumImage
                     assetKey="hero_showcase"
                     fallback="/premium-hero-showcase.png"
-                    alt={t("home.hero.showcase_alt", "Live online Arabic and Quran classes for sisters at Hareem Academy")}
+                    alt="Live online Arabic and Quran classes for sisters at Hareem Academy"
                     className="rounded-lg object-cover"
                     aspectRatio="aspect-[1.12/1]"
                     widthClass="w-full max-w-[280px]"
@@ -393,7 +382,7 @@ export default function Home() {
                   <PremiumImage
                     assetKey="hero_showcase"
                     fallback="/premium-hero-showcase.png"
-                    alt={t("home.hero.showcase_alt", "Live online Arabic and Quran classes for sisters at Hareem Academy")}
+                    alt="Live online Arabic and Quran classes for sisters at Hareem Academy"
                     className="rounded-xl object-cover transition-transform duration-500 group-hover:scale-105"
                     aspectRatio="aspect-[1.12/1]"
                     widthClass="w-full max-w-[420px]"
@@ -435,54 +424,54 @@ export default function Home() {
           <div className="flex items-center gap-10 md:gap-20 px-5 md:px-10 shrink-0">
             <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
               <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
-              {t("home.trust.teachers", "Female Teachers Only")}
+              Female Teachers Only
             </span>
             <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
               <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
-              {t("home.trust.privacy", "Full Privacy")}
+              Full Privacy
             </span>
             <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
               <Video className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
-              {t("home.trust.live_classes", "Live Online Classes")}
+              Live Online Classes
             </span>
             <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
               <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
-              {t("home.trust.flexible_timings", "Flexible Timings")}
+              Flexible Timings
             </span>
             <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
               <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
-              {t("home.trust.beginner_friendly", "Beginner Friendly")}
+              Beginner Friendly
             </span>
             <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
               <Award className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
-              {t("home.trust.small_batches", "Small Interactive Batches")}
+              Small Interactive Batches
             </span>
           </div>
           {/* Second set of badges for looping */}
           <div className="flex items-center gap-10 md:gap-20 px-5 md:px-10 shrink-0">
             <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
               <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
-              {t("home.trust.teachers", "Female Teachers Only")}
+              Female Teachers Only
             </span>
             <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
               <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
-              {t("home.trust.privacy", "Full Privacy")}
+              Full Privacy
             </span>
             <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
               <Video className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
-              {t("home.trust.live_classes", "Live Online Classes")}
+              Live Online Classes
             </span>
             <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
               <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
-              {t("home.trust.flexible_timings", "Flexible Timings")}
+              Flexible Timings
             </span>
             <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
               <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
-              {t("home.trust.beginner_friendly", "Beginner Friendly")}
+              Beginner Friendly
             </span>
             <span className="flex items-center gap-2 text-xs sm:text-sm font-medium font-sans">
               <Award className="w-4 h-4 sm:w-5 sm:h-5 text-accent shrink-0" />
-              {t("home.trust.small_batches", "Small Interactive Batches")}
+              Small Interactive Batches
             </span>
           </div>
         </div>
@@ -503,10 +492,10 @@ export default function Home() {
               transition={{ duration: 0.5 }}
             >
               <span className="inline-block text-xs font-bold tracking-[0.2em] text-primary uppercase font-display">
-                {t("home.pain.label", "We get it")}
+                We get it
               </span>
               <h2 className="font-serif font-light text-3xl sm:text-4xl md:text-5xl text-foreground leading-[1.15]">
-                {t("home.pain.title", "Learning Quran shouldn't feel impossible.")}
+                Learning Quran shouldn't feel impossible.
               </h2>
               <div className="h-[2px] w-12 bg-accent/60 rounded-full" />
               <p className="text-sm text-muted-foreground leading-relaxed font-sans">
@@ -525,24 +514,24 @@ export default function Home() {
               {[
                 {
                   icon: HeartCrack,
-                  title: t("home.pain.item1.title", "Mixed-gender classes feel uncomfortable"),
-                  desc: t("home.pain.item1.desc", "You hesitate to turn on your camera or ask questions."),
+                  title: "Mixed-gender classes feel uncomfortable",
+                  desc: "You hesitate to turn on your camera or ask questions.",
                   bgColor: "bg-rose-500/5",
                   borderColor: "border-rose-500/10",
                   iconColor: "text-rose-600"
                 },
                 {
                   icon: Clock,
-                  title: t("home.pain.item2.title", "Local madrasas don't fit your schedule"),
-                  desc: t("home.pain.item2.desc", "Between work, kids, and household — fixed timings just don't work."),
+                  title: "Local madrasas don't fit your schedule",
+                  desc: "Between work, kids, and household — fixed timings just don't work.",
                   bgColor: "bg-amber-500/5",
                   borderColor: "border-amber-500/10",
                   iconColor: "text-amber-600"
                 },
                 {
                   icon: BookOpen,
-                  title: t("home.pain.item3.title", "You can read Arabic but don't understand it"),
-                  desc: t("home.pain.item3.desc", "Reading without meaning leaves you spiritually disconnected."),
+                  title: "You can read Arabic but don't understand it",
+                  desc: "Reading without meaning leaves you spiritually disconnected.",
                   bgColor: "bg-emerald-500/5",
                   borderColor: "border-emerald-500/10",
                   iconColor: "text-emerald-600"
@@ -583,10 +572,10 @@ export default function Home() {
             transition={{ duration: 0.5 }}
           >
             <span className="inline-block text-xs font-bold tracking-[0.2em] text-[#ECC565] uppercase font-display mb-3">
-              {t("home.enrollment.label", "Steps")}
+              Steps
             </span>
             <h2 className="font-serif font-light text-3xl md:text-4xl text-foreground">
-              {t("home.enrollment.title", "How Enrollment Works")}
+              How Enrollment Works
             </h2>
             <div className="h-[2px] w-12 bg-accent/60 mx-auto mt-4 rounded-full" />
           </motion.div>
@@ -605,26 +594,26 @@ export default function Home() {
               {
                 step: "01",
                 icon: Search,
-                title: t("home.enrollment.step1_title", "Choose Your Course"),
-                desc: t("home.enrollment.step1_desc", "Browse Arabic & Urdu programs and select your preferred level and batch."),
+                title: "Choose Your Course",
+                desc: "Browse Arabic & Urdu programs and select your preferred level and batch.",
               },
               {
                 step: "02",
                 icon: MessageSquare,
-                title: t("home.enrollment.step2_title", "Connect With Our Team"),
-                desc: t("home.enrollment.step2_desc", "Get guidance about timings, course structure, and learning path."),
+                title: "Connect With Our Team",
+                desc: "Get guidance about timings, course structure, and learning path.",
               },
               {
                 step: "03",
                 icon: Video,
-                title: t("home.enrollment.step3_title", "Attend a Trial Class"),
-                desc: t("home.enrollment.step3_desc", "Experience the classroom environment before enrollment."),
+                title: "Attend a Trial Class",
+                desc: "Experience the classroom environment before enrollment.",
               },
               {
                 step: "04",
                 icon: GraduationCap,
-                title: t("home.enrollment.step4_title", "Begin Your Learning Journey"),
-                desc: t("home.enrollment.step4_desc", "Start structured online learning with qualified female teachers."),
+                title: "Begin Your Learning Journey",
+                desc: "Start structured online learning with qualified female teachers.",
               },
             ].map((item, idx) => (
               <motion.div
@@ -663,7 +652,7 @@ export default function Home() {
               asChild
             >
               <Link href="/courses">
-                {t("home.enrollment.cta", "Explore Courses")}
+                Explore Courses
               </Link>
             </Button>
           </div>
@@ -685,10 +674,10 @@ export default function Home() {
           >
             <div className="max-w-2xl">
               <span className="inline-block text-xs font-bold tracking-widest text-primary uppercase mb-2">
-                {t("home.programs.label", "Programs")}
+                Programs
               </span>
               <h2 className="font-serif font-bold text-3xl md:text-4xl text-foreground">
-                {t("home.programs.title", "Pick what fits your level.")}
+                Pick what fits your level.
               </h2>
             </div>
             <Button
@@ -696,7 +685,7 @@ export default function Home() {
               className="rounded-full border-primary/20 text-primary hover-elevate active-elevate-2"
               asChild
             >
-              <Link href="/courses">{t("home.programs.view_all", "View all courses →")}</Link>
+              <Link href="/courses">View all courses →</Link>
             </Button>
           </motion.div>
 
@@ -729,10 +718,10 @@ export default function Home() {
             transition={{ duration: 0.5 }}
           >
             <span className="inline-block text-xs font-bold tracking-widest text-accent uppercase mb-3">
-              {t("home.why_us.label", "Why us")}
+              Why us
             </span>
             <h2 className="font-serif font-bold text-3xl md:text-4xl text-white">
-              {t("home.why_us.title", "Built for sisters, by sisters.")}
+              Built for sisters, by sisters.
             </h2>
           </motion.div>
 
@@ -746,18 +735,18 @@ export default function Home() {
             {[
               {
                 icon: ShieldCheck,
-                title: t("home.why_us.item1.title", "100% Privacy"),
-                desc: t("home.why_us.item1.desc", "Sisters-only classroom. Camera-on freely without a niqab."),
+                title: "100% Privacy",
+                desc: "Sisters-only classroom. Camera-on freely without a niqab.",
               },
               {
                 icon: Clock,
-                title: t("home.why_us.item2.title", "Flexible Timings"),
-                desc: t("home.why_us.item2.desc", "Evening & weekend batches that work around your life."),
+                title: "Flexible Timings",
+                desc: "Evening & weekend batches that work around your life.",
               },
               {
                 icon: BookOpen,
-                title: t("home.why_us.item3.title", "Real Curriculum"),
-                desc: t("home.why_us.item3.desc", "Step-by-step from alphabet to fluency, with weekly checks."),
+                title: "Real Curriculum",
+                desc: "Step-by-step from alphabet to fluency, with weekly checks.",
               },
             ].map((feature, idx) => (
               <motion.div
@@ -795,10 +784,10 @@ export default function Home() {
           >
             <div className="max-w-2xl">
               <span className="inline-block text-xs font-bold tracking-widest text-primary uppercase mb-2">
-                {t("home.testimonials.label", "Real stories")}
+                Real stories
               </span>
               <h2 className="font-serif font-bold text-3xl md:text-4xl text-foreground">
-                {t("home.testimonials.title", "Sisters who started where you are.")}
+                Sisters who started where you are.
               </h2>
             </div>
             <Button
@@ -807,7 +796,7 @@ export default function Home() {
               asChild
             >
               <Link href="/testimonials">
-                {t("home.testimonials.view_all", "Read all stories →")}
+                Read all stories →
               </Link>
             </Button>
           </motion.div>
@@ -844,17 +833,17 @@ export default function Home() {
             transition={{ duration: 0.5 }}
           >
             <h2 className="font-serif font-bold text-2xl md:text-3xl mb-6">
-              {t("home.rtl_preview.title", "Experience the beauty of the language.")}
+              Experience the beauty of the language.
             </h2>
             <div className="bg-background p-5 sm:p-8 rounded-2xl border border-primary/10 shadow-sm">
               <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">
-                {t("home.rtl_preview.label", "Arabic Script")}
+                Arabic Script
               </div>
               <p className="font-arabic text-2xl sm:text-3xl md:text-4xl leading-relaxed text-foreground" dir="rtl">
-                {t("home.rtl_preview.bismillah", "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ")}
+                بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
               </p>
               <p className="text-sm text-muted-foreground mt-4">
-                {t("home.rtl_preview.translation", "In the name of Allah, the Entirely Merciful, the Especially Merciful.")}
+                In the name of Allah, the Entirely Merciful, the Especially Merciful.
               </p>
             </div>
           </motion.div>
@@ -878,17 +867,14 @@ export default function Home() {
             transition={{ duration: 0.45 }}
             className="font-serif font-bold text-2xl sm:text-3xl md:text-5xl text-white leading-tight"
           >
-            {t("home.final_cta.title", "Your free trial is one click away.")}
+            Your free trial is one click away.
           </motion.h2>
           <motion.p
             variants={fadeUp}
             transition={{ duration: 0.4 }}
             className="text-lg text-primary-foreground/85"
           >
-            {t(
-              "home.final_cta.subtitle",
-              "Try a real class with our teacher. No payment, no commitment — see if it's right for you."
-            )}
+            Try a real class with our teacher. No payment, no commitment — see if it's right for you.
           </motion.p>
           <motion.div variants={fadeUp} transition={{ duration: 0.4 }} className="flex justify-center pt-2">
             <CTAGroup variant="hero" align="center" theme="dark" trialMode />
@@ -899,7 +885,7 @@ export default function Home() {
             className="text-sm text-primary-foreground/70 inline-flex items-center gap-2"
           >
             <ArrowRight className="w-4 h-4" />
-            {t("home.final_cta.whatsapp", "We reply on WhatsApp within minutes.")}
+            We reply on WhatsApp within minutes.
           </motion.p>
         </motion.div>
       </section>

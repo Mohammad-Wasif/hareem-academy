@@ -20,10 +20,8 @@ import {
   Award,
   Heart,
   ShieldCheck,
-  Star,
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
-import { useTranslation } from "react-i18next";
 import TestimonialCard from "@/components/TestimonialCard";
 import {
   Accordion,
@@ -33,8 +31,6 @@ import {
 } from "@/components/ui/accordion";
 
 export default function CourseDetail() {
-  const { i18n, t } = useTranslation();
-  const lang = i18n.language;
   const params = useParams();
   const slug = params.slug || "";
   const { whatsappUrl } = useWhatsApp();
@@ -58,10 +54,10 @@ export default function CourseDetail() {
 
   if (isError || !course) return <NotFound />;
 
-  // Select localized fields
-  const title = lang === "ur" ? (course as any).title_ur || course.title : course.title;
-  const summary = lang === "ur" ? (course as any).summary_ur || course.summary : course.summary;
-  const timings = lang === "ur" ? (course as any).timings_ur || course.timings : course.timings;
+  // Select fields
+  const title = course.title;
+  const summary = course.summary;
+  const timings = course.timings;
 
   const lowSeats =
     typeof course.seatsRemaining === "number" &&
@@ -82,16 +78,16 @@ export default function CourseDetail() {
   const isArabic = course.language?.toLowerCase() === "arabic";
   const transformations = isArabic
     ? [
-        { icon: Heart, text: t("course_detail.achieve.salah", "Pray Salah understanding every word") },
-        { icon: Sparkles, text: t("course_detail.achieve.tajweed", "Read the Quran with Tajweed and meaning") },
-        { icon: Award, text: t("course_detail.achieve.habit", "Build a daily Arabic study habit") },
-        { icon: Users, text: t("course_detail.achieve.sisterhood", "Join a global circle of sisters on the same path") },
+        { icon: Heart, text: "Pray Salah understanding every word" },
+        { icon: Sparkles, text: "Read the Quran with Tajweed and meaning" },
+        { icon: Award, text: "Build a daily Arabic study habit" },
+        { icon: Users, text: "Join a global circle of sisters on the same path" },
       ]
     : [
-        { icon: Heart, text: t("course_detail.achieve.urdu_fluent", "Read Urdu fluently and confidently") },
-        { icon: Sparkles, text: t("course_detail.achieve.urdu_lit", "Connect with Islamic literature and poetry") },
-        { icon: Award, text: t("course_detail.achieve.urdu_life", "Speak and write Urdu in everyday life") },
-        { icon: Users, text: t("course_detail.achieve.urdu_sisterhood", "Join a sisterhood that celebrates the language") },
+        { icon: Heart, text: "Read Urdu fluently and confidently" },
+        { icon: Sparkles, text: "Connect with Islamic literature and poetry" },
+        { icon: Award, text: "Speak and write Urdu in everyday life" },
+        { icon: Users, text: "Join a sisterhood that celebrates the language" },
       ];
 
   const breadcrumbSchema = {
@@ -159,12 +155,12 @@ export default function CourseDetail() {
             </span>
             {course.featured && (
               <span className="inline-flex items-center gap-1 px-3 py-1 bg-accent text-primary font-bold text-xs uppercase tracking-widest rounded-full">
-                <Sparkles className="w-3 h-3" /> {t("courses.most_popular", "Most Popular")}
+                <Sparkles className="w-3 h-3" /> Most Popular
               </span>
             )}
             {lowSeats && (course as any).enrollmentStatus !== "closed" && (
               <span className="inline-flex items-center gap-1 px-3 py-1 bg-rose-500 text-white font-bold text-xs uppercase tracking-widest rounded-full animate-pulse">
-                <Flame className="w-3 h-3" /> {t("courses.only", "Only")} {course.seatsRemaining} {t("courses.seats_left", "seats left")}
+                <Flame className="w-3 h-3" /> Only {course.seatsRemaining} seats left
               </span>
             )}
             {(course as any).enrollmentStatus === "closed" && (
@@ -191,13 +187,13 @@ export default function CourseDetail() {
                 variant="hero"
                 theme="dark"
                 trialMode={false}
-                primaryLabel={t("common.enroll_now", "Enroll Now")}
+                primaryLabel="Enroll Now"
                 defaultCourseSlug={course.slug}
               />
             )}
             <div className="font-serif font-bold text-2xl md:ml-2">
               {course.currency} {course.feeMonthly}
-              <span className="text-sm font-sans font-normal opacity-70"> / {t("courses.month", "month")}</span>
+              <span className="text-sm font-sans font-normal opacity-70"> / month</span>
             </div>
           </div>
         </div>
@@ -212,11 +208,11 @@ export default function CourseDetail() {
               <div className="flex items-center gap-2 mb-5">
                 <Sparkles className="w-5 h-5 text-accent" />
                 <h2 className="font-serif font-bold text-2xl md:text-3xl text-primary">
-                  {t("course_detail.what_achieve", "What you'll achieve")}
+                  What you'll achieve
                 </h2>
               </div>
               <p className="text-muted-foreground mb-5">
-                {t("course_detail.end_of_course", "By the end of this course, in shaa Allah:")}
+                By the end of this course, in shaa Allah:
               </p>
               <div className="grid sm:grid-cols-2 gap-3">
                 {transformations.map((t, i) => (
@@ -236,7 +232,7 @@ export default function CourseDetail() {
             {/* What you'll learn */}
             <section className="bg-card p-7 md:p-9 rounded-3xl border border-border shadow-sm">
               <h2 className="font-serif font-bold text-2xl md:text-3xl text-primary mb-5">
-                {t("course_detail.what_learn", "What you'll learn")}
+                What you'll learn
               </h2>
               <ul className="space-y-3">
                 {course.highlights.map((item, i) => (
@@ -251,7 +247,7 @@ export default function CourseDetail() {
             {/* Curriculum */}
             <section className="bg-card p-6 sm:p-8 rounded-3xl border border-border shadow-sm">
               <h2 className="font-serif font-bold text-2xl md:text-3xl text-primary mb-6">
-                {t("course_detail.curriculum", "The curriculum")}
+                The curriculum
               </h2>
               <Accordion type="single" collapsible className="w-full space-y-3">
                 {course.curriculum.map((module, i) => (
@@ -288,7 +284,7 @@ export default function CourseDetail() {
                 ) : (
                   <CTAGroup
                     trialMode={false}
-                    primaryLabel={t("course_detail.enroll_btn", "Enroll in This Course")}
+                    primaryLabel="Enroll in This Course"
                     defaultCourseSlug={course.slug}
                   />
                 )}
@@ -299,10 +295,10 @@ export default function CourseDetail() {
             {showTestimonials.length > 0 && (
               <section className="bg-card p-7 md:p-9 rounded-3xl border border-border shadow-sm">
                 <h2 className="font-serif font-bold text-2xl md:text-3xl text-primary mb-2">
-                  {t("course_detail.testimonials_title", "Sisters love this course.")}
+                  Sisters love this course.
                 </h2>
                 <p className="text-muted-foreground mb-6">
-                  {t("course_detail.testimonials_subtitle", "Real words from sisters who took the leap.")}
+                  Real words from sisters who took the leap.
                 </p>
                 <div className="grid sm:grid-cols-1 gap-6">
                   {showTestimonials.map((t) => (
@@ -316,10 +312,10 @@ export default function CourseDetail() {
             <section className="bg-primary text-primary-foreground rounded-3xl p-8 text-center">
               <Sparkles className="w-8 h-8 text-accent mx-auto mb-3" />
               <h3 className="font-serif font-bold text-2xl text-white mb-2">
-                {t("course_detail.ready_title", "Ready to begin?")}
+                Ready to begin?
               </h3>
               <p className="text-primary-foreground/85 mb-6 text-sm">
-                {t("course_detail.ready_subtitle", "Book a free trial first, or enroll directly. Either way — you'll be on WhatsApp with us within minutes.")}
+                Book a free trial first, or enroll directly. Either way — you'll be on WhatsApp with us within minutes.
               </p>
               {(course as any).enrollmentStatus === "closed" ? (
                 <div className="bg-rose-500/20 text-rose-200 px-6 py-3 rounded-full font-bold">
@@ -346,13 +342,13 @@ export default function CourseDetail() {
               <div className="bg-card p-6 rounded-3xl border border-border shadow-sm space-y-5">
                 <div className="text-center pb-4 border-b border-border">
                   <div className="text-xs uppercase tracking-widest text-muted-foreground mb-1">
-                    {t("courses.monthly_fee", "Monthly Fee")}
+                    Monthly Fee
                   </div>
                   <div className="font-serif font-bold text-3xl text-primary">
                     {course.currency} {course.feeMonthly}
                   </div>
                   <div className="text-xs text-muted-foreground mt-1">
-                    {t("courses.free_trial_no_payment", "Free trial — no payment to start")}
+                    Free trial — no payment to start
                   </div>
                 </div>
 
@@ -360,7 +356,7 @@ export default function CourseDetail() {
                   <div className="bg-rose-50 border border-rose-200 text-rose-700 rounded-xl p-3 flex items-center gap-2 text-sm">
                     <Flame className="w-4 h-4 shrink-0" />
                     <span>
-                      {t("courses.only", "Only")} <strong>{course.seatsRemaining} {t("courses.seats", "seats")}</strong> {t("courses.left_batch", "left this batch")}
+                      Only <strong>{course.seatsRemaining} seats</strong> left this batch
                     </span>
                   </div>
                 )}
@@ -373,7 +369,7 @@ export default function CourseDetail() {
                   <>
                     <EnrollmentModal mode="trial" defaultCourseSlug={course.slug}>
                       <Button className="w-full h-12 font-sans text-base rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 font-semibold cursor-pointer">
-                        <Sparkles className="w-4 h-4 mr-2" /> {t("common.book_trial", "Begin Your Journey")}
+                        <Sparkles className="w-4 h-4 mr-2" /> Begin Your Journey
                       </Button>
                     </EnrollmentModal>
 
@@ -382,7 +378,7 @@ export default function CourseDetail() {
                         variant="outline"
                         className="w-full h-12 font-sans text-base rounded-lg border-primary/30 text-primary hover:bg-primary/5 font-semibold cursor-pointer"
                       >
-                        {t("common.enroll_now", "Enroll Now")}
+                        Enroll Now
                       </Button>
                     </EnrollmentModal>
                   </>
@@ -393,30 +389,30 @@ export default function CourseDetail() {
                   className="w-full h-12 font-sans text-base rounded-lg bg-[#0F4D36] text-white hover:bg-[#0A3828] border border-[#ECC565]/20 shadow-sm font-semibold cursor-pointer"
                 >
                   <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-                    <FaWhatsapp className="w-4 h-4 mr-2" /> {t("common.chat_whatsapp", "Speak With Our Team")}
+                    <FaWhatsapp className="w-4 h-4 mr-2" /> Speak With Our Team
                   </a>
                 </Button>
 
                 <div className="pt-4 border-t border-border space-y-3 text-sm">
-                  <Detail icon={Clock} label={t("courses.duration", "Duration")} value={`${course.durationMonths} ${t("courses.months", "Months")}`} />
-                  <Detail icon={Calendar} label={t("courses.timings_label", "Timings")} value={timings} />
+                  <Detail icon={Clock} label="Duration" value={`${course.durationMonths} Months`} />
+                  <Detail icon={Calendar} label="Timings" value={timings} />
                   {course.platform && (
-                    <Detail icon={Video} label={t("courses.platform", "Platform")} value={`${t("courses.live_on", "Live on")} ${course.platform}`} />
+                    <Detail icon={Video} label="Platform" value={`Live on ${course.platform}`} />
                   )}
-                  <Detail icon={GraduationCap} label={t("courses.level_label", "Level")} value={course.level} />
+                  <Detail icon={GraduationCap} label="Level" value={course.level} />
                   {course.forWhom && (
-                    <Detail icon={Users} label={t("courses.for_label", "For")} value={course.forWhom} />
+                    <Detail icon={Users} label="For" value={course.forWhom} />
                   )}
                 </div>
 
                 <div className="pt-4 border-t border-border space-y-2 text-xs text-muted-foreground">
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="w-3.5 h-3.5 text-primary" />
-                    {t("courses.sisters_only_class", "100% sisters-only classroom")}
+                    100% sisters-only classroom
                   </div>
                   <div className="flex items-center gap-2">
                     <Award className="w-3.5 h-3.5 text-primary" />
-                    {t("courses.guarantee", "Money-back guarantee")}
+                    Money-back guarantee
                   </div>
                 </div>
               </div>
@@ -480,7 +476,7 @@ export default function CourseDetail() {
         ) : (
           <EnrollmentModal mode="trial" defaultCourseSlug={course.slug}>
             <Button className="flex-1 h-12 rounded-lg bg-primary text-primary-foreground font-sans font-semibold cursor-pointer">
-              <Sparkles className="w-4 h-4 mr-1.5" /> {t("common.book_trial", "Begin Your Journey")}
+              <Sparkles className="w-4 h-4 mr-1.5" /> Begin Your Journey
             </Button>
           </EnrollmentModal>
         )}

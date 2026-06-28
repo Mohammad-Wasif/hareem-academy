@@ -58,7 +58,7 @@ const NAV = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/courses", label: "Courses", icon: BookOpen },
   { href: "/admin/builder", label: "Page Builder", icon: FileText },
-  { href: "/admin/site-content", label: "Site Content", icon: Globe },
+
   { href: "/admin/media", label: "Media Manager", icon: ImageIcon },
   { href: "/admin/settings", label: "Settings", icon: Settings },
   { href: "/admin/enrollments", label: "Enrollments", icon: Users },
@@ -213,12 +213,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         subtitle: "Visually design, edit, and publish SEO and campaign landing pages.",
       };
     }
-    if (location.startsWith("/admin/site-content")) {
-      return {
-        title: "Site Content Manager",
-        subtitle: "Translate and localize landing pages, blogs, and testimonials.",
-      };
-    }
+
     if (location.startsWith("/admin/media")) {
       return {
         title: "Media Manager",
@@ -312,8 +307,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     { title: "Tajweed Rules Workbook", category: "Media", url: "/admin/media" },
     { title: "Zainab Fatima - Enrollment", category: "Lead", url: "/admin/enrollments" },
     { title: "Aisha Begum - WhatsApp Click", category: "Lead", url: "/admin/leads" },
-    { title: "Course Landing Page SEO Meta", category: "Site Content", url: "/admin/site-content" },
-    { title: "How to recite Quran correctly", category: "Blog", url: "/admin/site-content" },
+
   ];
 
   const filteredSearchResults = searchQuery
