@@ -79,46 +79,7 @@ function PublicRoutes() {
           <Route path="/terms" component={Terms} />
           <Route path="/refund" component={Refund} />
 
-          {/* SEO Landing Pages */}
-          <Route path="/learn-arabic-online-for-sisters">
-            {() => <SEOLandingPage slug="learn-arabic-online-for-sisters" />}
-          </Route>
-          <Route path="/arabic-classes-for-muslim-women">
-            {() => <SEOLandingPage slug="arabic-classes-for-muslim-women" />}
-          </Route>
-          <Route path="/beginner-arabic-course-online">
-            {() => <SEOLandingPage slug="beginner-arabic-course-online" />}
-          </Route>
-          <Route path="/quranic-arabic-classes">
-            {() => <SEOLandingPage slug="quranic-arabic-classes" />}
-          </Route>
-          <Route path="/female-arabic-teachers-online">
-            {() => <SEOLandingPage slug="female-arabic-teachers-online" />}
-          </Route>
-          <Route path="/learn-urdu-online">
-            {() => <SEOLandingPage slug="learn-urdu-online" />}
-          </Route>
-          <Route path="/urdu-course-for-beginners">
-            {() => <SEOLandingPage slug="urdu-course-for-beginners" />}
-          </Route>
-          <Route path="/urdu-reading-classes">
-            {() => <SEOLandingPage slug="urdu-reading-classes" />}
-          </Route>
-          <Route path="/online-urdu-classes-for-sisters">
-            {() => <SEOLandingPage slug="online-urdu-classes-for-sisters" />}
-          </Route>
-          <Route path="/learn-quran-with-meaning">
-            {() => <SEOLandingPage slug="learn-quran-with-meaning" />}
-          </Route>
-          <Route path="/quran-reading-classes-for-sisters">
-            {() => <SEOLandingPage slug="quran-reading-classes-for-sisters" />}
-          </Route>
-          <Route path="/online-tajweed-classes">
-            {() => <SEOLandingPage slug="online-tajweed-classes" />}
-          </Route>
-          <Route path="/understand-quranic-arabic">
-            {() => <SEOLandingPage slug="understand-quranic-arabic" />}
-          </Route>
+
 
           {/* Dynamic catch-all route for database-defined landing pages */}
           <Route path="/:slug">

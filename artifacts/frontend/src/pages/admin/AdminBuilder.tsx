@@ -49,7 +49,6 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { toast } from "sonner";
-import { seoLandingPages } from "@/data/seoLandingPages";
 
 // Theme configuration interface
 interface PageTheme {
@@ -136,7 +135,7 @@ export default function AdminBuilder() {
 
   // Page DB states
   const [pages, setPages] = useState<Record<string, ExtendedPageConfig>>({});
-  const [selectedSlug, setSelectedSlug] = useState<string>("learn-arabic-online-for-sisters");
+  const [selectedSlug, setSelectedSlug] = useState<string>("home");
   const [activePage, setActivePage] = useState<ExtendedPageConfig | null>(null);
 
   // Layout states
@@ -224,50 +223,7 @@ export default function AdminBuilder() {
           }
         }
 
-        // Seed static landing pages if missing
-        for (const [slug, cfg] of Object.entries(seoLandingPages)) {
-          if (!loadedPages[slug]) {
-            const pageData = {
-              sections: [
-                { id: "hero", name: "Hero Banner", visible: true },
-                { id: "overview", name: "Overview Summary", visible: true },
-                { id: "benefits", name: "Core Benefits", visible: true },
-                { id: "moat", name: "Privacy Moat", visible: true },
-                { id: "curriculum", name: "Curriculum Roadmap", visible: true },
-                { id: "testimonials", name: "Student Reviews", visible: true },
-                { id: "faqs", name: "FAQs Accordion", visible: true },
-                { id: "related", name: "Related Programs", visible: true },
-                { id: "cta", name: "Closing Call-to-Action", visible: true },
-              ],
-              theme: {
-                fontFamily: "serif" as const,
-                primaryColor: "#0F4D36",
-                accentColor: "#ECC565",
-                backgroundColor: "#FDFCF7",
-                baseFontSize: "base" as const
-              },
-              ...cfg,
-            };
 
-            try {
-              await adminApi.createLandingPage({
-                slug,
-                title: cfg.title,
-                metaDescription: cfg.metaDescription || "",
-                config: pageData,
-              });
-
-              loadedPages[slug] = {
-                ...pageData,
-                slug,
-                title: cfg.title,
-                metaDescription: cfg.metaDescription || "",
-              };
-            } catch (err) {
-              console.error("Failed to seed landing page in DB:", err);
-            }
-          }
-        }
 
         setPages(loadedPages);
         if (loadedPages[selectedSlug]) {
@@ -389,7 +345,7 @@ export default function AdminBuilder() {
       return;
     }
 
-    const baseTemplate = seoLandingPages["learn-arabic-online-for-sisters"] || {
+    const baseTemplate = {
       heroTitle: newPageForm.title,
       heroSubtitle: "Interactive learning courses designed exclusively for sisters.",
     };
