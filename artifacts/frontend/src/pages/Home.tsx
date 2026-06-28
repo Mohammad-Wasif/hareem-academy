@@ -497,7 +497,7 @@ export default function Home() {
       </div>
 
       {/* 2. PAIN */}
-      <section className="py-16 sm:py-20 lg:py-24 bg-background">
+      <section className="py-12 sm:py-14 lg:py-16 bg-background">
         <div className="container px-4 max-w-5xl mx-auto">
           <div className="flex flex-col lg:flex-row gap-12 items-start">
             
@@ -680,7 +680,7 @@ export default function Home() {
 
 
       {/* 4. COURSES */}
-      <section className="py-14 sm:py-16 lg:py-20 bg-background relative overflow-hidden">
+      <section className="py-10 sm:py-12 lg:py-14 bg-background relative overflow-hidden">
 
         <div className="container px-4">
           <motion.div
@@ -725,7 +725,7 @@ export default function Home() {
       </section>
 
       {/* 5. TRUST — Why us */}
-      <section className="py-14 sm:py-16 lg:py-20 bg-primary text-primary-foreground relative overflow-hidden">
+      <section className="py-10 sm:py-12 lg:py-14 bg-primary text-primary-foreground relative overflow-hidden">
 
         <div className="container px-4 relative z-10">
           <motion.div
@@ -789,7 +789,7 @@ export default function Home() {
       </section>
 
       {/* 6. TESTIMONIALS */}
-      <section className="py-14 sm:py-16 lg:py-20 bg-background">
+      <section className="py-10 sm:py-12 lg:py-14 bg-background">
         <div className="container px-4 max-w-6xl mx-auto">
           <motion.div
             className="flex flex-col md:flex-row justify-between items-end gap-6 mb-10"
@@ -840,7 +840,7 @@ export default function Home() {
       </section>
 
       {/* 7. RTL Preview */}
-      <section className="py-10 lg:py-16 border-t border-border bg-card">
+      <section className="py-8 lg:py-10 border-t border-border bg-card">
         <div className="container px-4 text-center max-w-3xl mx-auto">
           <motion.div
             variants={fadeUp}

@@ -45,6 +45,17 @@
   --font-serif: var(--app-font-serif);
   --font-arabic: var(--app-font-arabic);
 
+  --text-xs: 0.9375rem;
+  --text-sm: 1.0625rem;
+  --text-base: 1.1875rem;
+  --text-lg: 1.3125rem;
+  --text-xl: 1.5625rem;
+  --text-2xl: 1.9375rem;
+  --text-3xl: 2.375rem;
+  --text-4xl: 3.125rem;
+  --text-5xl: 3.875rem;
+  --text-6xl: 4.75rem;
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
