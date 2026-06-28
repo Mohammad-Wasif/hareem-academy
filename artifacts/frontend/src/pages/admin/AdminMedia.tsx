@@ -486,20 +486,7 @@ export default function AdminMedia() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [sortedFiles, selectedFileKey]);
 
-  // AI alt text generator
-  const triggerGenerateAltText = () => {
-    if (!selectedFile || isGeneratingAlt) return;
-    setIsGeneratingAlt(true);
-    toast({
-      title: "Analyzing Image Layout",
-      description: "Extracting visual cues and semantic tags...",
-    });
-    setTimeout(() => {
-      setIsGeneratingAlt(false);
-      const generated = `Luxury Islamic editorial design showing ${selectedFile.tags.join(" and ")} themed layout pattern`;
-      handleUpdateFileDetails(selectedFile.key, { altText: generated });
-    }, 1500);
-  };
+
 
   // Trigger file selection upload and prompt for key allocation
   const handleFileUpload = (file: File) => {
