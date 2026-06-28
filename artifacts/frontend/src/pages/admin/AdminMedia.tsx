@@ -76,11 +76,18 @@ interface MediaFile {
   usedIn: string[];
   status: "Published" | "Unused" | "Archived" | "Deleted";
   isReal: boolean;
+  bytes?: number | null;
+  width?: number | null;
+  height?: number | null;
 }
 
 export default function AdminMedia() {
   const { assets, assetsMetadata, assetsArray, isLoading, refetch } = useSiteAssets();
   const { toast } = useToast();
+
+  // Dynamic measured dimensions cache for assets
+  const [measuredDimensions, setMeasuredDimensions] = useState<Record<string, string>>({});
+  const [customViewportWidth, setCustomViewportWidth] = useState<number>(800);
 
   // State Sandbox Controls
   const [mediaState, setMediaState] = useState<"success" | "loading" | "empty" | "error">("success");
@@ -214,20 +221,33 @@ export default function AdminMedia() {
       },
     ];
 
+    const formatBytes = (b?: number | null) => {
+      if (b === undefined || b === null || isNaN(b)) return "—";
+      if (b === 0) return "0 KB";
+      if (b < 1024) return `${b} B`;
+      if (b < 1024 * 1024) return `${(b / 1024).toFixed(1)} KB`;
+      return `${(b / (1024 * 1024)).toFixed(1)} MB`;
+    };
+
     const dbSlots: MediaFile[] = standardSlots.map((slot) => {
       const dbAsset = assetsMetadata[slot.key];
       const meta = localMetadata[slot.key] || {};
 
+      const url = dbAsset ? dbAsset.url : slot.fallbackUrl;
+      const dims = dbAsset?.width && dbAsset?.height 
+        ? `${dbAsset.width} × ${dbAsset.height} px` 
+        : (measuredDimensions[slot.key] || "Loading...");
+
       return {
         key: slot.key,
         name: slot.name,
-        url: dbAsset ? dbAsset.url : slot.fallbackUrl,
+        url,
         folder: meta.folder || slot.folder,
-        dimensions: "1920 × 1080 px",
-        format: dbAsset ? "WEBP (Cloudinary)" : "PNG (System default)",
-        fileSize: dbAsset ? "Optimized" : "Default Size",
+        dimensions: dims,
+        format: dbAsset?.format ? `${dbAsset.format.toUpperCase()} (Cloudinary)` : "PNG (System default)",
+        fileSize: dbAsset?.bytes ? formatBytes(dbAsset.bytes) : "Default Size",
         originalSize: "2.4 MB",
-        savings: dbAsset ? "80%" : "—",
+        savings: dbAsset?.bytes ? `${Math.round((1 - dbAsset.bytes / (2.4 * 1024 * 1024)) * 100)}%` : "—",
         altText: dbAsset?.altText || meta.altText || (dbAsset ? "Hareem Academy brand logo" : "Hareem Academy placeholder logo"),
         description: dbAsset?.description || meta.description || slot.desc,
         tags: dbAsset?.tags ? dbAsset.tags.split(",") : (meta.tags || slot.defaultTags),
@@ -236,6 +256,9 @@ export default function AdminMedia() {
         usedIn: [slot.label],
         status: dbAsset ? "Published" : "Unused" as const,
         isReal: !!dbAsset,
+        bytes: dbAsset?.bytes || null,
+        width: dbAsset?.width || null,
+        height: dbAsset?.height || null,
       };
     });
 
@@ -246,14 +269,18 @@ export default function AdminMedia() {
       assetsArray.forEach((asset) => {
         if (!standardKeys.has(asset.key)) {
           const meta = localMetadata[asset.key] || {};
+          const dims = asset.width && asset.height
+            ? `${asset.width} × ${asset.height} px`
+            : (measuredDimensions[asset.key] || "Loading...");
+
           customDbFiles.push({
             key: asset.key,
             name: asset.key,
             url: asset.url,
             folder: meta.folder || "all",
-            dimensions: "Auto-optimized",
-            format: "WEBP (Cloudinary)",
-            fileSize: "Optimized",
+            dimensions: dims,
+            format: asset.format ? `${asset.format.toUpperCase()} (Cloudinary)` : "WEBP (Cloudinary)",
+            fileSize: asset.bytes ? formatBytes(asset.bytes) : "Optimized",
             originalSize: "Unknown",
             savings: "—",
             altText: asset.altText || meta.altText || `Custom uploaded asset: ${asset.key}`,
@@ -264,6 +291,9 @@ export default function AdminMedia() {
             usedIn: ["Custom Section"],
             status: "Published" as const,
             isReal: true,
+            bytes: asset.bytes || null,
+            width: asset.width || null,
+            height: asset.height || null,
           });
         }
       });
@@ -271,7 +301,7 @@ export default function AdminMedia() {
 
     if (mediaState === "empty") return [];
     return [...dbSlots, ...customDbFiles];
-  }, [assets, assetsMetadata, assetsArray, localMetadata, mediaState]);
+  }, [assets, assetsMetadata, assetsArray, localMetadata, mediaState, measuredDimensions]);
 
   // Dynamic folders calculation
   const foldersList = useMemo(() => {
@@ -299,34 +329,33 @@ export default function AdminMedia() {
         totalCount++;
       }
     });
+
+    const formatBytes = (b?: number | null) => {
+      if (b === undefined || b === null || isNaN(b) || b === 0) return "0 KB";
+      if (b < 1024) return `${b} B`;
+      if (b < 1024 * 1024) return `${(b / 1024).toFixed(1)} KB`;
+      return `${(b / (1024 * 1024)).toFixed(1)} MB`;
+    };
     
     return foldersDef.map((f) => {
       let count = 0;
+      let sizeBytes = 0;
       if (f.id === "all") {
         count = totalCount;
+        sizeBytes = combinedFiles
+          .filter((file) => file.folder !== "deleted" && file.folder !== "archived")
+          .reduce((acc, file) => acc + (file.bytes || 150000), 0); // fallback to 150KB for default placeholder assets
       } else {
         count = counts[f.id] || 0;
-      }
-      
-      let size = "0 KB";
-      if (count > 0) {
-        if (f.id === "hero" || f.id === "backgrounds") {
-          size = `${(count * 1.8).toFixed(1)} MB`;
-        } else if (f.id === "courses" || f.id === "og") {
-          size = `${(count * 1.2).toFixed(1)} MB`;
-        } else if (f.id === "teachers" || f.id === "testimonials") {
-          size = `${(count * 600).toFixed(0)} KB`;
-        } else if (f.id === "icons" || f.id === "navbar") {
-          size = `${(count * 45).toFixed(0)} KB`;
-        } else {
-          size = `${(count * 350).toFixed(0)} KB`;
-        }
+        sizeBytes = combinedFiles
+          .filter((file) => file.folder === f.id)
+          .reduce((acc, file) => acc + (file.bytes || 150000), 0);
       }
       
       return {
         ...f,
         count,
-        size,
+        size: formatBytes(sizeBytes),
       };
     });
   }, [combinedFiles]);
@@ -805,6 +834,17 @@ export default function AdminMedia() {
     );
   }
 
+  const totalStorageBytes = useMemo(() => {
+    return combinedFiles.reduce((acc, file) => acc + (file.bytes || 150000), 0);
+  }, [combinedFiles]);
+
+  const formatStorageBytes = (b: number) => {
+    if (b < 1024) return `${b} B`;
+    if (b < 1024 * 1024) return `${(b / 1024).toFixed(1)} KB`;
+    if (b < 1024 * 1024 * 1024) return `${(b / (1024 * 1024)).toFixed(1)} MB`;
+    return `${(b / (1024 * 1024 * 1024)).toFixed(2)} GB`;
+  };
+
   return (
     <div className="max-w-[1600px] mx-auto px-4 md:px-8 py-8 space-y-8 relative text-[#0F4D36]">
       {/* State Sandbox control bar */}
@@ -831,7 +871,7 @@ export default function AdminMedia() {
             <span>Cloudinary CDN: Active</span>
           </div>
           <div className="flex items-center gap-2 bg-[#FAF7F0] px-3 py-1.5 rounded-lg border border-[#0F4D36]/10 text-xs font-semibold text-muted-foreground">
-            <span>Storage: 4.8 GB / 10 GB</span>
+            <span>Storage: {formatStorageBytes(totalStorageBytes)} / 10 GB</span>
           </div>
         </div>
       </div>
@@ -1083,6 +1123,13 @@ export default function AdminMedia() {
                           src={file.url}
                           alt={file.altText}
                           className="max-w-full max-h-full object-contain rounded transition-transform group-hover:scale-105 duration-300"
+                          onLoad={(e) => {
+                            const img = e.currentTarget;
+                            const dims = `${img.naturalWidth} × ${img.naturalHeight} px`;
+                            if (measuredDimensions[file.key] !== dims) {
+                              setMeasuredDimensions((prev) => ({ ...prev, [file.key]: dims }));
+                            }
+                          }}
                         />
                         
                         {/* Hover Overlay Actions */}
@@ -1232,19 +1279,38 @@ export default function AdminMedia() {
                   
                   {previewTab === "device" && (
                     <div className="w-full h-full flex flex-col justify-between">
-                      {/* Device sizing buttons */}
-                      <div className="flex items-center justify-center gap-2 border-b border-[#0F4D36]/5 pb-1">
-                        <button onClick={() => setDeviceFrame("desktop")} className={`p-1 rounded ${deviceFrame === "desktop" ? "bg-[#0F4D36]/10" : "text-[#0F4D36]/50"}`}><Monitor className="w-3.5 h-3.5" /></button>
-                        <button onClick={() => setDeviceFrame("tablet")} className={`p-1 rounded ${deviceFrame === "tablet" ? "bg-[#0F4D36]/10" : "text-[#0F4D36]/50"}`}><Tablet className="w-3.5 h-3.5" /></button>
-                        <button onClick={() => setDeviceFrame("mobile")} className={`p-1 rounded ${deviceFrame === "mobile" ? "bg-[#0F4D36]/10" : "text-[#0F4D36]/50"}`}><Smartphone className="w-3.5 h-3.5" /></button>
+                      {/* Device sizing buttons & Viewport width slider */}
+                      <div className="flex flex-col gap-2 border-b border-[#0F4D36]/5 pb-2">
+                        <div className="flex items-center justify-center gap-2">
+                          <button onClick={() => { setDeviceFrame("desktop"); setCustomViewportWidth(800); }} className={`p-1 rounded ${deviceFrame === "desktop" ? "bg-[#0F4D36]/10" : "text-[#0F4D36]/50"}`} title="Desktop (800px)"><Monitor className="w-3.5 h-3.5" /></button>
+                          <button onClick={() => { setDeviceFrame("tablet"); setCustomViewportWidth(600); }} className={`p-1 rounded ${deviceFrame === "tablet" ? "bg-[#0F4D36]/10" : "text-[#0F4D36]/50"}`} title="Tablet (600px)"><Tablet className="w-3.5 h-3.5" /></button>
+                          <button onClick={() => { setDeviceFrame("mobile"); setCustomViewportWidth(360); }} className={`p-1 rounded ${deviceFrame === "mobile" ? "bg-[#0F4D36]/10" : "text-[#0F4D36]/50"}`} title="Mobile (360px)"><Smartphone className="w-3.5 h-3.5" /></button>
+                        </div>
+                        <div className="flex items-center gap-2 px-2 text-[9px] text-[#0F4D36]">
+                          <span className="shrink-0 font-mono font-bold">{customViewportWidth}px</span>
+                          <input
+                            type="range"
+                            min="320"
+                            max="800"
+                            value={customViewportWidth}
+                            onChange={(e) => {
+                              const val = Number(e.target.value);
+                              setCustomViewportWidth(val);
+                              if (val > 700) setDeviceFrame("desktop");
+                              else if (val > 450) setDeviceFrame("tablet");
+                              else setDeviceFrame("mobile");
+                            }}
+                            className="flex-1 accent-[#0F4D36] h-1 bg-[#0F4D36]/10 rounded-lg appearance-none cursor-pointer"
+                          />
+                        </div>
                       </div>
                       
                       <div className="flex-1 flex items-center justify-center relative overflow-hidden p-2">
                         {/* Rendering simulated frames */}
-                        <div className={`transition-all duration-300 border border-[#0F4D36]/20 bg-white rounded shadow-md overflow-hidden flex items-center justify-center p-2 ${
-                          deviceFrame === "desktop" ? "w-full h-full" :
-                          deviceFrame === "tablet" ? "w-3/4 h-5/6" : "w-1/2 h-4/5"
-                        }`}>
+                        <div
+                          style={{ width: `${customViewportWidth}px` }}
+                          className="transition-all duration-150 border border-[#0F4D36]/20 bg-white rounded shadow-md overflow-hidden flex items-center justify-center p-2 h-4/5"
+                        >
                           <img src={selectedFile.url} alt="" className="max-w-full max-h-full object-contain" />
                         </div>
                       </div>

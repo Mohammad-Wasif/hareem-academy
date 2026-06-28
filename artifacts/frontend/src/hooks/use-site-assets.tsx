@@ -9,6 +9,10 @@ export interface SiteAsset {
   description?: string | null;
   altText?: string | null;
   tags?: string | null;
+  width?: number | null;
+  height?: number | null;
+  bytes?: number | null;
+  format?: string | null;
   updatedAt?: string;
 }
 

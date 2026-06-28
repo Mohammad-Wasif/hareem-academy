@@ -82,6 +82,10 @@ router.post(
               key,
               url: optimizedUrl,
               publicId: result.public_id,
+              width: result.width,
+              height: result.height,
+              bytes: result.bytes,
+              format: result.format,
               updatedAt: new Date(),
             })
             .onConflictDoUpdate({
@@ -89,6 +93,10 @@ router.post(
               set: {
                 url: optimizedUrl,
                 publicId: result.public_id,
+                width: result.width,
+                height: result.height,
+                bytes: result.bytes,
+                format: result.format,
                 updatedAt: new Date(),
               },
             });
@@ -98,6 +106,10 @@ router.post(
             key,
             url: optimizedUrl,
             publicId: result.public_id,
+            width: result.width,
+            height: result.height,
+            bytes: result.bytes,
+            format: result.format,
           });
         }
       );

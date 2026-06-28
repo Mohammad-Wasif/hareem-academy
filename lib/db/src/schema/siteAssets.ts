@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
+import { integer, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
 
 export const siteAssetsTable = pgTable("site_assets", {
   key: varchar("key", { length: 255 }).primaryKey(),
@@ -8,5 +8,10 @@ export const siteAssetsTable = pgTable("site_assets", {
   description: text("description"),
   altText: text("alt_text"),
   tags: text("tags"),
+  width: integer("width"),
+  height: integer("height"),
+  bytes: integer("bytes"),
+  format: varchar("format", { length: 50 }),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+
