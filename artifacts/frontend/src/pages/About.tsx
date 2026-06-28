@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   ShieldCheck,
   Video,
@@ -16,6 +17,7 @@ import { useSiteAssets } from "@/hooks/use-site-assets";
 import PremiumImage from "@/components/PremiumImage";
 import { motion } from "framer-motion";
 import { SEO } from "@/components/SEO";
+import { adminApi } from "@/lib/adminApi";
 
 /* ── Reusable animation variants ── */
 const fadeUp = {
@@ -31,6 +33,23 @@ const staggerContainer = {
 export default function About() {
   const { data: stats } = useGetSiteStats();
   const { assets } = useSiteAssets();
+  const [pageData, setPageData] = useState<any>(null);
+
+  useEffect(() => {
+    adminApi.getLandingPage("about")
+      .then((data) => {
+        if (data && data.config) {
+          setPageData({
+            title: data.title,
+            metaDescription: data.metaDescription || "",
+            ...data.config,
+          });
+        }
+      })
+      .catch((err) => {
+        console.warn("Could not load about overrides:", err);
+      });
+  }, []);
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -51,11 +70,32 @@ export default function About() {
     ]
   };
 
+  const computedFont =
+    pageData?.theme?.fontFamily === "sans"
+      ? "font-sans"
+      : pageData?.theme?.fontFamily === "mono"
+      ? "font-mono"
+      : "font-serif";
+
+  const sizeClass =
+    pageData?.theme?.baseFontSize === "lg"
+      ? "text-lg"
+      : pageData?.theme?.baseFontSize === "sm"
+      ? "text-sm"
+      : "text-base";
+
+  const primaryColor = pageData?.theme?.primaryColor || "#0F4D36";
+  const accentColor = pageData?.theme?.accentColor || "#ECC565";
+  const backgroundColor = pageData?.theme?.backgroundColor || "#FDFCF7";
+
   return (
-    <div className="min-h-screen bg-background pb-24 pt-24">
+    <div 
+      className={`min-h-screen pb-24 pt-24 transition-colors duration-300 ${computedFont} ${sizeClass}`}
+      style={pageData?.theme ? { backgroundColor } as React.CSSProperties : undefined}
+    >
       <SEO
-        title="About Us"
-        description="Learn about Hareem Academy's mission to provide a private, comfortable, live online learning environment for sisters to study Arabic, Urdu, and Quran."
+        title={pageData?.title || "About Us"}
+        description={pageData?.metaDescription || "Learn about Hareem Academy's mission to provide a private, comfortable, live online learning environment for sisters to study Arabic, Urdu, and Quran."}
         schema={breadcrumbSchema}
       />
       {/* HERO with above-fold CTA */}
@@ -69,32 +109,58 @@ export default function About() {
           <motion.span
             variants={fadeUp}
             transition={{ duration: 0.4 }}
-            className="inline-block text-xs font-bold tracking-widest text-primary uppercase"
+            className="inline-block text-xs font-bold tracking-widest uppercase"
+            style={{ color: primaryColor }}
           >
-            Our Promise
+            {pageData?.geoContext || "Our Promise"}
           </motion.span>
           <motion.h1
             variants={fadeUp}
             transition={{ duration: 0.5 }}
-            className="font-serif font-bold text-4xl md:text-6xl text-foreground leading-tight"
+            className="font-serif font-bold text-4xl md:text-6xl leading-tight"
+            style={{ color: primaryColor }}
           >
-            A safe space for sisters
-            <br />
-            to fall in love with the Quran.
+            {pageData?.heroTitle ? (
+              pageData.heroTitle
+            ) : (
+              <>
+                A safe space for sisters
+                <br />
+                to fall in love with the Quran.
+              </>
+            )}
           </motion.h1>
           <motion.p
             variants={fadeUp}
             transition={{ duration: 0.45 }}
             className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto"
           >
-            No mixed classes. No judgment. Just qualified female teachers and a
-            global community of sisters learning together — from your living room.
+            {pageData?.heroSubtitle || "No mixed classes. No judgment. Just qualified female teachers and a global community of sisters learning together — from your living room."}
           </motion.p>
           <motion.div variants={fadeUp} transition={{ duration: 0.4 }} className="flex justify-center pt-2">
-            <CTAGroup variant="hero" align="center" trialMode />
+            <CTAGroup variant="hero" align="center" trialMode primaryLabel={pageData?.primaryCTA} />
           </motion.div>
         </motion.div>
       </section>
+
+      {pageData?.proseBody && (
+        <section className="container mx-auto px-4 mt-16 mb-20 max-w-3xl">
+          <motion.div
+            className="bg-card rounded-3xl border border-border p-8 md:p-12"
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            variants={fadeUp}
+          >
+            <h2 className="font-serif font-bold text-3xl text-foreground mb-6 text-center" style={{ color: primaryColor }}>
+              {pageData?.proseTitle || "Our Mission & Vision"}
+            </h2>
+            <div className="prose prose-stone leading-relaxed whitespace-pre-line text-foreground/80">
+              {pageData.proseBody}
+            </div>
+          </motion.div>
+        </section>
+      )}
 
       {/* PAIN — Why we exist */}
       <section className="container mx-auto px-4 mt-16 mb-20 max-w-5xl">

@@ -1,9 +1,11 @@
+import { useState, useEffect } from "react";
 import { useListTestimonials } from "@workspace/api-client-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import CTAGroup from "@/components/CTAGroup";
 import TestimonialCard from "@/components/TestimonialCard";
 import { SEO } from "@/components/SEO";
 import { motion, type Variants } from "framer-motion";
+import { adminApi } from "@/lib/adminApi";
 
 const staggerContainer: Variants = {
   hidden: {},
@@ -28,6 +30,23 @@ const fadeUp: Variants = {
 
 export default function Testimonials() {
   const { data: testimonials = [], isLoading } = useListTestimonials();
+  const [pageData, setPageData] = useState<any>(null);
+
+  useEffect(() => {
+    adminApi.getLandingPage("testimonials")
+      .then((data) => {
+        if (data && data.config) {
+          setPageData({
+            title: data.title,
+            metaDescription: data.metaDescription || "",
+            ...data.config,
+          });
+        }
+      })
+      .catch((err) => {
+        console.warn("Could not load testimonials overrides:", err);
+      });
+  }, []);
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -71,28 +90,61 @@ export default function Testimonials() {
     "reviewBody": testimonial.quote
   }));
 
+  const computedFont =
+    pageData?.theme?.fontFamily === "sans"
+      ? "font-sans"
+      : pageData?.theme?.fontFamily === "mono"
+      ? "font-mono"
+      : "font-serif";
+
+  const sizeClass =
+    pageData?.theme?.baseFontSize === "lg"
+      ? "text-lg"
+      : pageData?.theme?.baseFontSize === "sm"
+      ? "text-sm"
+      : "text-base";
+
+  const primaryColor = pageData?.theme?.primaryColor || "#0F4D36";
+  const accentColor = pageData?.theme?.accentColor || "#ECC565";
+  const backgroundColor = pageData?.theme?.backgroundColor || "#FDFCF7";
+
   return (
-    <div className="min-h-screen bg-background pt-20 pb-12 lg:pt-24 lg:pb-24 w-full overflow-x-hidden">
+    <div 
+      className={`min-h-screen pt-20 pb-12 lg:pt-24 lg:pb-24 w-full overflow-x-hidden transition-colors duration-300 ${computedFont} ${sizeClass}`}
+      style={pageData?.theme ? { backgroundColor } as React.CSSProperties : undefined}
+    >
       <SEO
-        title="Student Testimonials"
-        description="Read real stories and experiences from sisters around the world who have learned Arabic, Tajweed, and Urdu with Hareem Academy's qualified female teachers."
+        title={pageData?.title || "Student Testimonials"}
+        description={pageData?.metaDescription || "Read real stories and experiences from sisters around the world who have learned Arabic, Tajweed, and Urdu with Hareem Academy's qualified female teachers."}
         schema={[breadcrumbSchema, ...reviewSchemas]}
       />
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Hero */}
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-5">
-          <span className="inline-block text-xs font-bold tracking-widest text-primary uppercase">
-            Real stories
+          <span 
+            className="inline-block text-xs font-bold tracking-widest uppercase"
+            style={{ color: primaryColor }}
+          >
+            {pageData?.geoContext || "Real stories"}
           </span>
-          <h1 className="font-serif font-bold text-3xl sm:text-4xl md:text-5xl text-foreground">
-            Sisters from around the world
-            <br /> who started where you are.
+          <h1 
+            className="font-serif font-bold text-3xl sm:text-4xl md:text-5xl"
+            style={{ color: primaryColor }}
+          >
+            {pageData?.heroTitle ? (
+              pageData.heroTitle
+            ) : (
+              <>
+                Sisters from around the world
+                <br /> who started where you are.
+              </>
+            )}
           </h1>
           <p className="text-lg text-muted-foreground">
-            Alhamdulillah, hundreds of sisters have transformed their relationship with the Quran and Arabic through Hareem Academy.
+            {pageData?.heroSubtitle || "Alhamdulillah, hundreds of sisters have transformed their relationship with the Quran and Arabic through Hareem Academy."}
           </p>
           <div className="flex justify-center pt-2">
-            <CTAGroup variant="hero" align="center" trialMode />
+            <CTAGroup variant="hero" align="center" trialMode primaryLabel={pageData?.primaryCTA} />
           </div>
         </div>
 
@@ -119,15 +171,15 @@ export default function Testimonials() {
         )}
 
         {/* Closing CTA */}
-        <div className="mt-12 lg:mt-20 bg-primary text-primary-foreground rounded-3xl px-5 py-8 sm:p-10 md:p-14 text-center max-w-4xl mx-auto">
+        <div className="mt-12 lg:mt-20 bg-primary text-primary-foreground rounded-3xl px-5 py-8 sm:p-10 md:p-14 text-center max-w-4xl mx-auto" style={{ backgroundColor: primaryColor }}>
           <h2 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl text-white mb-3">
-            Your story could be next.
+            {pageData?.closingTitle || "Your story could be next."}
           </h2>
           <p className="text-primary-foreground/85 mb-7 max-w-xl mx-auto">
-            Book a free trial and experience the difference for yourself.
+            {pageData?.closingSubtitle || "Book a free trial and experience the difference for yourself."}
           </p>
           <div className="flex justify-center">
-            <CTAGroup variant="hero" align="center" theme="dark" trialMode />
+            <CTAGroup variant="hero" align="center" theme="dark" trialMode primaryLabel={pageData?.primaryCTA} />
           </div>
         </div>
       </div>

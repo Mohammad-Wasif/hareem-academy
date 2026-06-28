@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { adminApi } from "@/lib/adminApi";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateContactMessage } from "@workspace/api-client-react";
@@ -23,6 +24,23 @@ export default function Contact() {
   const createContact = useCreateContactMessage();
   const [isSuccess, setIsSuccess] = useState(false);
   const { whatsappNumber, whatsappUrl } = useWhatsApp();
+  const [pageData, setPageData] = useState<any>(null);
+
+  useEffect(() => {
+    adminApi.getLandingPage("contact")
+      .then((data) => {
+        if (data && data.config) {
+          setPageData({
+            title: data.title,
+            metaDescription: data.metaDescription || "",
+            ...data.config,
+          });
+        }
+      })
+      .catch((err) => {
+        console.warn("Could not load contact overrides:", err);
+      });
+  }, []);
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -91,25 +109,58 @@ export default function Contact() {
     );
   };
 
+  const computedFont =
+    pageData?.theme?.fontFamily === "sans"
+      ? "font-sans"
+      : pageData?.theme?.fontFamily === "mono"
+      ? "font-mono"
+      : "font-serif";
+
+  const sizeClass =
+    pageData?.theme?.baseFontSize === "lg"
+      ? "text-lg"
+      : pageData?.theme?.baseFontSize === "sm"
+      ? "text-sm"
+      : "text-base";
+
+  const primaryColor = pageData?.theme?.primaryColor || "#0F4D36";
+  const accentColor = pageData?.theme?.accentColor || "#ECC565";
+  const backgroundColor = pageData?.theme?.backgroundColor || "#FDFCF7";
+
   return (
-    <div className="min-h-screen bg-background pt-24 pb-24">
+    <div 
+      className={`min-h-screen pt-24 pb-24 transition-colors duration-300 ${computedFont} ${sizeClass}`}
+      style={pageData?.theme ? { backgroundColor } as React.CSSProperties : undefined}
+    >
       <SEO
-        title="Contact Us"
-        description="Have questions about batch timings, fee structures, or learning paths? Connect with a sister from Hareem Academy via WhatsApp or contact form."
+        title={pageData?.title || "Contact Us"}
+        description={pageData?.metaDescription || "Have questions about batch timings, fee structures, or learning paths? Connect with a sister from Hareem Academy via WhatsApp or contact form."}
         schema={[breadcrumbSchema, localBusinessSchema]}
       />
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Emotional hook */}
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-5">
-          <span className="inline-block text-xs font-bold tracking-widest text-primary uppercase">
-            Talk to a sister
+          <span 
+            className="inline-block text-xs font-bold tracking-widest uppercase"
+            style={{ color: primaryColor }}
+          >
+            {pageData?.geoContext || "Talk to a sister"}
           </span>
-          <h1 className="font-serif font-bold text-4xl md:text-5xl text-foreground">
-            We're here. We listen.
-            <br /> No judgment.
+          <h1 
+            className="font-serif font-bold text-4xl md:text-5xl"
+            style={{ color: primaryColor }}
+          >
+            {pageData?.heroTitle ? (
+              pageData.heroTitle
+            ) : (
+              <>
+                We're here. We listen.
+                <br /> No judgment.
+              </>
+            )}
           </h1>
           <p className="text-lg text-muted-foreground">
-            Whether you're nervous to start, unsure which course fits, or just want to ask a sister — message us. We reply on WhatsApp within minutes.
+            {pageData?.heroSubtitle || "Whether you're nervous to start, unsure which course fits, or just want to ask a sister — message us. We reply on WhatsApp within minutes."}
           </p>
         </div>
 
@@ -127,10 +178,10 @@ export default function Contact() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="font-serif font-bold text-xl sm:text-2xl md:text-3xl mb-1">
-                  Chat with us on WhatsApp
+                  {pageData?.whatsappCTATitle || "Chat with us on WhatsApp"}
                 </div>
                 <p className="text-white/90 text-xs sm:text-sm">
-                  +91 9315118289 — fastest way to reach us. Most messages answered in under 5 minutes.
+                  {pageData?.whatsappCTASubtitle || "+91 9315118289 — fastest way to reach us. Most messages answered in under 5 minutes."}
                 </p>
               </div>
               <div className="bg-white text-[#128C7E] font-bold px-5 py-2.5 rounded-full text-sm whitespace-nowrap shrink-0">
@@ -144,13 +195,16 @@ export default function Contact() {
           {/* Form (secondary) */}
           <div className="bg-card p-7 md:p-9 rounded-3xl border border-border shadow-sm">
             <div className="flex items-center gap-2 mb-2">
-              <MessageCircle className="w-5 h-5 text-primary" />
-              <h2 className="font-serif font-bold text-2xl text-foreground">
-                Or send a quick message
+              <MessageCircle className="w-5 h-5" style={{ color: primaryColor }} />
+              <h2 
+                className="font-serif font-bold text-2xl"
+                style={{ color: primaryColor }}
+              >
+                {pageData?.formTitle || "Or send a quick message"}
               </h2>
             </div>
             <p className="text-sm text-muted-foreground mb-6">
-              Prefer not to use WhatsApp? Drop us a line below.
+              {pageData?.formSubtitle || "Prefer not to use WhatsApp? Drop us a line below."}
             </p>
 
             {isSuccess ? (

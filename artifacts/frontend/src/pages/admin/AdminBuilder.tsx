@@ -86,6 +86,14 @@ interface ExtendedPageConfig {
   // Prose pages (legal / policies)
   proseTitle?: string;
   proseBody?: string;
+
+  // Closing and Contact elements
+  closingTitle?: string;
+  closingSubtitle?: string;
+  whatsappCTATitle?: string;
+  whatsappCTASubtitle?: string;
+  formTitle?: string;
+  formSubtitle?: string;
 }
 
 // Default static prose configs for legal pages seed
@@ -127,6 +135,82 @@ const defaultHomeConfig: Partial<ExtendedPageConfig> = {
     { id: "benefits", name: "Core Benefits", visible: true },
     { id: "moat", name: "Privacy Moat", visible: true },
     { id: "cta", name: "Closing Call-to-Action", visible: true }
+  ]
+};
+
+const defaultAboutConfig: Partial<ExtendedPageConfig> = {
+  title: "About Us | Hareem Academy",
+  metaDescription: "Learn about Hareem Academy's mission, values, and our female-only online classrooms.",
+  heroTitle: "A Dedicated Space for Sisters to Learn",
+  heroSubtitle: "Hareem Academy was founded with a clear purpose: to make learning Quranic Arabic, Tajweed, and Urdu accessible, comfortable, and deeply rewarding for sisters worldwide.",
+  geoContext: "Our Story",
+  proseTitle: "Our Mission & Vision",
+  proseBody: `### 1. 100% Privacy & Comfort\nEvery single batch at Hareem Academy is taught by qualified female instructors. Classroom settings are private, allowing sisters to participate with cameras on comfortably.\n\n### 2. High-Quality Curriculum\nWe follow step-by-step learning modules for beginners to advanced readers, incorporating interactive slide decks, workbook activities, and regular checks.`,
+  sections: [
+    { id: "hero", name: "Hero Banner", visible: true },
+    { id: "prose", name: "About Story & Mission", visible: true }
+  ]
+};
+
+const defaultCoursesConfig: Partial<ExtendedPageConfig> = {
+  title: "Our Arabic & Urdu Programs | Hareem Academy",
+  metaDescription: "Explore live, sisters-only Arabic and Urdu courses at Hareem Academy. Certified female teachers, small interactive online groups, and free trials.",
+  heroTitle: "Find the right course for you.",
+  heroSubtitle: "From absolute beginner to fluent reader. All classes are live, sisters-only, and start with a free trial.",
+  geoContext: "Live online classes",
+  closingTitle: "Not sure which to pick?",
+  closingSubtitle: "Tell us your goal on WhatsApp and we'll recommend the right batch — usually within a few minutes.",
+  sections: [
+    { id: "hero", name: "Hero Banner", visible: true },
+    { id: "courses_list", name: "Courses Grid Preview", visible: true },
+    { id: "help_band", name: "Recommendation Card", visible: true }
+  ]
+};
+
+const defaultTestimonialsConfig: Partial<ExtendedPageConfig> = {
+  title: "Student Testimonials | Hareem Academy",
+  metaDescription: "Read real stories and experiences from sisters around the world who have learned Arabic, Tajweed, and Urdu with Hareem Academy.",
+  heroTitle: "Sisters from around the world who started where you are.",
+  heroSubtitle: "Alhamdulillah, hundreds of sisters have transformed their relationship with the Quran and Arabic through Hareem Academy.",
+  geoContext: "Real stories",
+  closingTitle: "Your story could be next.",
+  closingSubtitle: "Book a free trial and experience the difference for yourself.",
+  sections: [
+    { id: "hero", name: "Hero Banner", visible: true },
+    { id: "testimonials_grid", name: "Testimonials Grid Preview", visible: true },
+    { id: "closing_cta", name: "Closing Call-to-Action", visible: true }
+  ]
+};
+
+const defaultFaqsConfig: Partial<ExtendedPageConfig> = {
+  title: "Frequently Asked Questions | Hareem Academy",
+  metaDescription: "Find answers to common questions about Hareem Academy: enrollment, batch timings, sisters-only privacy measures, fee structures, and free trials.",
+  heroTitle: "We've got answers.",
+  heroSubtitle: "Everything you need to know about Hareem Academy — from enrollment to class schedules.",
+  geoContext: "Frequently Asked Questions",
+  closingTitle: "Still have questions?",
+  closingSubtitle: "We're always happy to help. Reach out on WhatsApp or book a free trial to experience our classes first-hand.",
+  sections: [
+    { id: "hero", name: "Hero Banner", visible: true },
+    { id: "faqs_accordion", name: "FAQs Accordion Preview", visible: true },
+    { id: "closing_cta", name: "Closing Call-to-Action", visible: true }
+  ]
+};
+
+const defaultContactConfig: Partial<ExtendedPageConfig> = {
+  title: "Contact Us | Hareem Academy",
+  metaDescription: "Have questions about batch timings, fee structures, or learning paths? Connect with a sister from Hareem Academy via WhatsApp or contact form.",
+  heroTitle: "We're here. We listen. No judgment.",
+  heroSubtitle: "Whether you're nervous to start, unsure which course fits, or just want to ask a sister — message us. We reply on WhatsApp within minutes.",
+  geoContext: "Talk to a sister",
+  whatsappCTATitle: "Chat with us on WhatsApp",
+  whatsappCTASubtitle: "+91 9315118289 — fastest way to reach us. Most messages answered in under 5 minutes.",
+  formTitle: "Or send a quick message",
+  formSubtitle: "Prefer not to use WhatsApp? Drop us a line below.",
+  sections: [
+    { id: "hero", name: "Hero Banner", visible: true },
+    { id: "whatsapp_banner", name: "WhatsApp Banner", visible: true },
+    { id: "contact_form", name: "Contact Form & Details", visible: true }
   ]
 };
 
@@ -179,12 +263,16 @@ export default function AdminBuilder() {
           };
         });
 
-        // Seed core default pages if not existing
         const coreSeeds: Record<string, Partial<ExtendedPageConfig>> = {
           home: defaultHomeConfig,
           privacy: defaultProseConfigs.privacy,
           terms: defaultProseConfigs.terms,
           refund: defaultProseConfigs.refund,
+          about: defaultAboutConfig,
+          courses: defaultCoursesConfig,
+          testimonials: defaultTestimonialsConfig,
+          faqs: defaultFaqsConfig,
+          contact: defaultContactConfig,
         };
 
         for (const [slug, defaults] of Object.entries(coreSeeds)) {
@@ -396,7 +484,7 @@ export default function AdminBuilder() {
   // Delete dynamic custom page configuration
   const handleDeletePage = async () => {
     if (!activePage) return;
-    const coreSlugs = ["home", "privacy", "terms", "refund", "learn-arabic-online-for-sisters"];
+    const coreSlugs = ["home", "privacy", "terms", "refund", "about", "courses", "testimonials", "faqs", "contact", "learn-arabic-online-for-sisters"];
     if (coreSlugs.includes(activePage.slug)) {
       toast.error("Cannot delete core system or primary landing pages!");
       return;
@@ -455,15 +543,7 @@ export default function AdminBuilder() {
     }
   };
 
-  // Google SEO Auditor Score
-  const auditSEOScore = () => {
-    if (!activePage) return 0;
-    let score = 65;
-    if (activePage.title?.length > 25) score += 15;
-    if (activePage.metaDescription?.length > 70) score += 15;
-    if (activePage.metaDescription?.toLowerCase().includes("sister") || activePage.metaDescription?.toLowerCase().includes("academy")) score += 5;
-    return Math.min(100, score);
-  };
+
 
   if (!activePage) {
     return (
@@ -475,7 +555,7 @@ export default function AdminBuilder() {
   }
 
   // Group pages for selector
-  const corePageSlugs = ["home", "privacy", "terms", "refund"];
+  const corePageSlugs = ["home", "privacy", "terms", "refund", "about", "courses", "testimonials", "faqs", "contact"];
   const corePagesList = Object.values(pages).filter(p => corePageSlugs.includes(p.slug));
   const landingPagesList = Object.values(pages).filter(p => !corePageSlugs.includes(p.slug));
 
@@ -719,13 +799,7 @@ export default function AdminBuilder() {
             </Button>
           )}
 
-          <div className="pt-3 border-t border-[#0F4D36]/5 space-y-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">SEO Metrics</span>
-            <div className="p-3 bg-[#FAF7F0] rounded-xl border border-[#0F4D36]/5 text-center text-xs">
-              <div className="font-bold text-lg text-emerald-700">{auditSEOScore()}%</div>
-              <div className="text-[9px] text-muted-foreground uppercase mt-0.5">Google Search Health</div>
-            </div>
-          </div>
+
         </div>
 
         {/* Center Panel: Interactive Mockup Canvas (6 columns) */}
@@ -764,210 +838,306 @@ export default function AdminBuilder() {
 
               {/* RENDER CANVAS CORE CONTENT */}
               <div className="w-full relative min-h-[400px]">
-                {activePage.slug === "privacy" || activePage.slug === "terms" || activePage.slug === "refund" ? (
-                  /* Prose Layout for Legal Pages */
-                  <div className="p-8 sm:p-12 max-w-2xl mx-auto text-left">
-                    {inlineEditingField?.sectionId === "prose" && inlineEditingField.field === "proseTitle" ? (
-                      <div className="flex gap-2 items-center mb-6" onClick={e => e.stopPropagation()}>
-                        <Input
-                          value={inlineEditText}
-                          onChange={e => setInlineEditText(e.target.value)}
-                          className="text-xs h-9"
-                          autoFocus
-                        />
-                        <Button onClick={handleInlineEditSave} size="sm" className="bg-[#0F4D36] text-white">Save</Button>
-                      </div>
-                    ) : (
-                      <h1
-                        onDoubleClick={() => handleInlineEditStart("prose", "proseTitle", activePage.proseTitle || "")}
-                        className="font-serif font-bold text-3xl mb-6 border-b border-[#0F4D36]/10 pb-4 text-[#0F4D36] cursor-text hover:bg-amber-50/50 p-1 border border-dashed border-transparent hover:border-amber-400"
+                <div className="space-y-0 w-full">
+                  {activePage.sections?.map((sec, idx) => {
+                    if (!sec.visible) return null;
+                    const isSelected = selectedSectionId === sec.id;
+
+                    return (
+                      <div
+                        key={sec.id}
+                        onClick={() => setSelectedSectionId(sec.id)}
+                        className={`relative border-b border-[#0F4D36]/5 ${
+                          isSelected ? "ring-2 ring-[#ECC565]" : ""
+                        }`}
                       >
-                        {activePage.proseTitle}
-                      </h1>
-                    )}
+                        {sec.id === "hero" && (
+                          <div className="py-16 px-6 text-center bg-gradient-to-b from-[#FAF7F0] to-white flex flex-col items-center justify-center">
+                            <div className="max-w-2xl space-y-4">
+                              <span className="inline-block text-[9px] font-bold tracking-widest text-[#ECC565] uppercase bg-[#0F4D36]/5 border border-[#0F4D36]/10 px-2.5 py-0.5 rounded-full">
+                                {activePage.geoContext || "100% Sisters Only • Taught by Women"}
+                              </span>
 
-                    <div className="text-xs text-muted-foreground mb-4">Last Updated: {new Date().toLocaleDateString()}</div>
-                    <div className="prose prose-stone leading-relaxed whitespace-pre-line text-foreground/80">
-                      {activePage.proseBody}
-                    </div>
-                  </div>
-                ) : (
-                  /* Standard Dynamic Layout & Home Layout */
-                  <div className="space-y-0 w-full">
-                    {activePage.sections.map((sec) => {
-                      if (!sec.visible) return null;
-                      const isSelected = selectedSectionId === sec.id;
-
-                      return (
-                        <div
-                          key={sec.id}
-                          onClick={() => setSelectedSectionId(sec.id)}
-                          className={`relative border-b border-[#0F4D36]/5 ${
-                            isSelected ? "ring-2 ring-[#ECC565]" : ""
-                          }`}
-                        >
-                          {sec.id === "hero" && (
-                            <div className="py-16 px-6 text-center bg-gradient-to-b from-[#FAF7F0] to-white flex flex-col items-center justify-center">
-                              <div className="max-w-2xl space-y-4">
-                                <span className="inline-block text-[9px] font-bold tracking-widest text-[#ECC565] uppercase bg-[#0F4D36]/5 border border-[#0F4D36]/10 px-2.5 py-0.5 rounded-full">
-                                  {activePage.geoContext || "100% Sisters Only • Taught by Women"}
-                                </span>
-
-                                {inlineEditingField?.sectionId === "hero" && inlineEditingField.field === "heroTitle" ? (
-                                  <div className="flex gap-2 justify-center items-center py-2" onClick={e => e.stopPropagation()}>
-                                    <Input
-                                      value={inlineEditText}
-                                      onChange={e => setInlineEditText(e.target.value)}
-                                      className="max-w-md h-9 text-xs"
-                                      autoFocus
-                                    />
-                                    <Button onClick={handleInlineEditSave} size="sm" className="h-9 px-3 bg-[#0F4D36] text-white">Save</Button>
-                                  </div>
-                                ) : (
-                                  <h1
-                                    onDoubleClick={() => handleInlineEditStart("hero", "heroTitle", activePage.heroTitle || "")}
-                                    className="font-serif font-bold text-2xl sm:text-3xl text-[#0F4D36] leading-tight select-none cursor-text hover:bg-yellow-50/50 p-1 rounded border border-dashed border-transparent hover:border-amber-400"
-                                    style={{ color: activePage.theme?.primaryColor }}
-                                  >
-                                    {activePage.heroTitle}
-                                  </h1>
-                                )}
-
-                                {inlineEditingField?.sectionId === "hero" && inlineEditingField.field === "heroSubtitle" ? (
-                                  <div className="flex gap-2 justify-center items-center" onClick={e => e.stopPropagation()}>
-                                    <Textarea
-                                      value={inlineEditText}
-                                      onChange={e => setInlineEditText(e.target.value)}
-                                      className="max-w-md h-12 text-xs"
-                                      autoFocus
-                                    />
-                                    <Button onClick={handleInlineEditSave} size="sm" className="h-9 px-3 bg-[#0F4D36] text-white">Save</Button>
-                                  </div>
-                                ) : (
-                                  <p
-                                    onDoubleClick={() => handleInlineEditStart("hero", "heroSubtitle", activePage.heroSubtitle || "")}
-                                    className="text-muted-foreground text-xs max-w-lg mx-auto leading-relaxed cursor-text hover:bg-yellow-50/50 p-1 rounded border border-dashed border-transparent hover:border-amber-400"
-                                  >
-                                    {activePage.heroSubtitle}
-                                  </p>
-                                )}
-
-                                <div className="flex gap-2 justify-center items-center pt-2">
-                                  <Button className="bg-[#0F4D36] text-white hover:bg-[#0F4D36]/95 text-xs h-9 rounded-lg font-semibold pointer-events-none" style={{ backgroundColor: activePage.theme?.accentColor, color: activePage.theme?.primaryColor }}>
-                                    {activePage.primaryCTA || "Explore Courses"}
-                                  </Button>
+                              {inlineEditingField?.sectionId === "hero" && inlineEditingField.field === "heroTitle" ? (
+                                <div className="flex gap-2 justify-center items-center py-2" onClick={e => e.stopPropagation()}>
+                                  <Input
+                                    value={inlineEditText}
+                                    onChange={e => setInlineEditText(e.target.value)}
+                                    className="max-w-md h-9 text-xs"
+                                    autoFocus
+                                  />
+                                  <Button onClick={handleInlineEditSave} size="sm" className="h-9 px-3 bg-[#0F4D36] text-white">Save</Button>
                                 </div>
-                              </div>
-                            </div>
-                          )}
+                              ) : (
+                                <h1
+                                  onDoubleClick={() => handleInlineEditStart("hero", "heroTitle", activePage.heroTitle || "")}
+                                  className="font-serif font-bold text-2xl sm:text-3xl text-[#0F4D36] leading-tight select-none cursor-text hover:bg-yellow-50/50 p-1 rounded border border-dashed border-transparent hover:border-amber-400"
+                                  style={{ color: activePage.theme?.primaryColor }}
+                                >
+                                  {activePage.heroTitle}
+                                </h1>
+                              )}
 
-                          {sec.id === "overview" && (
-                            <div className="p-6 bg-white">
-                              <div className="max-w-xl mx-auto flex gap-3 p-4 bg-muted/20 border border-[#0F4D36]/10 rounded-xl">
-                                <Palette className="w-5 h-5 text-[#ECC565] shrink-0" />
-                                <div className="space-y-1">
-                                  <span className="text-[9px] font-bold text-[#ECC565] uppercase">Page Overview</span>
-                                  {inlineEditingField?.sectionId === "overview" && inlineEditingField.field === "aiAnswerBlock" ? (
-                                    <div className="flex gap-2 items-start py-1" onClick={e => e.stopPropagation()}>
-                                      <Textarea
-                                        value={inlineEditText}
-                                        onChange={e => setInlineEditText(e.target.value)}
-                                        className="min-h-[60px] text-xs"
-                                      />
-                                      <Button onClick={handleInlineEditSave} size="sm" className="bg-[#0F4D36] text-white">Save</Button>
-                                    </div>
-                                  ) : (
-                                    <p
-                                      onDoubleClick={() => handleInlineEditStart("overview", "aiAnswerBlock", activePage.aiAnswerBlock || "")}
-                                      className="text-xs text-foreground/80 leading-relaxed cursor-text hover:bg-yellow-50/50 rounded border border-dashed border-transparent hover:border-amber-400"
-                                    >
-                                      {activePage.aiAnswerBlock || "Discover our live interactive online batches."}
-                                    </p>
-                                  )}
+                              {inlineEditingField?.sectionId === "hero" && inlineEditingField.field === "heroSubtitle" ? (
+                                <div className="flex gap-2 justify-center items-center" onClick={e => e.stopPropagation()}>
+                                  <Textarea
+                                    value={inlineEditText}
+                                    onChange={e => setInlineEditText(e.target.value)}
+                                    className="max-w-md h-12 text-xs"
+                                    autoFocus
+                                  />
+                                  <Button onClick={handleInlineEditSave} size="sm" className="h-9 px-3 bg-[#0F4D36] text-white">Save</Button>
                                 </div>
-                              </div>
-                            </div>
-                          )}
-
-                          {sec.id === "benefits" && (
-                            <div className="py-8 px-6 bg-white text-center">
-                              <h2 className="font-serif font-bold text-sm text-[#0F4D36] mb-4">{activePage.benefitsTitle || "Benefits of Academy"}</h2>
-                              <div className="grid sm:grid-cols-2 gap-3 max-w-xl mx-auto">
-                                {(activePage.benefits || [
-                                  { title: "Female Instructors Only", description: "Learn comfortably with certified sisters." },
-                                  { title: "Flexible Timeslots", description: "Convenient batch schedules." }
-                                ]).map((b: any, idx: number) => (
-                                  <div key={idx} className="p-3 bg-[#FAF7F0] border border-[#0F4D36]/5 rounded-lg text-left">
-                                    <h4 className="text-[11px] font-bold text-[#0F4D36]">{b.title}</h4>
-                                    <p className="text-[10px] text-muted-foreground mt-1 leading-snug">{b.description}</p>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                          {sec.id === "moat" && (
-                            <div className="py-8 px-6 bg-[#FAF7F0]">
-                              <div className="max-w-xl mx-auto space-y-3 text-left">
-                                <h3 className="font-serif font-bold text-sm text-[#0F4D36]">Our Privacy Guarantee</h3>
-                                <p className="text-[11px] text-muted-foreground leading-relaxed">
-                                  Camera-on participation is optional. Batches are password-secured.
+                              ) : (
+                                <p
+                                  onDoubleClick={() => handleInlineEditStart("hero", "heroSubtitle", activePage.heroSubtitle || "")}
+                                  className="text-muted-foreground text-xs max-w-lg mx-auto leading-relaxed cursor-text hover:bg-yellow-50/50 p-1 rounded border border-dashed border-transparent hover:border-amber-400"
+                                >
+                                  {activePage.heroSubtitle}
                                 </p>
-                              </div>
-                            </div>
-                          )}
+                              )}
 
-                          {sec.id === "curriculum" && (
-                            <div className="py-8 px-6 bg-white text-left">
-                              <div className="max-w-xl mx-auto space-y-4">
-                                <h3 className="font-serif font-bold text-sm text-[#0F4D36] text-center">{activePage.curriculumTitle || "Course Curriculum"}</h3>
-                                <div className="border-l border-[#0F4D36]/10 pl-4 space-y-3">
-                                  {(activePage.curriculum || [
-                                    { title: "Alphabet Foundations", description: "Letters and vowel marks." },
-                                    { title: "Conversational Speaking", description: "Introductory grammar." }
-                                  ]).map((step: any, idx: number) => (
-                                    <div key={idx}>
-                                      <h4 className="text-[11px] font-bold text-[#0F4D36]">{idx+1}. {step.title}</h4>
-                                      <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">{step.description}</p>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-                          )}
-
-                          {sec.id === "faqs" && (
-                            <div className="py-8 px-6 bg-white text-left max-w-xl mx-auto">
-                              <h3 className="font-serif font-bold text-sm text-[#0F4D36] mb-4 text-center">Frequently Asked Questions</h3>
-                              <div className="space-y-2">
-                                {(activePage.faqs || [
-                                  { question: "Is this for brothers too?", answer: "No, classes are sisters-only." }
-                                ]).map((faq: any, idx: number) => (
-                                  <div key={idx} className="p-3 bg-[#FAF7F0] rounded-lg">
-                                    <h4 className="text-[11px] font-bold text-[#0F4D36]">{faq.question}</h4>
-                                    <p className="text-[10px] text-muted-foreground mt-1">{faq.answer}</p>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                          {sec.id === "cta" && (
-                            <div className="py-8 px-4 text-center bg-white">
-                              <div className="bg-[#0F4D36] text-white p-6 rounded-xl max-w-md mx-auto">
-                                <h3 className="font-serif font-bold text-base text-white mb-2">Start Learning Journey</h3>
-                                <p className="text-[10px] text-white/80 mb-3">Register for a free interactive trial class today.</p>
-                                <Button className="text-xs font-bold px-4 h-8 bg-[#ECC565] text-[#0F4D36] rounded hover:opacity-90">
-                                  {activePage.primaryCTA || "Start Free Trial"}
+                              <div className="flex gap-2 justify-center items-center pt-2">
+                                <Button className="bg-[#0F4D36] text-white hover:bg-[#0F4D36]/95 text-xs h-9 rounded-lg font-semibold pointer-events-none" style={{ backgroundColor: activePage.theme?.accentColor, color: activePage.theme?.primaryColor }}>
+                                  {activePage.primaryCTA || "Explore Courses"}
                                 </Button>
                               </div>
                             </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+                          </div>
+                        )}
+
+                        {sec.id === "prose" && (
+                          <div className="p-8 sm:p-12 max-w-2xl mx-auto text-left">
+                            {inlineEditingField?.sectionId === "prose" && inlineEditingField.field === "proseTitle" ? (
+                              <div className="flex gap-2 items-center mb-6" onClick={e => e.stopPropagation()}>
+                                <Input
+                                  value={inlineEditText}
+                                  onChange={e => setInlineEditText(e.target.value)}
+                                  className="text-xs h-9"
+                                  autoFocus
+                                />
+                                <Button onClick={handleInlineEditSave} size="sm" className="bg-[#0F4D36] text-white">Save</Button>
+                              </div>
+                            ) : (
+                              <h1
+                                onDoubleClick={() => handleInlineEditStart("prose", "proseTitle", activePage.proseTitle || "")}
+                                className="font-serif font-bold text-3xl mb-6 border-b border-[#0F4D36]/10 pb-4 text-[#0F4D36] cursor-text hover:bg-amber-50/50 p-1 border border-dashed border-transparent hover:border-amber-400"
+                              >
+                                {activePage.proseTitle}
+                              </h1>
+                            )}
+
+                            <div className="text-xs text-muted-foreground mb-4">Last Updated: {new Date().toLocaleDateString()}</div>
+                            <div className="prose prose-stone leading-relaxed whitespace-pre-line text-foreground/80">
+                              {activePage.proseBody}
+                            </div>
+                          </div>
+                        )}
+
+                        {sec.id === "overview" && (
+                          <div className="p-6 bg-white">
+                            <div className="max-w-xl mx-auto flex gap-3 p-4 bg-muted/20 border border-[#0F4D36]/10 rounded-xl">
+                              <Palette className="w-5 h-5 text-[#ECC565] shrink-0" />
+                              <div className="space-y-1">
+                                <span className="text-[9px] font-bold text-[#ECC565] uppercase">Page Overview</span>
+                                {inlineEditingField?.sectionId === "overview" && inlineEditingField.field === "aiAnswerBlock" ? (
+                                  <div className="flex gap-2 items-start py-1" onClick={e => e.stopPropagation()}>
+                                    <Textarea
+                                      value={inlineEditText}
+                                      onChange={e => setInlineEditText(e.target.value)}
+                                      className="min-h-[60px] text-xs"
+                                    />
+                                    <Button onClick={handleInlineEditSave} size="sm" className="bg-[#0F4D36] text-white">Save</Button>
+                                  </div>
+                                ) : (
+                                  <p
+                                    onDoubleClick={() => handleInlineEditStart("overview", "aiAnswerBlock", activePage.aiAnswerBlock || "")}
+                                    className="text-xs text-foreground/80 leading-relaxed cursor-text hover:bg-yellow-50/50 rounded border border-dashed border-transparent hover:border-amber-400"
+                                  >
+                                    {activePage.aiAnswerBlock || "Discover our live interactive online batches."}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {sec.id === "benefits" && (
+                          <div className="py-8 px-6 bg-white text-center">
+                            <h2 className="font-serif font-bold text-sm text-[#0F4D36] mb-4">{activePage.benefitsTitle || "Benefits of Academy"}</h2>
+                            <div className="grid sm:grid-cols-2 gap-3 max-w-xl mx-auto">
+                              {(activePage.benefits || [
+                                { title: "Female Instructors Only", description: "Learn comfortably with certified sisters." },
+                                { title: "Flexible Timeslots", description: "Convenient batch schedules." }
+                              ]).map((b: any, idx: number) => (
+                                <div key={idx} className="p-3 bg-[#FAF7F0] border border-[#0F4D36]/5 rounded-lg text-left">
+                                  <h4 className="text-[11px] font-bold text-[#0F4D36]">{b.title}</h4>
+                                  <p className="text-[10px] text-muted-foreground mt-1 leading-snug">{b.description}</p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {sec.id === "moat" && (
+                          <div className="py-8 px-6 bg-[#FAF7F0]">
+                            <div className="max-w-xl mx-auto space-y-3 text-left">
+                              <h3 className="font-serif font-bold text-sm text-[#0F4D36]">Our Privacy Guarantee</h3>
+                              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                                Camera-on participation is optional. Batches are password-secured.
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                        {sec.id === "curriculum" && (
+                          <div className="py-8 px-6 bg-white text-left">
+                            <div className="max-w-xl mx-auto space-y-4">
+                              <h3 className="font-serif font-bold text-sm text-[#0F4D36] text-center">{activePage.curriculumTitle || "Course Curriculum"}</h3>
+                              <div className="border-l border-[#0F4D36]/10 pl-4 space-y-3">
+                                {(activePage.curriculum || [
+                                  { title: "Alphabet Foundations", description: "Letters and vowel marks." },
+                                  { title: "Conversational Speaking", description: "Introductory grammar." }
+                                ]).map((step: any, idx: number) => (
+                                  <div key={idx}>
+                                    <h4 className="text-[11px] font-bold text-[#0F4D36]">{idx+1}. {step.title}</h4>
+                                    <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">{step.description}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {sec.id === "faqs" && (
+                          <div className="py-8 px-6 bg-white text-left max-w-xl mx-auto">
+                            <h3 className="font-serif font-bold text-sm text-[#0F4D36] mb-4 text-center">Frequently Asked Questions</h3>
+                            <div className="space-y-2">
+                              {(activePage.faqs || [
+                                { question: "Is this for brothers too?", answer: "No, classes are sisters-only." }
+                              ]).map((faq: any, idx: number) => (
+                                <div key={idx} className="p-3 bg-[#FAF7F0] rounded-lg">
+                                  <h4 className="text-[11px] font-bold text-[#0F4D36]">{faq.question}</h4>
+                                  <p className="text-[10px] text-muted-foreground mt-1">{faq.answer}</p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {sec.id === "cta" && (
+                          <div className="py-8 px-4 text-center bg-white">
+                            <div className="bg-[#0F4D36] text-white p-6 rounded-xl max-w-md mx-auto">
+                              <h3 className="font-serif font-bold text-base text-white mb-2">Start Learning Journey</h3>
+                              <p className="text-[10px] text-white/80 mb-3">Register for a free interactive trial class today.</p>
+                              <Button className="text-xs font-bold px-4 h-8 bg-[#ECC565] text-[#0F4D36] rounded hover:opacity-90">
+                                {activePage.primaryCTA || "Start Free Trial"}
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+
+                        {sec.id === "courses_list" && (
+                          <div className="py-12 px-6 bg-white text-center">
+                            <span className="text-[10px] font-bold text-[#ECC565] uppercase tracking-wider">Active Programs</span>
+                            <h3 className="font-serif font-bold text-xl text-[#0F4D36] mt-2 mb-6">Explore Our Live Batches</h3>
+                            <div className="grid grid-cols-2 gap-4 max-w-xl mx-auto">
+                              <div className="border border-[#0F4D36]/15 p-4 rounded-xl text-left bg-[#FAF7F0]/40">
+                                <div className="font-bold text-xs">Quranic Arabic for Sisters</div>
+                                <div className="text-[10px] text-muted-foreground mt-1 leading-relaxed">Sisters only • Live Zoom lessons • 3 months</div>
+                              </div>
+                              <div className="border border-[#0F4D36]/15 p-4 rounded-xl text-left bg-[#FAF7F0]/40">
+                                <div className="font-bold text-xs">Tajweed & Recitation</div>
+                                <div className="text-[10px] text-muted-foreground mt-1 leading-relaxed">Sisters only • Live Zoom lessons • 2 months</div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {sec.id === "help_band" && (
+                          <div className="py-12 px-6 bg-white">
+                            <div className="bg-[#0F4D36] text-white p-8 rounded-2xl max-w-md mx-auto text-center space-y-3">
+                              <h4 className="font-serif font-bold text-base text-[#ECC565]">{activePage.closingTitle || "Not sure which to pick?"}</h4>
+                              <p className="text-[10px] text-white/80 leading-relaxed">{activePage.closingSubtitle || "Chat with us on WhatsApp..."}</p>
+                              <Button className="bg-[#ECC565] text-[#0F4D36] text-[10px] h-8 rounded px-3.5 font-bold pointer-events-none">
+                                Message a Sister on WhatsApp
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+
+                        {sec.id === "testimonials_grid" && (
+                          <div className="py-12 px-6 bg-white">
+                            <h3 className="font-serif font-bold text-xl text-center text-[#0F4D36] mb-8">What Our Students Say</h3>
+                            <div className="grid grid-cols-2 gap-4 max-w-xl mx-auto">
+                              <div className="border border-[#0F4D36]/15 p-5 rounded-xl text-left bg-[#FAF7F0]/40">
+                                <p className="text-[10px] italic leading-relaxed text-[#0F4D36]">"The female-only environment was exactly what I needed. Learning Tajweed has never felt so comfortable."</p>
+                                <div className="text-[9px] font-bold mt-3 text-primary">— Sarah K., UK</div>
+                              </div>
+                              <div className="border border-[#0F4D36]/15 p-5 rounded-xl text-left bg-[#FAF7F0]/40">
+                                <p className="text-[10px] italic leading-relaxed text-[#0F4D36]">"My teacher is extremely patient. Alhamdulillah, I can now understand the short Surahs in Salah."</p>
+                                <div className="text-[9px] font-bold mt-3 text-primary">— Aisha M., Canada</div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {sec.id === "closing_cta" && (
+                          <div className="py-12 px-6 bg-[#FAF7F0] text-center border-t border-[#0F4D36]/5">
+                            <div className="max-w-md mx-auto space-y-3.5">
+                              <h3 className="font-serif font-bold text-lg text-[#0F4D36]">{activePage.closingTitle || "Your story could be next."}</h3>
+                              <p className="text-[10px] text-muted-foreground leading-relaxed">{activePage.closingSubtitle || "Book a free trial and experience the difference."}</p>
+                              <Button className="bg-[#0F4D36] text-white text-[10px] h-8 rounded px-5 font-bold pointer-events-none">
+                                {activePage.primaryCTA || "Book Free Trial"}
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+
+                        {sec.id === "faqs_accordion" && (
+                          <div className="py-12 px-6 bg-white max-w-xl mx-auto space-y-3 text-left">
+                            <h3 className="font-serif font-bold text-lg text-[#0F4D36] text-center mb-6">Frequently Asked Questions</h3>
+                            <div className="p-4 bg-[#FAF7F0] rounded-xl border border-[#0F4D36]/5">
+                              <div className="text-[10px] font-bold text-[#0F4D36]">Is there a free trial class?</div>
+                              <div className="text-[9.5px] text-muted-foreground mt-1 leading-relaxed">Yes, all batches begin with a 100% free trial. No card details or deposits required.</div>
+                            </div>
+                            <div className="p-4 bg-[#FAF7F0] rounded-xl border border-[#0F4D36]/5">
+                              <div className="text-[10px] font-bold text-[#0F4D36]">Are classes recorded?</div>
+                              <div className="text-[9.5px] text-muted-foreground mt-1 leading-relaxed">Zoom live sessions are private. Dedicated lesson summaries are provided to students in the batch group.</div>
+                            </div>
+                          </div>
+                        )}
+
+                        {sec.id === "whatsapp_banner" && (
+                          <div className="py-10 px-6 bg-emerald-50 text-center border-t border-b border-emerald-100">
+                            <div className="max-w-md mx-auto space-y-2">
+                              <h3 className="font-serif font-bold text-base text-emerald-800">{activePage.whatsappCTATitle || "Chat with us on WhatsApp"}</h3>
+                              <p className="text-[10px] text-emerald-700 leading-relaxed">{activePage.whatsappCTASubtitle || "+91 9315118289 — fastest way..."}</p>
+                              <Button className="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] h-8 rounded px-4 font-bold pointer-events-none">
+                                Open Chat
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+
+                        {sec.id === "contact_form" && (
+                          <div className="py-12 px-6 bg-white max-w-xl mx-auto space-y-4 text-left">
+                            <h3 className="font-serif font-bold text-base text-[#0F4D36]">{activePage.formTitle || "Or send a quick message"}</h3>
+                            <p className="text-[10px] text-muted-foreground -mt-3">{activePage.formSubtitle || "Prefer not to use WhatsApp? Drop us a line below."}</p>
+                            <div className="grid grid-cols-2 gap-3">
+                              <Input placeholder="Your Name" disabled className="h-8 text-[10px] bg-[#FAF7F0]/30" />
+                              <Input placeholder="WhatsApp/Phone Number" disabled className="h-8 text-[10px] bg-[#FAF7F0]/30" />
+                            </div>
+                            <Textarea placeholder="How can we help you?" disabled className="min-h-[60px] text-[10px] bg-[#FAF7F0]/30" />
+                            <Button className="w-full bg-[#0F4D36] text-white text-[10px] h-8 rounded font-bold pointer-events-none">
+                              Submit Message
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
@@ -976,9 +1146,8 @@ export default function AdminBuilder() {
         {/* Right Panel: Configurations Drawer (3 columns) */}
         <div className="lg:col-span-3 space-y-4">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="bg-white border border-[#0F4D36]/10 rounded-xl p-4 shadow-sm">
-            <TabsList className="bg-[#FAF7F0] w-full grid grid-cols-3 text-xs mb-4">
+            <TabsList className="bg-[#FAF7F0] w-full grid grid-cols-2 text-xs mb-4">
               <TabsTrigger value="content" className="text-[10px] font-bold uppercase cursor-pointer">Content</TabsTrigger>
-              <TabsTrigger value="seo" className="text-[10px] font-bold uppercase cursor-pointer">SEO Settings</TabsTrigger>
               <TabsTrigger value="theme" className="text-[10px] font-bold uppercase cursor-pointer flex gap-1 items-center">
                 <Palette className="w-3.5 h-3.5" />
                 Theme
@@ -992,238 +1161,255 @@ export default function AdminBuilder() {
                 <span className="bg-[#ECC565]/15 border border-[#ECC565] text-[#0F4D36] px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider">{selectedSectionId}</span>
               </div>
 
-              {activePage.slug === "privacy" || activePage.slug === "terms" || activePage.slug === "refund" ? (
-                /* Edit Prose Document Properties */
-                <div className="space-y-3.5">
-                  <div className="space-y-1">
-                    <Label className="text-[10px] uppercase font-bold text-muted-foreground">Document Title</Label>
-                    <Input
-                      value={activePage.proseTitle || ""}
-                      onChange={e => updateActivePage({ ...activePage, proseTitle: e.target.value })}
-                      className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label className="text-[10px] uppercase font-bold text-muted-foreground">Document Content (Markdown/Text)</Label>
-                    <Textarea
-                      value={activePage.proseBody || ""}
-                      onChange={e => updateActivePage({ ...activePage, proseBody: e.target.value })}
-                      className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs min-h-[300px] font-mono leading-relaxed"
-                    />
-                  </div>
-                </div>
-              ) : (
-                /* Edit Landing Page Section Content */
-                <div className="space-y-3">
-                  {selectedSectionId === "hero" && (
-                    <div className="space-y-3">
-                      <div className="space-y-1">
-                        <Label className="text-[10px] uppercase font-bold text-muted-foreground">Headline Text</Label>
-                        <Input
-                          value={activePage.heroTitle}
-                          onChange={e => updateActivePage({ ...activePage, heroTitle: e.target.value })}
-                          className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <Label className="text-[10px] uppercase font-bold text-muted-foreground">Subheading Description</Label>
-                        <Textarea
-                          value={activePage.heroSubtitle}
-                          onChange={e => updateActivePage({ ...activePage, heroSubtitle: e.target.value })}
-                          className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs min-h-[60px]"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <Label className="text-[10px] uppercase font-bold text-muted-foreground">Button text (CTA)</Label>
-                        <Input
-                          value={activePage.primaryCTA}
-                          onChange={e => updateActivePage({ ...activePage, primaryCTA: e.target.value })}
-                          className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <Label className="text-[10px] uppercase font-bold text-muted-foreground">Target Course Path</Label>
-                        <Input
-                          value={activePage.targetCourseSlug}
-                          onChange={e => updateActivePage({ ...activePage, targetCourseSlug: e.target.value })}
-                          className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs font-mono"
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  {selectedSectionId === "overview" && (
+              <div className="space-y-3">
+                {selectedSectionId === "prose" && (
+                  <div className="space-y-3.5">
                     <div className="space-y-1">
-                      <Label className="text-[10px] uppercase font-bold text-muted-foreground">AI overview text block</Label>
-                      <Textarea
-                        value={activePage.aiAnswerBlock}
-                        onChange={e => updateActivePage({ ...activePage, aiAnswerBlock: e.target.value })}
-                        className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs min-h-[140px]"
+                      <Label className="text-[10px] uppercase font-bold text-muted-foreground">Section Title</Label>
+                      <Input
+                        value={activePage.proseTitle || ""}
+                        onChange={e => updateActivePage({ ...activePage, proseTitle: e.target.value })}
+                        className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs"
                       />
                     </div>
-                  )}
-
-                  {selectedSectionId === "benefits" && (
-                    <div className="space-y-3">
-                      <div className="space-y-1">
-                        <Label className="text-[10px] uppercase font-bold text-muted-foreground">Section Header Title</Label>
-                        <Input
-                          value={activePage.benefitsTitle}
-                          onChange={e => updateActivePage({ ...activePage, benefitsTitle: e.target.value })}
-                          className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs"
-                        />
-                      </div>
-                      
-                      <div className="space-y-2.5 pt-2 border-t border-[#0F4D36]/5">
-                        <span className="text-[9px] uppercase font-bold text-muted-foreground">Items List</span>
-                        {(activePage.benefits || []).map((b, idx) => (
-                          <div key={idx} className="p-2 bg-[#FAF7F0] border border-[#0F4D36]/10 rounded-lg space-y-1.5">
-                            <Input
-                              value={b.title}
-                              onChange={e => {
-                                const nextB = [...(activePage.benefits || [])];
-                                nextB[idx].title = e.target.value;
-                                updateActivePage({ ...activePage, benefits: nextB });
-                              }}
-                              className="bg-white h-7 text-[10px]"
-                            />
-                            <Textarea
-                              value={b.description}
-                              onChange={e => {
-                                const nextB = [...(activePage.benefits || [])];
-                                nextB[idx].description = e.target.value;
-                                updateActivePage({ ...activePage, benefits: nextB });
-                              }}
-                              className="bg-white p-1 text-[10px] min-h-[45px]"
-                            />
-                          </div>
-                        ))}
-                      </div>
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase font-bold text-muted-foreground">Section Content (Markdown/Text)</Label>
+                      <Textarea
+                        value={activePage.proseBody || ""}
+                        onChange={e => updateActivePage({ ...activePage, proseBody: e.target.value })}
+                        className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs min-h-[220px] font-mono leading-relaxed"
+                      />
                     </div>
-                  )}
+                  </div>
+                )}
 
-                  {selectedSectionId === "curriculum" && (
-                    <div className="space-y-3">
-                      <div className="space-y-1">
-                        <Label className="text-[10px] uppercase font-bold text-muted-foreground">Section Header Title</Label>
-                        <Input
-                          value={activePage.curriculumTitle}
-                          onChange={e => updateActivePage({ ...activePage, curriculumTitle: e.target.value })}
-                          className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs"
-                        />
-                      </div>
-                      
-                      <div className="space-y-2.5 pt-2 border-t border-[#0F4D36]/5">
-                        <span className="text-[9px] uppercase font-bold text-muted-foreground">Steps List</span>
-                        {(activePage.curriculum || []).map((step, idx) => (
-                          <div key={idx} className="p-2 bg-[#FAF7F0] border border-[#0F4D36]/10 rounded-lg space-y-1.5">
-                            <Input
-                              value={step.title}
-                              onChange={e => {
-                                const nextC = [...(activePage.curriculum || [])];
-                                nextC[idx].title = e.target.value;
-                                updateActivePage({ ...activePage, curriculum: nextC });
-                              }}
-                              className="bg-white h-7 text-[10px]"
-                            />
-                            <Textarea
-                              value={step.description}
-                              onChange={e => {
-                                const nextC = [...(activePage.curriculum || [])];
-                                nextC[idx].description = e.target.value;
-                                updateActivePage({ ...activePage, curriculum: nextC });
-                              }}
-                              className="bg-white p-1 text-[10px] min-h-[45px]"
-                            />
-                          </div>
-                        ))}
-                      </div>
+                {selectedSectionId === "hero" && (
+                  <div className="space-y-3">
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase font-bold text-muted-foreground">Headline Text</Label>
+                      <Input
+                        value={activePage.heroTitle}
+                        onChange={e => updateActivePage({ ...activePage, heroTitle: e.target.value })}
+                        className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs"
+                      />
                     </div>
-                  )}
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase font-bold text-muted-foreground">Subheading Description</Label>
+                      <Textarea
+                        value={activePage.heroSubtitle}
+                        onChange={e => updateActivePage({ ...activePage, heroSubtitle: e.target.value })}
+                        className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs min-h-[60px]"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase font-bold text-muted-foreground">Button text (CTA)</Label>
+                      <Input
+                        value={activePage.primaryCTA}
+                        onChange={e => updateActivePage({ ...activePage, primaryCTA: e.target.value })}
+                        className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase font-bold text-muted-foreground">Target Course Path</Label>
+                      <Input
+                        value={activePage.targetCourseSlug}
+                        onChange={e => updateActivePage({ ...activePage, targetCourseSlug: e.target.value })}
+                        className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs font-mono"
+                      />
+                    </div>
+                  </div>
+                )}
 
-                  {selectedSectionId === "faqs" && (
-                    <div className="space-y-3 pt-2">
-                      <span className="text-[9px] uppercase font-bold text-muted-foreground">FAQ Q&A List</span>
-                      {(activePage.faqs || []).map((faq, idx) => (
+                {selectedSectionId === "overview" && (
+                  <div className="space-y-1">
+                    <Label className="text-[10px] uppercase font-bold text-muted-foreground">AI overview text block</Label>
+                    <Textarea
+                      value={activePage.aiAnswerBlock}
+                      onChange={e => updateActivePage({ ...activePage, aiAnswerBlock: e.target.value })}
+                      className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs min-h-[140px]"
+                    />
+                  </div>
+                )}
+
+                {selectedSectionId === "benefits" && (
+                  <div className="space-y-3">
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase font-bold text-muted-foreground">Section Header Title</Label>
+                      <Input
+                        value={activePage.benefitsTitle}
+                        onChange={e => updateActivePage({ ...activePage, benefitsTitle: e.target.value })}
+                        className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2.5 pt-2 border-t border-[#0F4D36]/5">
+                      <span className="text-[9px] uppercase font-bold text-muted-foreground">Items List</span>
+                      {(activePage.benefits || []).map((b, idx) => (
                         <div key={idx} className="p-2 bg-[#FAF7F0] border border-[#0F4D36]/10 rounded-lg space-y-1.5">
                           <Input
-                            value={faq.question}
+                            value={b.title}
                             onChange={e => {
-                              const nextF = [...(activePage.faqs || [])];
-                              nextF[idx].question = e.target.value;
-                              updateActivePage({ ...activePage, faqs: nextF });
+                              const nextB = [...(activePage.benefits || [])];
+                              nextB[idx].title = e.target.value;
+                              updateActivePage({ ...activePage, benefits: nextB });
                             }}
                             className="bg-white h-7 text-[10px]"
                           />
                           <Textarea
-                            value={faq.answer}
+                            value={b.description}
                             onChange={e => {
-                              const nextF = [...(activePage.faqs || [])];
-                              nextF[idx].answer = e.target.value;
-                              updateActivePage({ ...activePage, faqs: nextF });
+                              const nextB = [...(activePage.benefits || [])];
+                              nextB[idx].description = e.target.value;
+                              updateActivePage({ ...activePage, benefits: nextB });
                             }}
                             className="bg-white p-1 text-[10px] min-h-[45px]"
                           />
                         </div>
                       ))}
                     </div>
-                  )}
-
-                  {!["hero", "overview", "benefits", "curriculum", "faqs"].includes(selectedSectionId) && (
-                    <div className="py-8 text-center text-[#0F4D36]/40">
-                      <Settings className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
-                      No parameter fields for selected section card. Adjust sequence order.
-                    </div>
-                  )}
-                </div>
-              )}
-            </TabsContent>
-
-            {/* TAB 2: SEO META CONFIG */}
-            <TabsContent value="seo" className="space-y-4 text-xs">
-              <div className="flex items-center justify-between border-b border-[#0F4D36]/5 pb-2">
-                <span className="text-[10px] font-bold uppercase text-muted-foreground">SEO optimization</span>
-                <span className="text-[10px] bg-emerald-50 border border-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full font-bold">{auditSEOScore()}/100 Score</span>
-              </div>
-
-              <div className="space-y-3">
-                <div className="space-y-1">
-                  <Label className="text-[10px] uppercase font-bold text-muted-foreground">Google Page Title Tag</Label>
-                  <Input
-                    value={activePage.title}
-                    onChange={e => updateActivePage({ ...activePage, title: e.target.value })}
-                    className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs"
-                  />
-                  <span className="text-[9px] text-muted-foreground block text-right">{activePage.title.length}/60 chars</span>
-                </div>
-
-                <div className="space-y-1">
-                  <Label className="text-[10px] uppercase font-bold text-muted-foreground">Google Meta Description Tag</Label>
-                  <Textarea
-                    value={activePage.metaDescription}
-                    onChange={e => updateActivePage({ ...activePage, metaDescription: e.target.value })}
-                    className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs min-h-[90px]"
-                  />
-                  <span className="text-[9px] text-muted-foreground block text-right">{activePage.metaDescription.length}/160 chars</span>
-                </div>
-
-                {/* Google Snippet Live View */}
-                <div className="pt-2 border-t border-[#0F4D36]/5 space-y-2">
-                  <span className="text-[10px] font-bold uppercase text-muted-foreground">Snippet index preview</span>
-                  <div className="p-3 bg-white border border-gray-200 rounded-lg text-left shadow-inner space-y-1">
-                    <span className="text-blue-800 hover:underline cursor-pointer block truncate font-medium text-[11px]">
-                      {activePage.title}
-                    </span>
-                    <span className="text-emerald-800 block text-[9.5px] truncate">
-                      https://hareemacademy.com › {activePage.slug === "home" ? "" : activePage.slug}
-                    </span>
-                    <p className="text-gray-600 text-[10px] leading-relaxed line-clamp-2">
-                      {activePage.metaDescription}
-                    </p>
                   </div>
-                </div>
+                )}
+
+                {selectedSectionId === "curriculum" && (
+                  <div className="space-y-3">
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase font-bold text-muted-foreground">Section Header Title</Label>
+                      <Input
+                        value={activePage.curriculumTitle}
+                        onChange={e => updateActivePage({ ...activePage, curriculumTitle: e.target.value })}
+                        className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2.5 pt-2 border-t border-[#0F4D36]/5">
+                      <span className="text-[9px] uppercase font-bold text-muted-foreground">Steps List</span>
+                      {(activePage.curriculum || []).map((step, idx) => (
+                        <div key={idx} className="p-2 bg-[#FAF7F0] border border-[#0F4D36]/10 rounded-lg space-y-1.5">
+                          <Input
+                            value={step.title}
+                            onChange={e => {
+                              const nextC = [...(activePage.curriculum || [])];
+                              nextC[idx].title = e.target.value;
+                              updateActivePage({ ...activePage, curriculum: nextC });
+                            }}
+                            className="bg-white h-7 text-[10px]"
+                          />
+                          <Textarea
+                            value={step.description}
+                            onChange={e => {
+                              const nextC = [...(activePage.curriculum || [])];
+                              nextC[idx].description = e.target.value;
+                              updateActivePage({ ...activePage, curriculum: nextC });
+                            }}
+                            className="bg-white p-1 text-[10px] min-h-[45px]"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {selectedSectionId === "faqs" && (
+                  <div className="space-y-3 pt-2">
+                    <span className="text-[9px] uppercase font-bold text-muted-foreground">FAQ Q&A List</span>
+                    {(activePage.faqs || []).map((faq, idx) => (
+                      <div key={idx} className="p-2 bg-[#FAF7F0] border border-[#0F4D36]/10 rounded-lg space-y-1.5">
+                        <Input
+                          value={faq.question}
+                          onChange={e => {
+                            const nextF = [...(activePage.faqs || [])];
+                            nextF[idx].question = e.target.value;
+                            updateActivePage({ ...activePage, faqs: nextF });
+                          }}
+                          className="bg-white h-7 text-[10px]"
+                        />
+                        <Textarea
+                          value={faq.answer}
+                          onChange={e => {
+                            const nextF = [...(activePage.faqs || [])];
+                            nextF[idx].answer = e.target.value;
+                            updateActivePage({ ...activePage, faqs: nextF });
+                          }}
+                          className="bg-white p-1 text-[10px] min-h-[45px]"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {(selectedSectionId === "help_band" || selectedSectionId === "closing_cta") && (
+                  <div className="space-y-3">
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase font-bold text-muted-foreground">Closing Section Title</Label>
+                      <Input
+                        value={activePage.closingTitle || ""}
+                        onChange={e => updateActivePage({ ...activePage, closingTitle: e.target.value })}
+                        className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase font-bold text-muted-foreground">Closing Section Subtitle</Label>
+                      <Textarea
+                        value={activePage.closingSubtitle || ""}
+                        onChange={e => updateActivePage({ ...activePage, closingSubtitle: e.target.value })}
+                        className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs min-h-[70px]"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {selectedSectionId === "whatsapp_banner" && (
+                  <div className="space-y-3">
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase font-bold text-muted-foreground">WhatsApp CTA Title</Label>
+                      <Input
+                        value={activePage.whatsappCTATitle || ""}
+                        onChange={e => updateActivePage({ ...activePage, whatsappCTATitle: e.target.value })}
+                        className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase font-bold text-muted-foreground">WhatsApp CTA Subtitle</Label>
+                      <Textarea
+                        value={activePage.whatsappCTASubtitle || ""}
+                        onChange={e => updateActivePage({ ...activePage, whatsappCTASubtitle: e.target.value })}
+                        className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs min-h-[70px]"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {selectedSectionId === "contact_form" && (
+                  <div className="space-y-3">
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase font-bold text-muted-foreground">Form Header Title</Label>
+                      <Input
+                        value={activePage.formTitle || ""}
+                        onChange={e => updateActivePage({ ...activePage, formTitle: e.target.value })}
+                        className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-[10px] uppercase font-bold text-muted-foreground">Form Subtitle Description</Label>
+                      <Textarea
+                        value={activePage.formSubtitle || ""}
+                        onChange={e => updateActivePage({ ...activePage, formSubtitle: e.target.value })}
+                        className="bg-[#FAF7F0] border-[#0F4D36]/10 text-xs min-h-[70px]"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {!["hero", "overview", "benefits", "curriculum", "faqs", "prose", "help_band", "closing_cta", "whatsapp_banner", "contact_form"].includes(selectedSectionId) && (
+                  <div className="py-8 text-center text-[#0F4D36]/40">
+                    <Settings className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
+                    No parameter fields for selected section card. Adjust sequence order.
+                  </div>
+                )}
               </div>
             </TabsContent>
+
+
 
             {/* TAB 3: THEME EDITOR PANEL (FONTS, COLORS, SIZE) */}
             <TabsContent value="theme" className="space-y-4 text-xs">

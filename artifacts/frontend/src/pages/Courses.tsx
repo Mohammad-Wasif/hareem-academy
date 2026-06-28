@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useListCourses } from "@workspace/api-client-react";
 import CourseCard from "@/components/CourseCard";
 import CTAGroup from "@/components/CTAGroup";
@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Sparkles, ShieldCheck, Award } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { motion, type Variants } from "framer-motion";
+import { adminApi } from "@/lib/adminApi";
 
 const staggerContainer: Variants = {
   hidden: {},
@@ -32,6 +33,23 @@ const fadeUp: Variants = {
 export default function Courses() {
   const { data: courses = [], isLoading } = useListCourses();
   const [filter, setFilter] = useState<"all" | "arabic" | "urdu">("all");
+  const [pageData, setPageData] = useState<any>(null);
+
+  useEffect(() => {
+    adminApi.getLandingPage("courses")
+      .then((data) => {
+        if (data && data.config) {
+          setPageData({
+            title: data.title,
+            metaDescription: data.metaDescription || "",
+            ...data.config,
+          });
+        }
+      })
+      .catch((err) => {
+        console.warn("Could not load courses overrides:", err);
+      });
+  }, []);
 
   const filteredCourses = courses.filter(
     (course) => filter === "all" || course.language?.toLowerCase() === filter,
@@ -68,24 +86,51 @@ export default function Courses() {
     }))
   };
 
+  const computedFont =
+    pageData?.theme?.fontFamily === "sans"
+      ? "font-sans"
+      : pageData?.theme?.fontFamily === "mono"
+      ? "font-mono"
+      : "font-serif";
+
+  const sizeClass =
+    pageData?.theme?.baseFontSize === "lg"
+      ? "text-lg"
+      : pageData?.theme?.baseFontSize === "sm"
+      ? "text-sm"
+      : "text-base";
+
+  const primaryColor = pageData?.theme?.primaryColor || "#0F4D36";
+  const accentColor = pageData?.theme?.accentColor || "#ECC565";
+  const backgroundColor = pageData?.theme?.backgroundColor || "#FDFCF7";
+
   return (
-    <div className="min-h-screen bg-background pt-24 pb-24">
+    <div 
+      className={`min-h-screen pt-24 pb-24 transition-colors duration-300 ${computedFont} ${sizeClass}`}
+      style={pageData?.theme ? { backgroundColor } as React.CSSProperties : undefined}
+    >
       <SEO
-        title="Arabic & Urdu Courses"
-        description="Explore live, sisters-only Arabic and Urdu batches at Hareem Academy. Certified female teachers, small interactive online groups, and free trials."
+        title={pageData?.title || "Arabic & Urdu Courses"}
+        description={pageData?.metaDescription || "Explore live, sisters-only Arabic and Urdu batches at Hareem Academy. Certified female teachers, small interactive online groups, and free trials."}
         schema={[breadcrumbSchema, itemListSchema]}
       />
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Hero with CTA */}
         <div className="text-center max-w-3xl mx-auto mb-10 space-y-5">
-          <span className="inline-block text-xs font-bold tracking-widest text-primary uppercase">
-            Live online classes
+          <span 
+            className="inline-block text-xs font-bold tracking-widest uppercase"
+            style={{ color: primaryColor }}
+          >
+            {pageData?.geoContext || "Live online classes"}
           </span>
-          <h1 className="font-serif font-bold text-4xl md:text-5xl text-foreground">
-            Find the right course for you.
+          <h1 
+            className="font-serif font-bold text-4xl md:text-5xl"
+            style={{ color: primaryColor }}
+          >
+            {pageData?.heroTitle || "Find the right course for you."}
           </h1>
           <p className="text-lg text-muted-foreground">
-            From absolute beginner to fluent reader. All classes are live, sisters-only, and start with a free trial.
+            {pageData?.heroSubtitle || "From absolute beginner to fluent reader. All classes are live, sisters-only, and start with a free trial."}
           </p>
 
           {/* Trust strip */}
@@ -164,14 +209,17 @@ export default function Courses() {
 
         {/* Help band */}
         <div className="mt-16 bg-card border border-border rounded-3xl p-8 md:p-10 text-center max-w-3xl mx-auto">
-          <h3 className="font-serif font-bold text-2xl md:text-3xl text-foreground mb-3">
-            Not sure which to pick?
+          <h3 
+            className="font-serif font-bold text-2xl md:text-3xl mb-3"
+            style={{ color: primaryColor }}
+          >
+            {pageData?.closingTitle || "Not sure which to pick?"}
           </h3>
           <p className="text-muted-foreground mb-6">
-            Tell us your goal on WhatsApp and we'll recommend the right batch — usually within a few minutes.
+            {pageData?.closingSubtitle || "Tell us your goal on WhatsApp and we'll recommend the right batch — usually within a few minutes."}
           </p>
           <div className="flex justify-center">
-            <CTAGroup variant="hero" align="center" trialMode />
+            <CTAGroup variant="hero" align="center" trialMode primaryLabel={pageData?.primaryCTA} />
           </div>
         </div>
       </div>
