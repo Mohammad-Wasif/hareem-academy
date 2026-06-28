@@ -82,15 +82,14 @@ interface MediaFile {
 }
 
 export default function AdminMedia() {
-  const { assets, assetsMetadata, assetsArray, isLoading, refetch } = useSiteAssets();
+  const { assets, assetsMetadata, assetsArray, isLoading, error, refetch } = useSiteAssets();
   const { toast } = useToast();
 
   // Dynamic measured dimensions cache for assets
   const [measuredDimensions, setMeasuredDimensions] = useState<Record<string, string>>({});
   const [customViewportWidth, setCustomViewportWidth] = useState<number>(800);
 
-  // State Sandbox Controls
-  const [mediaState, setMediaState] = useState<"success" | "loading" | "empty" | "error">("success");
+
 
   // Selected folder and sorting/filters
   const [selectedFolder, setSelectedFolder] = useState("all");
@@ -105,15 +104,11 @@ export default function AdminMedia() {
   const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);
 
   // File action overlays/modals
-  const [isCropOpen, setIsCropOpen] = useState(false);
   const [isImportURLOpen, setIsImportURLOpen] = useState(false);
   const [importUrl, setImportUrl] = useState("");
   const [isMoveOpen, setIsMoveOpen] = useState(false);
   const [moveToFolder, setMoveToFolder] = useState("all");
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-
-  // AI Alt text typing status
-  const [isGeneratingAlt, setIsGeneratingAlt] = useState(false);
 
   // Previews tab: 'frame' (Device preview layouts) vs 'context' (Website UI layouts)
   const [previewTab, setPreviewTab] = useState<"device" | "navbar" | "hero" | "card" | "social">("device");
@@ -299,9 +294,8 @@ export default function AdminMedia() {
       });
     }
 
-    if (mediaState === "empty") return [];
     return [...dbSlots, ...customDbFiles];
-  }, [assets, assetsMetadata, assetsArray, localMetadata, mediaState, measuredDimensions]);
+  }, [assets, assetsMetadata, assetsArray, localMetadata, measuredDimensions]);
 
   // Dynamic folders calculation
   const foldersList = useMemo(() => {
@@ -650,14 +644,6 @@ export default function AdminMedia() {
     });
   };
 
-  // Duplicate asset helper
-  const handleDuplicateAsset = (file: MediaFile) => {
-    toast({
-      title: "Duplication Restricted",
-      description: "Database asset slots are bound to specific layout targets and cannot be arbitrarily duplicated.",
-    });
-  };
-
   // Move asset action
   const handleMoveAsset = () => {
     if (!selectedFile) return;
@@ -667,28 +653,6 @@ export default function AdminMedia() {
       title: "Asset Moved",
       description: `Relocated successfully to ${moveToFolder} folder.`,
     });
-  };
-
-  // Crop simulator action
-  const handleCropApply = () => {
-    setIsCropOpen(false);
-    toast({
-      title: "Applying Crop Transformation",
-      description: "Slicing boundaries in Cloudinary editor...",
-    });
-    setTimeout(() => {
-      if (selectedFile) {
-        if (selectedFile.isReal) {
-          toast({ title: "Optimized Crop Applied" });
-        } else {
-          handleUpdateFileDetails(selectedFile.key, {
-            dimensions: "800 × 800 px",
-            fileSize: "140 KB",
-            savings: "72%",
-          });
-        }
-      }
-    }, 1000);
   };
 
   // Delete selector warning checks
@@ -780,8 +744,8 @@ export default function AdminMedia() {
     });
   };
 
-  // Skeletons view for sandbox
-  if (mediaState === "loading") {
+  // Loading skeleton view
+  if (isLoading) {
     return (
       <div className="max-w-[1600px] mx-auto px-4 md:px-8 py-8 space-y-8 animate-pulse text-[#0F4D36]">
         <div className="flex items-center justify-between border-b border-[#0F4D36]/10 pb-4">
@@ -808,28 +772,26 @@ export default function AdminMedia() {
             <Skeleton className="h-20 w-full bg-[#0F4D36]/5" />
           </div>
         </div>
-        <FloatingSandbox state={mediaState} onChange={setMediaState} />
       </div>
     );
   }
 
-  // Error view for sandbox
-  if (mediaState === "error") {
+  // Error view
+  if (error) {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center max-w-lg mx-auto text-center px-6">
         <X className="w-16 h-16 text-red-600 mb-4 bg-red-100 p-3.5 rounded-full" />
         <h2 className="font-serif text-2xl font-bold text-[#0F4D36]">Asset Cache Connection Error</h2>
         <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
-          Cloudinary CDN handshake timed out. The local media router could not fetch sitemaps or active repository file tags.
+          {error.message || "Failed to load database site assets."}
         </p>
         <Button
-          onClick={() => setMediaState("success")}
+          onClick={() => refetch()}
           className="bg-[#0F4D36] hover:bg-[#0f4d36]/90 text-white font-medium text-xs px-6 h-10 mt-6 cursor-pointer"
         >
           <RefreshCw className="w-4 h-4 mr-2" />
-          Retry CDN Handshake
+          Retry Connection
         </Button>
-        <FloatingSandbox state={mediaState} onChange={setMediaState} />
       </div>
     );
   }
@@ -847,8 +809,7 @@ export default function AdminMedia() {
 
   return (
     <div className="max-w-[1600px] mx-auto px-4 md:px-8 py-8 space-y-8 relative text-[#0F4D36]">
-      {/* State Sandbox control bar */}
-      <FloatingSandbox state={mediaState} onChange={setMediaState} />
+
 
       {/* TOP HEADER STATUS ROW */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-[#0F4D36]/10 pb-6">
@@ -964,16 +925,7 @@ export default function AdminMedia() {
               <span>Import URL</span>
             </Button>
 
-            <Button
-              onClick={() => {
-                toast({ title: "Clear cache", description: "Successfully purged sitemaps and Cloudinary global URL cache." });
-              }}
-              variant="outline"
-              className="h-9 text-xs border-[#0F4D36]/10 font-semibold cursor-pointer gap-1.5"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-              <span>Purge Cache</span>
-            </Button>
+
 
             {/* Custom file upload button */}
             <input
@@ -1131,8 +1083,7 @@ export default function AdminMedia() {
                             }
                           }}
                         />
-                        
-                        {/* Hover Overlay Actions */}
+                                        {/* Hover Overlay Actions */}
                         <div className="absolute inset-0 bg-[#0F4D36]/75 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2 z-10">
                           <button
                             onClick={(e) => { e.stopPropagation(); setSelectedFileKey(file.key); setPreviewTab("device"); }}
@@ -1140,20 +1091,6 @@ export default function AdminMedia() {
                             title="Inspect in Frame"
                           >
                             <Maximize2 className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={(e) => { e.stopPropagation(); setSelectedFileKey(file.key); setIsCropOpen(true); }}
-                            className="p-2 bg-white text-[#0F4D36] rounded-lg hover:bg-[#D6B25E] transition-all hover:scale-110 shadow"
-                            title="Crop Image"
-                          >
-                            <Crop className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={(e) => { e.stopPropagation(); handleDuplicateAsset(file); }}
-                            className="p-2 bg-white text-[#0F4D36] rounded-lg hover:bg-[#D6B25E] transition-all hover:scale-110 shadow"
-                            title="Duplicate File"
-                          >
-                            <Copy className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={(e) => { e.stopPropagation(); handleCopyURL(file.url); }}
@@ -1373,24 +1310,6 @@ export default function AdminMedia() {
                 </div>
               </div>
 
-              {/* Bandwidth compression analytics meter */}
-              <div className="bg-[#FAF7F0] p-3.5 border border-[#0F4D36]/10 rounded-xl space-y-2">
-                <div className="flex justify-between items-center text-xs text-[#0F4D36]">
-                  <span className="font-bold">Original:</span>
-                  <span className="font-mono text-muted-foreground line-through">{selectedFile.originalSize}</span>
-                </div>
-                <div className="flex justify-between items-center text-xs text-[#0F4D36] border-b border-[#0F4D36]/5 pb-2">
-                  <span className="font-bold">Cloudinary Optimized:</span>
-                  <span className="font-mono text-emerald-700 font-bold">{selectedFile.fileSize}</span>
-                </div>
-                <div className="flex justify-between items-center text-xs text-[#0F4D36] pt-1">
-                  <span className="text-[#0F4D36]/70">Bandwidth Savings:</span>
-                  <span className="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200/50">
-                    -{selectedFile.savings} Saved
-                  </span>
-                </div>
-              </div>
-
               {/* Metadata form fields */}
               <div className="space-y-4 flex-1 overflow-y-auto text-xs py-2 pr-1 select-none">
                 <div>
@@ -1406,14 +1325,6 @@ export default function AdminMedia() {
                 <div>
                   <div className="flex items-center justify-between">
                     <label className="text-[10px] font-bold uppercase tracking-wider text-[#0F4D36]/60">Alt Text (SEO)</label>
-                    <button
-                      onClick={triggerGenerateAltText}
-                      disabled={isGeneratingAlt}
-                      className="text-[9px] text-[#D6B25E] font-bold hover:underline flex items-center gap-0.5 cursor-pointer"
-                    >
-                      {isGeneratingAlt ? <Loader2 className="w-2.5 h-2.5 animate-spin" /> : <Sparkles className="w-2.5 h-2.5" />}
-                      Generate AI Alt
-                    </button>
                   </div>
                   <textarea
                     rows={2}
@@ -1518,46 +1429,7 @@ export default function AdminMedia() {
 
       </div>
 
-      {/* 1. Crop Image Modal */}
-      <Dialog open={isCropOpen} onOpenChange={setIsCropOpen}>
-        <DialogContent className="max-w-md bg-white border border-[#0F4D36]/20 rounded-xl p-6 text-[#0F4D36]">
-          <DialogHeader>
-            <DialogTitle className="font-serif text-xl font-bold flex items-center gap-2">
-              <Crop className="w-5 h-5 text-[#D6B25E]" />
-              <span>Crop Asset Layout</span>
-            </DialogTitle>
-            <DialogDescription className="text-xs text-muted-foreground mt-1">
-              Select cropping bounds. Cloudinary will apply smart focal compression (c_fill, g_face).
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="my-4 aspect-[16/10] bg-[#FAF7F0] border border-[#0F4D36]/10 rounded-xl flex items-center justify-center relative overflow-hidden p-6 select-none">
-            {selectedFile && (
-              <>
-                <img src={selectedFile.url} alt="" className="max-w-full max-h-full object-contain opacity-55" />
-                {/* Simulated Crop selector boundary boxes */}
-                <div className="absolute inset-8 border-2 border-dashed border-[#D6B25E] shadow-2xl flex items-center justify-center cursor-move">
-                  <div className="bg-[#D6B25E] text-[#0F4D36] text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded shadow">
-                    Crop Scope: 1:1 Aspect
-                  </div>
-                  {/* Anchor corners */}
-                  <div className="absolute w-2.5 h-2.5 bg-white border border-[#0F4D36] -top-1.5 -left-1.5" />
-                  <div className="absolute w-2.5 h-2.5 bg-white border border-[#0F4D36] -top-1.5 -right-1.5" />
-                  <div className="absolute w-2.5 h-2.5 bg-white border border-[#0F4D36] -bottom-1.5 -left-1.5" />
-                  <div className="absolute w-2.5 h-2.5 bg-white border border-[#0F4D36] -bottom-1.5 -right-1.5" />
-                </div>
-              </>
-            )}
-          </div>
 
-          <DialogFooter className="pt-2">
-            <Button variant="outline" onClick={() => setIsCropOpen(false)} className="text-xs h-9 cursor-pointer">Cancel</Button>
-            <Button onClick={handleCropApply} className="bg-[#0F4D36] text-white hover:bg-[#0f4d36]/90 text-xs h-9 font-semibold cursor-pointer">
-              Apply Crop & Optimize
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
 
       {/* 2. Import URL Modal */}
       <Dialog open={isImportURLOpen} onOpenChange={setIsImportURLOpen}>
@@ -1690,57 +1562,7 @@ export default function AdminMedia() {
   );
 }
 
-// Float Sandbox control widget for testing Skeletons, Empty, Error
-function FloatingSandbox({
-  state,
-  onChange,
-}: {
-  state: "success" | "loading" | "error" | "empty";
-  onChange: (s: "success" | "loading" | "error" | "empty") => void;
-}) {
-  return (
-    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-[#0F4D36] text-white border border-[#D6B25E]/40 px-4 py-2.5 rounded-full shadow-2xl z-50 flex items-center gap-4 text-xs font-semibold select-none animate-bounce hover:animate-none">
-      <div className="flex items-center gap-1.5">
-        <CloudLightning className="w-4 h-4 text-[#D6B25E]" />
-        <span>Media OS State Simulator:</span>
-      </div>
-      <div className="flex items-center gap-2">
-        <button
-          onClick={() => onChange("success")}
-          className={`px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider cursor-pointer transition-colors ${
-            state === "success" ? "bg-[#D6B25E] text-[#0F4D36]" : "bg-white/10 hover:bg-white/20"
-          }`}
-        >
-          Success
-        </button>
-        <button
-          onClick={() => onChange("loading")}
-          className={`px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider cursor-pointer transition-colors ${
-            state === "loading" ? "bg-[#D6B25E] text-[#0F4D36]" : "bg-white/10 hover:bg-white/20"
-          }`}
-        >
-          Skeletons
-        </button>
-        <button
-          onClick={() => onChange("error")}
-          className={`px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider cursor-pointer transition-colors ${
-            state === "error" ? "bg-[#D6B25E] text-[#0F4D36]" : "bg-white/10 hover:bg-white/20"
-          }`}
-        >
-          Error
-        </button>
-        <button
-          onClick={() => onChange("empty")}
-          className={`px-3 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider cursor-pointer transition-colors ${
-            state === "empty" ? "bg-[#D6B25E] text-[#0F4D36]" : "bg-white/10 hover:bg-white/20"
-          }`}
-        >
-          Empty
-        </button>
-      </div>
-    </div>
-  );
-}
+
 
 // Inline Skeleton Component
 function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
