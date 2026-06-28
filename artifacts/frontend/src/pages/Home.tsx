@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import {
   ShieldCheck,
@@ -21,6 +22,7 @@ import CTAGroup from "@/components/CTAGroup";
 import TestimonialCard from "@/components/TestimonialCard";
 import { Button } from "@/components/ui/button";
 import { useListCourses, useListTestimonials, useGetSiteStats } from "@workspace/api-client-react";
+import { adminApi } from "@/lib/adminApi";
 
 import { useTranslation } from "react-i18next";
 import { SEO } from "@/components/SEO";
@@ -90,6 +92,19 @@ export default function Home() {
   const { data: courses = [] } = useListCourses();
   const { data: testimonials = [] } = useListTestimonials();
   const { data: stats } = useGetSiteStats();
+  const [homeConfig, setHomeConfig] = useState<any>(null);
+
+  useEffect(() => {
+    adminApi.getLandingPage("home")
+      .then((data) => {
+        if (data && data.config) {
+          setHomeConfig(data.config);
+        }
+      })
+      .catch((err) => {
+        console.warn("Could not load homepage config overrides:", err);
+      });
+  }, []);
 
 
 
@@ -171,11 +186,32 @@ export default function Home() {
     ]
   };
 
+  const computedFont =
+    homeConfig?.theme?.fontFamily === "sans"
+      ? "font-sans"
+      : homeConfig?.theme?.fontFamily === "mono"
+      ? "font-mono"
+      : "font-serif";
+
+  const sizeClass =
+    homeConfig?.theme?.baseFontSize === "lg"
+      ? "text-lg"
+      : homeConfig?.theme?.baseFontSize === "sm"
+      ? "text-sm"
+      : "text-base";
+
+  const primaryColor = homeConfig?.theme?.primaryColor;
+  const accentColor = homeConfig?.theme?.accentColor;
+  const backgroundColor = homeConfig?.theme?.backgroundColor;
+
   return (
-    <div className="flex flex-col min-h-screen w-full overflow-x-hidden">
+    <div 
+      className={`flex flex-col min-h-screen w-full overflow-x-hidden ${computedFont} ${sizeClass}`}
+      style={homeConfig?.theme ? { backgroundColor } as React.CSSProperties : undefined}
+    >
       <SEO
-        title={t("home.seo.title", "Online Quran Classes for Sisters")}
-        description={t(
+        title={homeConfig?.title || t("home.seo.title", "Online Quran Classes for Sisters")}
+        description={homeConfig?.metaDescription || t(
           "home.seo.description",
           "Live, female-only online Quran and Arabic classes. Learn Tajweed and meaning in a comfortable, judgment-free environment."
         )}
@@ -214,32 +250,38 @@ export default function Home() {
                 transition={{ duration: 0.5 }}
                 className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-[3px] sm:px-3 sm:py-1 rounded-full bg-primary/[0.03] border border-primary/8 text-primary/95 font-sans font-semibold text-[10px] sm:text-xs tracking-wide capitalize"
               >
-                <ShieldCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-accent" />
-                <span>{t("home.hero.privacy", "Women-Only • Live Online Arabic & Urdu Classes")}</span>
+                <ShieldCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5" style={{ color: accentColor || "#D6B25E" }} />
+                <span style={{ color: primaryColor }}>{homeConfig?.geoContext || t("home.hero.privacy", "Women-Only • Live Online Arabic & Urdu Classes")}</span>
               </motion.div>
 
-              <h1 className="text-[1.75rem] sm:text-4xl md:text-5xl lg:text-[3.5rem] font-serif font-bold text-foreground leading-[1.15] sm:leading-[1.12] tracking-[-0.02em] sm:tracking-tight">
-                {splitWords(t("home.hero.title_prefix", "Structured Arabic & Urdu"))}{" "}
-                <br className="hidden sm:inline" />
-                <span className="text-primary relative inline-block overflow-hidden vertical-align-bottom">
-                  <motion.span
-                    className="inline-block relative"
-                    variants={{
-                      hidden: { y: "115%", opacity: 0 },
-                      show: {
-                        y: 0,
-                        opacity: 1,
-                        transition: {
-                          duration: 0.9,
-                          ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
-                        },
-                      },
-                    }}
-                  >
-                    {t("home.hero.title_highlight", "Learning for Sisters")}
-                    <span className="absolute bottom-1 left-0 w-full h-[3px] bg-accent/40 rounded-full" />
-                  </motion.span>
-                </span>
+              <h1 className="text-[1.75rem] sm:text-4xl md:text-5xl lg:text-[3.5rem] font-serif font-bold text-foreground leading-[1.15] sm:leading-[1.12] tracking-[-0.02em] sm:tracking-tight" style={{ color: primaryColor }}>
+                {homeConfig?.heroTitle ? (
+                  splitWords(homeConfig.heroTitle)
+                ) : (
+                  <>
+                    {splitWords(t("home.hero.title_prefix", "Structured Arabic & Urdu"))}{" "}
+                    <br className="hidden sm:inline" />
+                    <span className="text-primary relative inline-block overflow-hidden vertical-align-bottom">
+                      <motion.span
+                        className="inline-block relative"
+                        variants={{
+                          hidden: { y: "115%", opacity: 0 },
+                          show: {
+                            y: 0,
+                            opacity: 1,
+                            transition: {
+                              duration: 0.9,
+                              ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+                            },
+                          },
+                        }}
+                      >
+                        {t("home.hero.title_highlight", "Learning for Sisters")}
+                        <span className="absolute bottom-1 left-0 w-full h-[3px] bg-accent/40 rounded-full" />
+                      </motion.span>
+                    </span>
+                  </>
+                )}
               </h1>
 
               <motion.p
@@ -247,7 +289,7 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: 0.1 }}
                 className="text-[0.8125rem] sm:text-base text-muted-foreground max-w-[92%] sm:max-w-xl leading-[1.6] sm:leading-relaxed font-sans"
               >
-                {t(
+                {homeConfig?.heroSubtitle || t(
                   "home.hero.subtitle",
                   "Live online Arabic and Urdu classes taught by qualified female teachers through structured, beginner-friendly lessons designed for sisters worldwide."
                 )}
@@ -258,7 +300,7 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: 0.15 }}
                 className="flex flex-col gap-2.5 sm:gap-3.5"
               >
-                <CTAGroup variant="hero" trialMode />
+                <CTAGroup variant="hero" trialMode primaryLabel={homeConfig?.primaryCTA} />
                 
                 {/* Trust rating & Student Avatars directly under CTAs */}
                 <div className="flex items-center gap-3 pt-1">

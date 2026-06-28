@@ -120,6 +120,11 @@ function PublicRoutes() {
             {() => <SEOLandingPage slug="understand-quranic-arabic" />}
           </Route>
 
+          {/* Dynamic catch-all route for database-defined landing pages */}
+          <Route path="/:slug">
+            {(params) => <SEOLandingPage slug={params.slug} />}
+          </Route>
+
           <Route component={NotFound} />
         </Switch>
       </Suspense>
