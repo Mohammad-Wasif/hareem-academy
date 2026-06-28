@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { FaWhatsapp } from "react-icons/fa";
 import { Sparkles } from "lucide-react";
-import EnrollmentModal from "./EnrollmentModal";
 import { useWhatsApp } from "@/hooks/use-whatsapp";
+import React, { Suspense } from "react";
+
+const EnrollmentModal = React.lazy(() => import("./EnrollmentModal"));
 
 export const WHATSAPP_NUMBER = "919315118289";
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
@@ -58,17 +60,24 @@ export default function CTAGroup({
 
   return (
     <div className={`flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-2.5 ${align_classes}`}>
-      <EnrollmentModal
-        mode={trialMode ? "trial" : "enroll"}
-        defaultCourseSlug={defaultCourseSlug}
-      >
-        <Button
-          className={`${size} ${primaryButton} group`}
-        >
+      <Suspense fallback={
+        <Button className={`${size} ${primaryButton} group`}>
           <Sparkles className="w-4 h-4 mr-2 text-accent" />
           {label}
         </Button>
-      </EnrollmentModal>
+      }>
+        <EnrollmentModal
+          mode={trialMode ? "trial" : "enroll"}
+          defaultCourseSlug={defaultCourseSlug}
+        >
+          <Button
+            className={`${size} ${primaryButton} group`}
+          >
+            <Sparkles className="w-4 h-4 mr-2 text-accent" />
+            {label}
+          </Button>
+        </EnrollmentModal>
+      </Suspense>
       {showSecondary && (
         <Button asChild className={`${size} ${secondaryButton}`}>
           <a

@@ -18,6 +18,37 @@ interface PremiumImageProps {
   fetchPriority?: "high" | "low" | "auto";
 }
 
+// Helper to inject Cloudinary optimization and scaling
+const getOptimizedUrl = (rawUrl: string, targetWidth?: number, isBlur = false) => {
+  if (!rawUrl || rawUrl.startsWith("data:") || rawUrl.startsWith("blob:")) {
+    return rawUrl;
+  }
+
+  if (rawUrl.includes("res.cloudinary.com")) {
+    const parts = rawUrl.split("/upload/");
+    if (parts.length === 2) {
+      let transformation = "";
+      if (isBlur) {
+        transformation = "w_40,q_20,e_blur:1500,f_auto";
+      } else {
+        transformation = targetWidth
+          ? `f_auto,q_auto,w_${targetWidth}`
+          : "f_auto,q_auto";
+      }
+      return `${parts[0]}/upload/${transformation}/${parts[1]}`;
+    }
+  }
+  return rawUrl;
+};
+
+// Helper to apply updatedAt version parameter
+const getVersionedUrl = (url: string, updatedAt?: string) => {
+  if (!url || url.startsWith("data:") || url.startsWith("blob:")) return url;
+  const version = updatedAt ? new Date(updatedAt).getTime() : "";
+  if (!version) return url;
+  return url.includes("?") ? `${url}&v=${version}` : `${url}?v=${version}`;
+};
+
 export default function PremiumImage({
   assetKey,
   fallback,
@@ -32,49 +63,37 @@ export default function PremiumImage({
   objectFit = "cover",
   fetchPriority = "auto",
 }: PremiumImageProps) {
-  const { assets, assetsMetadata, isVerifyingFreshness } = useSiteAssets();
-  const [currentSrc, setCurrentSrc] = useState<string | null>(null);
-  const [blurSrc, setBlurSrc] = useState<string | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const { assets, assetsMetadata } = useSiteAssets();
+
+  // Resolve sources synchronously to allow preload scanner match and avoid hydration layout shift
+  const resolvedRawUrl = assets[assetKey] || fallback;
+  const resolvedUpdatedAt = assetsMetadata[assetKey]?.updatedAt;
+  const syncFinalSrc = getVersionedUrl(getOptimizedUrl(resolvedRawUrl, width, false), resolvedUpdatedAt);
+  const syncLowResSrc = getVersionedUrl(getOptimizedUrl(resolvedRawUrl, 40, true), resolvedUpdatedAt);
+
+  const [currentSrc, setCurrentSrc] = useState<string | null>(
+    fetchPriority === "high" ? syncFinalSrc : null
+  );
+  const [blurSrc, setBlurSrc] = useState<string | null>(
+    fetchPriority === "high" ? syncLowResSrc : null
+  );
+  const [isLoaded, setIsLoaded] = useState(fetchPriority === "high");
   const [hasError, setHasError] = useState(false);
-
-  // Helper to inject Cloudinary optimization and scaling
-  const getOptimizedUrl = (rawUrl: string, targetWidth?: number, isBlur = false) => {
-    if (!rawUrl || rawUrl.startsWith("data:") || rawUrl.startsWith("blob:")) {
-      return rawUrl;
-    }
-
-    if (rawUrl.includes("res.cloudinary.com")) {
-      const parts = rawUrl.split("/upload/");
-      if (parts.length === 2) {
-        let transformation = "";
-        if (isBlur) {
-          transformation = "w_40,q_20,e_blur:1500,f_auto";
-        } else {
-          transformation = targetWidth
-            ? `f_auto,q_auto,w_${targetWidth}`
-            : "f_auto,q_auto";
-        }
-        return `${parts[0]}/upload/${transformation}/${parts[1]}`;
-      }
-    }
-    return rawUrl;
-  };
-
-  // Helper to apply updatedAt version parameter
-  const getVersionedUrl = (url: string, updatedAt?: string) => {
-    if (!url || url.startsWith("data:") || url.startsWith("blob:")) return url;
-    const version = updatedAt ? new Date(updatedAt).getTime() : "";
-    if (!version) return url;
-    return url.includes("?") ? `${url}&v=${version}` : `${url}?v=${version}`;
-  };
 
   useEffect(() => {
     const rawUrl = assets[assetKey] || fallback;
     const updatedAt = assetsMetadata[assetKey]?.updatedAt;
-
     const finalSrc = getVersionedUrl(getOptimizedUrl(rawUrl, width, false), updatedAt);
     const lowResSrc = getVersionedUrl(getOptimizedUrl(rawUrl, 40, true), updatedAt);
+
+    if (fetchPriority === "high") {
+      // Sync has initialized state, verify if URL matches
+      if (currentSrc !== finalSrc) {
+        setCurrentSrc(finalSrc);
+        setBlurSrc(lowResSrc);
+      }
+      return;
+    }
 
     setBlurSrc(lowResSrc);
     setHasError(false);
@@ -87,15 +106,15 @@ export default function PremiumImage({
       setIsLoaded(true);
     };
     img.onerror = () => {
-      // Fallback directly
       setCurrentSrc(finalSrc);
       setIsLoaded(true);
       setHasError(true);
     };
-  }, [assetKey, assets, assetsMetadata, fallback, width]);
+  }, [assetKey, assets, assetsMetadata, fallback, width, fetchPriority, currentSrc]);
 
-  // Combined styling for dimension stability
-  const containerClasses = `relative overflow-hidden select-none ${bgClass} ${roundedClass} ${widthClass} ${heightClass} ${aspectRatio}`;
+  // Combined styling for dimension stability: avoid heightClass (e.g. h-auto) collapsing if aspectRatio is set
+  const computedHeightClass = aspectRatio ? "" : heightClass;
+  const containerClasses = `relative overflow-hidden select-none ${bgClass} ${roundedClass} ${widthClass} ${computedHeightClass} ${aspectRatio}`;
 
   // 1. Shimmer Skeleton State (Initial load before resolving source)
   if (!currentSrc && !hasError) {

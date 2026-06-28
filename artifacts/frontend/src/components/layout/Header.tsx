@@ -1,10 +1,10 @@
 import { Link, useLocation } from "wouter";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense, lazy } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FaWhatsapp } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
-import EnrollmentModal from "@/components/EnrollmentModal";
+const EnrollmentModal = lazy(() => import("@/components/EnrollmentModal"));
 import { useWhatsApp } from "@/hooks/use-whatsapp";
 import staticLogo from "@assets/IMG_20260507_171922.png";
 import { useSiteAssets } from "@/hooks/use-site-assets";
@@ -113,11 +113,17 @@ export default function Header() {
             <span>WhatsApp</span>
           </a>
 
-          <EnrollmentModal mode="trial">
+          <Suspense fallback={
             <Button className="bg-[#ECC565] text-[#0F4D36] hover:bg-[#ECC565]/90 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 font-sans text-sm rounded-lg px-4.5 h-9 font-semibold shadow-sm cursor-pointer">
               Begin Your Journey
             </Button>
-          </EnrollmentModal>
+          }>
+            <EnrollmentModal mode="trial">
+              <Button className="bg-[#ECC565] text-[#0F4D36] hover:bg-[#ECC565]/90 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 font-sans text-sm rounded-lg px-4.5 h-9 font-semibold shadow-sm cursor-pointer">
+                Begin Your Journey
+              </Button>
+            </EnrollmentModal>
+          </Suspense>
         </nav>
 
         {/* Mobile Trigger */}
@@ -199,14 +205,22 @@ export default function Header() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.22 }}
               >
-                <EnrollmentModal mode="trial">
+                <Suspense fallback={
                   <Button
                     className="bg-[#ECC565] text-[#0F4D36] hover:bg-[#ECC565]/90 rounded-lg w-full font-sans h-10 text-base shadow-sm font-semibold cursor-pointer"
-                    onClick={() => setIsOpen(false)}
                   >
                     Begin Your Journey
                   </Button>
-                </EnrollmentModal>
+                }>
+                  <EnrollmentModal mode="trial">
+                    <Button
+                      className="bg-[#ECC565] text-[#0F4D36] hover:bg-[#ECC565]/90 rounded-lg w-full font-sans h-10 text-base shadow-sm font-semibold cursor-pointer"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Begin Your Journey
+                    </Button>
+                  </EnrollmentModal>
+                </Suspense>
                 <Button
                   asChild
                   variant="outline"
