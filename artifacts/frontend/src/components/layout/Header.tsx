@@ -74,20 +74,20 @@ export default function Header() {
               fetchPriority="high"
             />
           </motion.div>
-          <span className="whitespace-nowrap font-serif font-bold text-xs sm:text-base md:text-lg lg:text-xl tracking-[0.06em] sm:tracking-[0.12em] text-[#ECC565] group-hover:text-[#ECC565]/90 transition-colors uppercase">
+          <span className="whitespace-nowrap font-serif font-bold text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl tracking-[0.04em] lg:tracking-[0.08em] xl:tracking-[0.12em] text-[#ECC565] group-hover:text-[#ECC565]/90 transition-colors uppercase">
             Hareem Academy
           </span>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden lg:flex items-center gap-3.5 xl:gap-6">
           {navItems.map((item) => {
             const isActive = location === item.href;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`relative text-sm font-medium transition-colors duration-300 py-1 nav-link-glow ${isActive ? "text-[#ECC565]" : "text-white/80 hover:text-[#ECC565]"
+                className={`relative text-xs xl:text-sm font-medium transition-colors duration-300 py-1 nav-link-glow ${isActive ? "text-[#ECC565]" : "text-white/80 hover:text-[#ECC565]"
                   }`}
               >
                 {item.label}
@@ -107,19 +107,19 @@ export default function Header() {
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-sm font-medium text-white/80 hover:text-[#ECC565] transition-colors py-1.5"
+            className="flex items-center gap-1.5 text-xs xl:text-sm font-medium text-white/80 hover:text-[#ECC565] transition-colors py-1.5"
           >
             <FaWhatsapp className="w-4 h-4 text-[#ECC565]" />
             <span>WhatsApp</span>
           </a>
 
           <Suspense fallback={
-            <Button className="bg-[#ECC565] text-[#0F4D36] hover:bg-[#ECC565]/90 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 font-sans text-sm rounded-lg px-4.5 h-9 font-semibold shadow-sm cursor-pointer">
+            <Button className="bg-[#ECC565] text-[#0F4D36] hover:bg-[#ECC565]/90 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 font-sans text-xs xl:text-sm rounded-lg px-3.5 xl:px-4.5 h-8 xl:h-9 font-semibold shadow-sm cursor-pointer">
               Begin Your Journey
             </Button>
           }>
             <EnrollmentModal mode="trial">
-              <Button className="bg-[#ECC565] text-[#0F4D36] hover:bg-[#ECC565]/90 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 font-sans text-sm rounded-lg px-4.5 h-9 font-semibold shadow-sm cursor-pointer">
+              <Button className="bg-[#ECC565] text-[#0F4D36] hover:bg-[#ECC565]/90 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 font-sans text-xs xl:text-sm rounded-lg px-3.5 xl:px-4.5 h-8 xl:h-9 font-semibold shadow-sm cursor-pointer">
                 Begin Your Journey
               </Button>
             </EnrollmentModal>
@@ -127,7 +127,7 @@ export default function Header() {
         </nav>
 
         {/* Mobile Trigger */}
-        <div className="flex items-center gap-2 md:hidden">
+        <div className="flex items-center gap-2 lg:hidden">
           <motion.button
             className="p-2 text-[#ECC565] rounded-lg hover:bg-white/10 transition-colors"
             onClick={() => setIsOpen(!isOpen)}
@@ -170,7 +170,7 @@ export default function Header() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
-            className="md:hidden overflow-hidden bg-[#0F4D36] border-b border-[#ECC565]/20 shadow-xl shadow-black/10"
+            className="lg:hidden overflow-hidden bg-[#0F4D36] border-b border-[#ECC565]/20 shadow-xl shadow-black/10"
           >
             <div className="p-4 flex flex-col gap-1">
               {navItems.map((item, index) => {
