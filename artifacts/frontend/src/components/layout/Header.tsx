@@ -32,11 +32,9 @@ export default function Header() {
 
   const navItems = [
     { label: "Home", href: "/" },
-    { label: "About Us", href: "/about" },
-    { label: "Our Courses", href: "/courses" },
-    { label: "Testimonials", href: "/testimonials" },
-    { label: "FAQs", href: "/faqs" },
+    { label: "Courses", href: "/courses" },
     { label: "Contact Us", href: "/contact" },
+    { label: "FAQ", href: "/faqs" },
   ];
 
   return (
@@ -102,16 +100,6 @@ export default function Header() {
               </Link>
             );
           })}
-
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs xl:text-sm font-medium text-white/80 hover:text-[#ECC565] transition-colors py-1.5"
-          >
-            <FaWhatsapp className="w-4 h-4 text-[#ECC565]" />
-            <span>WhatsApp</span>
-          </a>
 
           <Suspense fallback={
             <Button className="bg-[#ECC565] text-[#0F4D36] hover:bg-[#ECC565]/90 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 font-sans text-xs xl:text-sm rounded-lg px-3.5 xl:px-4.5 h-8 xl:h-9 font-semibold shadow-sm cursor-pointer">
@@ -221,15 +209,6 @@ export default function Header() {
                     </Button>
                   </EnrollmentModal>
                 </Suspense>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="rounded-lg border-white/20 text-white hover:bg-white/5 h-10 text-sm font-sans gap-1.5"
-                >
-                  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-                    <FaWhatsapp className="w-4 h-4 text-[#ECC565]" /> Speak With Our Team
-                  </a>
-                </Button>
               </motion.div>
             </div>
           </motion.div>

@@ -308,7 +308,7 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: 0.15 }}
                 className="flex flex-col gap-2.5 sm:gap-3.5"
               >
-                <CTAGroup variant="hero" trialMode primaryLabel={homeConfig?.primaryCTA} />
+                <CTAGroup variant="hero" trialMode primaryLabel={homeConfig?.primaryCTA || "Explore Courses"} primaryHref="/courses" />
                 
                 {/* Trust rating & Student Avatars directly under CTAs */}
                 <div className="flex items-center gap-3 pt-1">

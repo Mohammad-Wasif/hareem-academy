@@ -3,6 +3,7 @@ import { FaWhatsapp } from "react-icons/fa";
 import { Sparkles } from "lucide-react";
 import { useWhatsApp } from "@/hooks/use-whatsapp";
 import React, { Suspense } from "react";
+import { Link } from "wouter";
 
 const EnrollmentModal = React.lazy(() => import("./EnrollmentModal"));
 
@@ -23,6 +24,7 @@ interface CTAGroupProps {
   secondaryLabel?: string;
   defaultCourseSlug?: string;
   showSecondary?: boolean;
+  primaryHref?: string;
 }
 
 export default function CTAGroup({
@@ -34,6 +36,7 @@ export default function CTAGroup({
   secondaryLabel = "Speak With Our Team",
   defaultCourseSlug,
   showSecondary = true,
+  primaryHref,
 }: CTAGroupProps) {
   const { whatsappUrl } = useWhatsApp();
   
@@ -57,6 +60,32 @@ export default function CTAGroup({
       : "bg-[#0F4D36]/5 text-[#0F4D36] border border-[#0F4D36]/15 hover:bg-[#0F4D36]/10 active:scale-[0.97] transition-all duration-300";
 
   const label = primaryLabel ?? (trialMode ? "Begin Your Journey" : "Enroll Now");
+
+  if (primaryHref) {
+    return (
+      <div className={`flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-2.5 ${align_classes}`}>
+        <Button asChild className={`${size} ${primaryButton} group`}>
+          <Link href={primaryHref}>
+            <Sparkles className="w-4 h-4 mr-2 text-accent" />
+            {label}
+          </Link>
+        </Button>
+        {showSecondary && (
+          <Button asChild className={`${size} ${secondaryButton}`}>
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2"
+            >
+              <FaWhatsapp className="w-4 h-4" />
+              {secondaryLabel}
+            </a>
+          </Button>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className={`flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-2.5 ${align_classes}`}>
