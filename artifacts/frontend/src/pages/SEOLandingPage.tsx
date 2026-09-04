@@ -230,6 +230,15 @@ export default function SEOLandingPage({ slug }: SEOLandingPageProps) {
       <SEO
         title={pageData.title}
         description={pageData.metaDescription}
+        url={`https://hareemacademy.com/${pageData.slug}`}
+        keywords={[
+          pageData.slug.replace(/-/g, " "),
+          pageData.heroTitle || pageData.title,
+          "learn arabic online",
+          "sisters only classes",
+          "female teacher",
+          "hareem academy"
+        ]}
         schema={[breadcrumbSchema, courseSchema, faqSchema]}
       />
 

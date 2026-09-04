@@ -135,6 +135,14 @@ export default function CourseDetail() {
     },
     "educationalLevel": course.level,
     "timeRequired": `P${course.durationMonths}M`,
+    "offers": {
+      "@type": "Offer",
+      "price": (course as any).feeAmount || "0",
+      "priceCurrency": (course as any).feeCurrency || "INR",
+      "category": "Education",
+      "availability": (course as any).enrollmentStatus === "closed" ? "https://schema.org/SoldOut" : "https://schema.org/InStock",
+      "url": `https://hareemacademy.com/courses/${course.slug}`
+    },
     "hasCourseInstance": {
       "@type": "CourseInstance",
       "courseMode": "Online",
@@ -147,11 +155,36 @@ export default function CourseDetail() {
     }
   };
 
+  const courseKeywords = isArabic
+    ? [
+        course.title,
+        "learn arabic online",
+        "arabic classes for sisters",
+        "female arabic tutor online",
+        "quranic arabic classes",
+        "tajweed for women",
+        "hareem academy"
+      ]
+    : [
+        course.title,
+        "learn urdu online",
+        "urdu reading classes for sisters",
+        "urdu course for beginners",
+        "female urdu teacher online",
+        "urdu foundations",
+        "hareem academy"
+      ];
+
+  const courseImage = `https://hareemacademy.com/${isUrdu ? "course-urdu.png" : "course-arabic.png"}`;
+
   return (
     <div className="min-h-screen bg-background pb-28 md:pb-16 pt-2 sm:pt-4">
       <SEO
         title={title}
         description={summary}
+        keywords={courseKeywords}
+        imageUrl={courseImage}
+        url={`https://hareemacademy.com/courses/${course.slug}`}
         schema={[breadcrumbSchema, courseSchema]}
       />
       {/* HERO */}

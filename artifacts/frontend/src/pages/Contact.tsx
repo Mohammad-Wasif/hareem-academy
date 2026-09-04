@@ -31,6 +31,20 @@ export default function Contact() {
     ]
   };
 
+  const contactPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Contact Hareem Academy",
+    "url": "https://hareemacademy.com/contact",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "Hareem Academy",
+      "telephone": "+91-9315118289",
+      "email": "admissions@hareemacademy.com",
+      "url": "https://hareemacademy.com"
+    }
+  };
+
   const {
     register,
     handleSubmit,
@@ -59,9 +73,17 @@ export default function Contact() {
   return (
     <div className="min-h-screen bg-[#f8f9fa] text-[#191c1d] flex flex-col font-sans">
       <SEO
-        title="Contact Us | Hareem Academy"
+        title="Contact Us"
         description="Connect with Hareem Academy. Message us on WhatsApp or fill out our contact form — we reply within minutes."
-        schema={[breadcrumbSchema]}
+        keywords={[
+          "contact hareem academy",
+          "hareem academy whatsapp",
+          "enroll in arabic class",
+          "book free trial arabic",
+          "female arabic admissions",
+          "sisters online academy contact"
+        ]}
+        schema={[breadcrumbSchema, contactPageSchema]}
       />
 
       <main className="flex-grow w-full px-4 md:px-12 max-w-[1280px] mx-auto py-10 md:py-16 space-y-10 md:space-y-14">

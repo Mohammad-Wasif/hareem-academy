@@ -23,11 +23,31 @@ export default function Refund() {
     year: "numeric",
   });
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://hareemacademy.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Refund Policy",
+        "item": "https://hareemacademy.com/refund"
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-[#f7f9fb] text-[#191c1e] font-sans antialiased pattern-bg pt-10 pb-24">
       <SEO
-        title="Refund Policy | Hareem Academy"
+        title="Refund Policy"
         description="Refund Policy and enrollment cancellation guidelines for Hareem Academy."
+        schema={breadcrumbSchema}
       />
 
       <style>{`

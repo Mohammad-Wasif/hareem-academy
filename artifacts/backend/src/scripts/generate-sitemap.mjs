@@ -22,28 +22,41 @@ const baseUrl = process.env.VITE_SITE_URL || process.env.VITE_APP_URL || "https:
 async function generateSitemap() {
   console.log("Generating sitemap...");
 
-  if (!process.env.DATABASE_URL) {
-    console.error("❌ Error: DATABASE_URL environment variable is missing.");
-    process.exit(1);
+  let courses = [
+    { slug: "arabic-foundations-level-1" },
+    { slug: "intermediate-arabic-level-2" },
+    { slug: "urdu-essentials-basic" }
+  ];
+
+  if (process.env.DATABASE_URL) {
+    try {
+      const pool = new Pool({
+        connectionString: process.env.DATABASE_URL,
+      });
+      const result = await pool.query("SELECT slug FROM courses");
+      if (result.rows && result.rows.length > 0) {
+        courses = result.rows;
+      }
+      await pool.end();
+    } catch (dbErr) {
+      console.warn("⚠️ Warning: Could not connect to database to fetch courses, using default course slugs:", dbErr.message);
+    }
+  } else {
+    console.log("ℹ️ No DATABASE_URL provided, using default course slugs.");
   }
 
-  const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-  });
-
   try {
-    // 1. Fetch dynamic data (e.g., courses)
-    const result = await pool.query("SELECT slug FROM courses");
-    const courses = result.rows;
-
     // 2. Define static routes
     const staticRoutes = [
-      "",
-      "/courses",
-      "/about",
-      "/contact",
-      "/faqs",
-      "/testimonials",
+      { path: "", priority: "1.0", freq: "weekly" },
+      { path: "/courses", priority: "0.9", freq: "weekly" },
+      { path: "/about", priority: "0.8", freq: "monthly" },
+      { path: "/contact", priority: "0.8", freq: "monthly" },
+      { path: "/faqs", priority: "0.8", freq: "monthly" },
+      { path: "/testimonials", priority: "0.8", freq: "weekly" },
+      { path: "/privacy", priority: "0.5", freq: "monthly" },
+      { path: "/terms", priority: "0.5", freq: "monthly" },
+      { path: "/refund", priority: "0.5", freq: "monthly" },
     ];
 
     // 13 SEO landing page routes
@@ -63,6 +76,13 @@ async function generateSitemap() {
       "/understand-quranic-arabic",
     ];
 
+    const toTitleCase = (str) =>
+      str
+        .replace(/^\//, "")
+        .split("-")
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" ");
+
     // 3. Construct XML with Image Sitemap Namespace
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
     xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n`;
@@ -71,28 +91,15 @@ async function generateSitemap() {
     // Static routes
     for (const route of staticRoutes) {
       xml += `  <url>\n`;
-      xml += `    <loc>${baseUrl}${route}</loc>\n`;
-      xml += `    <changefreq>weekly</changefreq>\n`;
-      xml += `    <priority>${route === "" ? "1.0" : "0.8"}</priority>\n`;
-      if (route === "") {
+      xml += `    <loc>${baseUrl}${route.path}</loc>\n`;
+      xml += `    <changefreq>${route.freq}</changefreq>\n`;
+      xml += `    <priority>${route.priority}</priority>\n`;
+      if (route.path === "") {
         xml += `    <image:image>\n`;
         xml += `      <image:loc>${baseUrl}/premium-hero-showcase.png</image:loc>\n`;
         xml += `      <image:title>Live online Arabic and Quran classes for sisters at Hareem Academy</image:title>\n`;
         xml += `    </image:image>\n`;
       }
-      xml += `  </url>\n`;
-    }
-
-    // SEO landing page routes
-    for (const route of seoRoutes) {
-      xml += `  <url>\n`;
-      xml += `    <loc>${baseUrl}${route}</loc>\n`;
-      xml += `    <changefreq>weekly</changefreq>\n`;
-      xml += `    <priority>0.85</priority>\n`;
-      xml += `    <image:image>\n`;
-      xml += `      <image:loc>${baseUrl}/premium-hero-showcase.png</image:loc>\n`;
-      xml += `      <image:title>${route.replace(/^\//, "").replace(/-/g, " ")}</image:title>\n`;
-      xml += `    </image:image>\n`;
       xml += `  </url>\n`;
     }
 
@@ -104,11 +111,24 @@ async function generateSitemap() {
 
       xml += `  <url>\n`;
       xml += `    <loc>${baseUrl}/courses/${course.slug}</loc>\n`;
-      xml += `    <changefreq>daily</changefreq>\n`;
+      xml += `    <changefreq>weekly</changefreq>\n`;
       xml += `    <priority>0.9</priority>\n`;
       xml += `    <image:image>\n`;
       xml += `      <image:loc>${baseUrl}/${imgName}</image:loc>\n`;
       xml += `      <image:title>${imgTitle}</image:title>\n`;
+      xml += `    </image:image>\n`;
+      xml += `  </url>\n`;
+    }
+
+    // SEO landing page routes
+    for (const route of seoRoutes) {
+      xml += `  <url>\n`;
+      xml += `    <loc>${baseUrl}${route}</loc>\n`;
+      xml += `    <changefreq>weekly</changefreq>\n`;
+      xml += `    <priority>0.85</priority>\n`;
+      xml += `    <image:image>\n`;
+      xml += `      <image:loc>${baseUrl}/premium-hero-showcase.png</image:loc>\n`;
+      xml += `      <image:title>${toTitleCase(route)} - Hareem Academy</image:title>\n`;
       xml += `    </image:image>\n`;
       xml += `  </url>\n`;
     }
@@ -121,9 +141,6 @@ async function generateSitemap() {
   } catch (error) {
     console.error("❌ Error generating sitemap:", error);
     process.exit(1);
-  } finally {
-    await pool.end();
-    process.exit(0);
   }
 }
 

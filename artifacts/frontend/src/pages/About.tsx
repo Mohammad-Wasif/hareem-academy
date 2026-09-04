@@ -106,8 +106,16 @@ export default function About() {
   return (
     <div className="min-h-screen bg-[#f8f9fa] text-[#191c1d] flex flex-col font-sans">
       <SEO
-        title="About Us | Hareem Academy"
+        title="About Us"
         description="Hareem Academy is an online learning space created for girls and women who want to learn Arabic and Urdu in a comfortable, structured, and supportive environment."
+        keywords={[
+          "about hareem academy",
+          "female islamic academy",
+          "sisters arabic classes",
+          "online madrasa for women",
+          "learn quran female teacher",
+          "arabic teachers for sisters"
+        ]}
         schema={breadcrumbSchema}
       />
 
@@ -138,14 +146,15 @@ export default function About() {
               </p>
               <div className="pt-1.5 flex flex-wrap gap-3">
                 <EnrollmentModal mode="trial">
-                  <button className="font-sans font-bold text-xs md:text-sm bg-[#00450d] text-white px-5 sm:px-6 py-3 rounded-xl hover:bg-[#00450d]/90 transition-all shadow-md shadow-[#00450d]/10 hover:-translate-y-0.5 cursor-pointer">
-                    Book a Free Trial
+                  <button className="inline-flex items-center justify-center h-10 px-5 rounded-full bg-[#00450d] text-white hover:bg-[#00350d] font-sans font-bold text-xs shadow-md transition-all">
+                    Book Free Trial
                   </button>
                 </EnrollmentModal>
-                <Link href="/courses">
-                  <button className="font-sans font-bold text-xs md:text-sm bg-white text-[#00450d] border border-[#00450d]/25 px-5 sm:px-6 py-3 rounded-xl hover:bg-[#00450d]/5 transition-all shadow-xs cursor-pointer">
-                    Explore Courses
-                  </button>
+                <Link
+                  href="/courses"
+                  className="inline-flex items-center justify-center h-10 px-5 rounded-full border border-[#00450d]/20 text-[#00450d] hover:bg-[#00450d]/5 font-sans font-semibold text-xs transition-colors"
+                >
+                  Explore Courses
                 </Link>
               </div>
             </div>
@@ -154,7 +163,7 @@ export default function About() {
               <div className="relative h-[280px] sm:h-[340px] md:h-[360px] w-full rounded-2xl overflow-hidden shadow-[0_16px_36px_-10px_rgba(0,69,13,0.12)] border border-gray-200/80">
                 <img
                   src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1000&q=80"
-                  alt="Sisters learning together"
+                  alt="Sisters learning together in live online Arabic class at Hareem Academy"
                   className="w-full h-full object-cover"
                 />
               </div>

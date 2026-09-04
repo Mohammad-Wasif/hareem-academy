@@ -64,8 +64,17 @@ export default function Courses() {
   return (
     <div className="min-h-screen bg-[#f8f9fa] text-[#191c1d] flex flex-col pt-6 md:pt-10 pb-8 md:pb-12 font-sans">
       <SEO
-        title="Our Arabic & Urdu Programs | Hareem Academy"
+        title="Our Arabic & Urdu Programs"
         description="Explore live, sisters-only Arabic and Urdu courses at Hareem Academy. Certified female teachers, small interactive online groups, and free trials."
+        keywords={[
+          "arabic courses for women",
+          "urdu language classes online",
+          "quran reading course for sisters",
+          "sisters only islamic academy",
+          "live online language classes",
+          "beginner arabic course online",
+          "hareem academy courses"
+        ]}
         schema={[breadcrumbSchema, itemListSchema]}
       />
 

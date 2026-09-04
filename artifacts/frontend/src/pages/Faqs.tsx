@@ -115,8 +115,16 @@ export default function Faqs() {
   return (
     <div className="min-h-screen bg-[#f8f9fa] text-[#191c1d] flex flex-col pt-10 pb-16">
       <SEO
-        title="Frequently Asked Questions | Hareem Academy"
+        title="Frequently Asked Questions"
         description="Find answers to common questions about Hareem Academy: live online batches, sisters-only privacy, timings, certification, and free trials."
+        keywords={[
+          "hareem academy faqs",
+          "online quran class questions",
+          "female arabic tutor queries",
+          "sisters only arabic classes timings",
+          "online urdu classes questions",
+          "free trial arabic class"
+        ]}
         schema={[breadcrumbSchema, faqSchema]}
       />
 

@@ -31,11 +31,31 @@ export default function Terms() {
     year: "numeric",
   });
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://hareemacademy.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Terms of Service",
+        "item": "https://hareemacademy.com/terms"
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-[#f7f9fb] text-[#191c1e] font-sans antialiased pattern-bg pt-10 pb-24">
       <SEO
-        title="Terms of Service | Hareem Academy"
+        title="Terms of Service"
         description="Terms of Service and student code of conduct guidelines for Hareem Academy live online classes."
+        schema={breadcrumbSchema}
       />
 
       <style>{`

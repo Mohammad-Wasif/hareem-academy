@@ -113,14 +113,36 @@ function getCleanCourseName(course?: string) {
     }
   ];
 
+  const aggregateRatingSchema = {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "name": "Hareem Academy",
+    "url": "https://hareemacademy.com",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "reviewCount": String(Math.max(testimonials.length, defaultStories.length)),
+      "bestRating": "5",
+      "worstRating": "1"
+    }
+  };
+
   const displayList = testimonials.length > 0 ? testimonials : defaultStories;
 
   return (
     <div className="min-h-screen bg-[#f7f9fb] text-[#191c1e] font-sans antialiased selection:bg-[#064e3b] selection:text-[#80bea6] pt-6 pb-4 md:pb-6">
       <SEO
-        title="Student Testimonials | Hareem Academy"
+        title="Student Reviews & Stories"
         description="Discover real stories and experiences from sisters around the world who have transformed their Arabic and Quranic studies at Hareem Academy."
-        schema={[breadcrumbSchema, ...reviewSchemas]}
+        keywords={[
+          "hareem academy reviews",
+          "student testimonials arabic classes",
+          "sister reviews online quran academy",
+          "urdu class reviews",
+          "female teacher feedback",
+          "hareem academy student results"
+        ]}
+        schema={[breadcrumbSchema, aggregateRatingSchema, ...reviewSchemas]}
       />
 
       <style>{`

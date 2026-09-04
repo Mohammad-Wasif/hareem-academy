@@ -143,12 +143,24 @@ export default function Home() {
     }
   };
 
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Hareem Academy",
+    "url": "https://hareemacademy.com",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://hareemacademy.com/courses?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
+
   const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": "Hareem Academy",
     "image": assets["hero_showcase"] || "https://hareemacademy.com/premium-hero-showcase.png",
-    "telePhone": "+91-9315118289",
+    "telephone": "+91-9315118289",
     "url": "https://hareemacademy.com",
     "address": {
       "@type": "PostalAddress",
@@ -274,9 +286,20 @@ export default function Home() {
       style={homeConfig?.theme ? { backgroundColor } as React.CSSProperties : undefined}
     >
       <SEO
-        title={homeConfig?.title || "Online Quran Classes for Sisters"}
+        title={homeConfig?.title || "Online Quran & Arabic Classes for Sisters"}
         description={homeConfig?.metaDescription || "Live, female-only online Quran and Arabic classes. Learn Tajweed and meaning in a comfortable, judgment-free environment."}
-        schema={[organizationSchema, localBusinessSchema, faqSchema]}
+        keywords={[
+          "learn arabic online",
+          "arabic classes for sisters",
+          "online quran classes for sisters",
+          "learn urdu online",
+          "female arabic teachers",
+          "online tajweed classes",
+          "urdu course for beginners",
+          "quran reading classes for sisters",
+          "hareem academy"
+        ]}
+        schema={[organizationSchema, localBusinessSchema, websiteSchema, faqSchema]}
       />
 
       {/* 1. HERO */}

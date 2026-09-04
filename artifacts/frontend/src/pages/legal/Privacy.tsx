@@ -28,11 +28,31 @@ export default function Privacy() {
     year: "numeric",
   });
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://hareemacademy.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Privacy Policy",
+        "item": "https://hareemacademy.com/privacy"
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-[#f7f9fb] text-[#191c1e] font-sans antialiased pattern-bg pt-10 pb-24">
       <SEO
-        title="Privacy Policy | Hareem Academy"
+        title="Privacy Policy"
         description="Privacy Policy and data protection guidelines for Hareem Academy students and visitors, guaranteeing a secure sisters-only learning environment."
+        schema={breadcrumbSchema}
       />
 
       <style>{`
