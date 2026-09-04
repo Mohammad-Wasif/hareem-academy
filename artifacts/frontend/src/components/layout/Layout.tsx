@@ -14,7 +14,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div className={`flex flex-col min-h-[100dvh] bg-background theme-${themePreset} glow-${glowPreset}`}>
       <Header />
-      <main className="flex-grow pt-12 sm:pt-14 bg-background overflow-x-hidden">
+      <main className="flex-grow bg-background overflow-x-hidden">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={location}

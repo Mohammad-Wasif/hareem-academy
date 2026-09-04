@@ -1,0 +1,9 @@
+[
+  { "id": "App", "path": "artifacts/frontend/src/App.tsx" },
+  { "id": "Home", "path": "artifacts/frontend/src/pages/Home.tsx" },
+  { "id": "SEOLandingPage", "path": "artifacts/frontend/src/pages/SEOLandingPage.tsx" },
+  { "id": "AdminBuilder", "path": "artifacts/frontend/src/pages/admin/AdminBuilder.tsx" },
+  { "id": "AdminSettings", "path": "artifacts/frontend/src/pages/admin/AdminSettings.tsx" },
+  { "id": "adminApi", "path": "artifacts/frontend/src/lib/adminApi.ts" },
+  { "id": "dbSchema", "path": "lib/db/src/schema/index.ts" }
+]

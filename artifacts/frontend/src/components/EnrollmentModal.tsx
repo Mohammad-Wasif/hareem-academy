@@ -282,7 +282,7 @@ export default function EnrollmentModal({
       }}
     >
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[480px] max-h-[90vh] overflow-y-auto p-0 rounded-2xl border border-accent/15">
+      <DialogContent className="w-[94vw] sm:max-w-[480px] max-h-[92vh] overflow-y-auto p-0 rounded-2xl border border-accent/15">
         {isSuccess ? (
           <div className="py-12 px-6 flex flex-col items-center justify-center text-center space-y-6">
             <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center shadow-inner">

@@ -157,7 +157,7 @@ const defaultCoursesConfig: Partial<ExtendedPageConfig> = {
   metaDescription: "Explore live, sisters-only Arabic and Urdu courses at Hareem Academy. Certified female teachers, small interactive online groups, and free trials.",
   heroTitle: "Find the right course for you.",
   heroSubtitle: "From absolute beginner to fluent reader. All classes are live, sisters-only, and start with a free trial.",
-  geoContext: "Live online classes",
+  geoContext: "Hareem Academy",
   closingTitle: "Not sure which to pick?",
   closingSubtitle: "Tell us your goal on WhatsApp and we'll recommend the right batch — usually within a few minutes.",
   sections: [
@@ -525,6 +525,7 @@ export default function AdminBuilder() {
       if (field === "aiAnswerBlock") nextPage.aiAnswerBlock = inlineEditText;
     } else if (sectionId === "prose") {
       if (field === "proseTitle") nextPage.proseTitle = inlineEditText;
+      if (field === "proseBody") nextPage.proseBody = inlineEditText;
     }
 
     updateActivePage(nextPage);
@@ -928,9 +929,24 @@ export default function AdminBuilder() {
                             )}
 
                             <div className="text-xs text-muted-foreground mb-4">Last Updated: {new Date().toLocaleDateString()}</div>
-                            <div className="prose prose-stone leading-relaxed whitespace-pre-line text-foreground/80">
-                              {activePage.proseBody}
-                            </div>
+                            {inlineEditingField?.sectionId === "prose" && inlineEditingField.field === "proseBody" ? (
+                              <div className="flex gap-2 items-start py-2" onClick={e => e.stopPropagation()}>
+                                <Textarea
+                                  value={inlineEditText}
+                                  onChange={e => setInlineEditText(e.target.value)}
+                                  className="min-h-[200px] text-xs font-mono"
+                                  autoFocus
+                                />
+                                <Button onClick={handleInlineEditSave} size="sm" className="bg-[#0F4D36] text-white">Save</Button>
+                              </div>
+                            ) : (
+                              <div
+                                onDoubleClick={() => handleInlineEditStart("prose", "proseBody", activePage.proseBody || "")}
+                                className="prose prose-stone leading-relaxed whitespace-pre-line text-foreground/80 cursor-text hover:bg-amber-50/50 p-2 rounded border border-dashed border-transparent hover:border-amber-400"
+                              >
+                                {activePage.proseBody}
+                              </div>
+                            )}
                           </div>
                         )}
 

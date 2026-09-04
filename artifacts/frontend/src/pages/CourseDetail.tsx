@@ -55,8 +55,16 @@ export default function CourseDetail() {
   if (isError || !course) return <NotFound />;
 
   // Select fields
+  const isUrdu =
+    course.language?.toLowerCase() === "urdu" ||
+    course.slug?.toLowerCase().includes("urdu");
+
+  const isIntermediate =
+    course.slug?.toLowerCase().includes("intermediate");
+
   const title = course.title;
   const summary = course.summary;
+  const courseLevel = course.level;
   const timings = course.timings;
 
   const lowSeats =
@@ -78,17 +86,17 @@ export default function CourseDetail() {
   const isArabic = course.language?.toLowerCase() === "arabic";
   const transformations = isArabic
     ? [
-        { icon: Heart, text: "Pray Salah understanding every word" },
-        { icon: Sparkles, text: "Read the Quran with Tajweed and meaning" },
-        { icon: Award, text: "Build a daily Arabic study habit" },
-        { icon: Users, text: "Join a global circle of sisters on the same path" },
-      ]
+      { icon: Heart, text: "Pray Salah understanding every word" },
+      { icon: Sparkles, text: "Read the Quran with Tajweed and meaning" },
+      { icon: Award, text: "Build a daily Arabic study habit" },
+      { icon: Users, text: "Join a global circle of sisters on the same path" },
+    ]
     : [
-        { icon: Heart, text: "Read Urdu fluently and confidently" },
-        { icon: Sparkles, text: "Connect with Islamic literature and poetry" },
-        { icon: Award, text: "Speak and write Urdu in everyday life" },
-        { icon: Users, text: "Join a sisterhood that celebrates the language" },
-      ];
+      { icon: Heart, text: "Read Urdu fluently and confidently" },
+      { icon: Sparkles, text: "Connect with Islamic literature and poetry" },
+      { icon: Award, text: "Speak and write Urdu in everyday life" },
+      { icon: Users, text: "Join a sisterhood that celebrates the language" },
+    ];
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -140,9 +148,9 @@ export default function CourseDetail() {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-32 pt-20">
-      <SEO 
-        title={title} 
+    <div className="min-h-screen bg-background pb-28 md:pb-16 pt-2 sm:pt-4">
+      <SEO
+        title={title}
         description={summary}
         schema={[breadcrumbSchema, courseSchema]}
       />
@@ -151,7 +159,7 @@ export default function CourseDetail() {
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="flex flex-wrap gap-2 mb-4">
             <span className="inline-block px-3 py-1 bg-accent/20 text-accent font-bold text-xs uppercase tracking-widest rounded-full">
-              {course.language} • {course.level}
+              {course.language} • {courseLevel}
             </span>
             {course.featured && (
               <span className="inline-flex items-center gap-1 px-3 py-1 bg-accent text-primary font-bold text-xs uppercase tracking-widest rounded-full">
@@ -468,7 +476,7 @@ export default function CourseDetail() {
       </div>
 
       {/* MOBILE STICKY BAR */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-background/95 backdrop-blur border-t border-border p-3 flex gap-2 shadow-2xl">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-background/95 backdrop-blur border-t border-border p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex gap-2 shadow-2xl">
         {(course as any).enrollmentStatus === "closed" ? (
           <Button disabled className="flex-1 h-12 rounded-lg opacity-50 font-sans font-semibold">
             Enrollments Closed

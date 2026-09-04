@@ -61,8 +61,8 @@ router.post("/admin/landing-pages", requireAdmin, async (req, res) => {
   }
 });
 
-// PUT /api/admin/landing-pages/:slug - Admin update page configuration
-router.put("/api/admin/landing-pages/:slug", requireAdmin, async (req, res) => {
+// PUT /admin/landing-pages/:slug - Admin update page configuration
+router.put("/admin/landing-pages/:slug", requireAdmin, async (req, res) => {
   try {
     const slug = req.params.slug as string;
     const { title, metaDescription, config } = req.body ?? {};

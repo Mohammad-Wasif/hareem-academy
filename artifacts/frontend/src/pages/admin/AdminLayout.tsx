@@ -170,7 +170,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   });
 
   useEffect(() => {
-    if (!isLoading && data && !data.isAdmin && !isLogin) {
+    if (!isLoading && (!data || !data.isAdmin) && !isLogin) {
       setLocation("/admin/login");
     }
   }, [isLoading, data, isLogin, setLocation]);

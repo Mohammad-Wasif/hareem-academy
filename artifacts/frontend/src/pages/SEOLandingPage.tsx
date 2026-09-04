@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { SEO } from "@/components/SEO";
 import { adminApi } from "@/lib/adminApi";
 import { seoLandingPages } from "@/data/seoLandingPages";
+import NotFound from "@/pages/not-found";
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -131,17 +132,7 @@ export default function SEOLandingPage({ slug }: SEOLandingPageProps) {
   const { assets } = useSiteAssets();
 
   if (!pageData) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center py-20">
-          <h1 className="font-serif font-bold text-3xl text-primary mb-4">Page Not Found</h1>
-          <p className="text-muted-foreground mb-6">The requested SEO landing page could not be found.</p>
-          <Button asChild className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
-            <Link href="/">Return to Home</Link>
-          </Button>
-        </div>
-      </div>
-    );
+    return <NotFound />;
   }
 
   // Define dynamic structured schemas
@@ -217,23 +208,23 @@ export default function SEOLandingPage({ slug }: SEOLandingPageProps) {
     pageData.theme?.fontFamily === "sans"
       ? "font-sans"
       : pageData.theme?.fontFamily === "mono"
-      ? "font-mono"
-      : "font-serif";
+        ? "font-mono"
+        : "font-serif";
 
   const sizeClass =
     pageData.theme?.baseFontSize === "lg"
       ? "text-lg"
       : pageData.theme?.baseFontSize === "sm"
-      ? "text-sm"
-      : "text-base";
+        ? "text-sm"
+        : "text-base";
 
   const primaryColor = pageData.theme?.primaryColor || "#0F4D36";
   const accentColor = pageData.theme?.accentColor || "#ECC565";
   const backgroundColor = pageData.theme?.backgroundColor || "#FDFCF7";
 
   return (
-    <div 
-      style={{ backgroundColor }} 
+    <div
+      style={{ backgroundColor }}
       className={`min-h-screen pb-24 pt-4 sm:pt-8 overflow-x-hidden ${computedFont} ${sizeClass}`}
     >
       <SEO
@@ -310,8 +301,8 @@ export default function SEOLandingPage({ slug }: SEOLandingPageProps) {
                         </a>
                       </Button>
                     </motion.div>
-                    
-                    <motion.p 
+
+                    <motion.p
                       variants={fadeUp}
                       className="text-[10px] text-muted-foreground/60 tracking-wider font-sans uppercase font-medium"
                     >
@@ -325,7 +316,7 @@ export default function SEOLandingPage({ slug }: SEOLandingPageProps) {
           case "overview":
             return (
               <section key="overview" className="container px-4 max-w-4xl -mt-8 sm:-mt-12 relative z-20">
-                <motion.div 
+                <motion.div
                   variants={fadeIn}
                   initial="hidden"
                   whileInView="show"
@@ -360,7 +351,7 @@ export default function SEOLandingPage({ slug }: SEOLandingPageProps) {
                   <div className="w-12 h-[3px] mx-auto rounded-full mt-4" style={{ backgroundColor: accentColor }} />
                 </div>
 
-                <motion.div 
+                <motion.div
                   variants={staggerContainer}
                   initial="hidden"
                   whileInView="show"
@@ -452,7 +443,7 @@ export default function SEOLandingPage({ slug }: SEOLandingPageProps) {
 
                 <div className="relative border-l border-primary/10 ml-4 sm:ml-6 pl-6 sm:pl-8 space-y-10 py-2 text-left">
                   <div className="absolute left-[-1px] top-4 bottom-4 w-[2px] bg-gradient-to-b from-primary via-accent/30 to-transparent" />
-                  
+
                   {(pageData.curriculum || []).map((module: any, i: number) => (
                     <div key={i} className="relative group">
                       <div className="absolute -left-[35px] sm:-left-[43px] top-0.5 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-card font-serif font-bold text-xs flex items-center justify-center border shadow-sm transition-all duration-300" style={{ color: primaryColor, borderColor: accentColor }}>
@@ -487,14 +478,14 @@ export default function SEOLandingPage({ slug }: SEOLandingPageProps) {
                     viewport={{ once: true, margin: "-100px" }}
                   >
                     {(pageData.testimonials || []).map((testimonial: any, i: number) => (
-                      <motion.div 
-                        key={i} 
+                      <motion.div
+                        key={i}
                         variants={fadeUp}
                         className="premium-card bg-white p-6 sm:p-8 flex flex-col justify-between hover:scale-[1.01] transition-all duration-300 text-left"
                       >
                         <div className="space-y-4">
                           <div className="flex gap-0.5">
-                            {[1,2,3,4,5].map((star) => (
+                            {[1, 2, 3, 4, 5].map((star) => (
                               <Star key={star} className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-accent text-accent" style={{ fill: accentColor, color: accentColor }} />
                             ))}
                           </div>
@@ -557,10 +548,10 @@ export default function SEOLandingPage({ slug }: SEOLandingPageProps) {
                   <h3 className="font-serif font-bold text-xl sm:text-2xl text-foreground" style={{ color: primaryColor }}>Related Programs & Paths</h3>
                   <div className="flex flex-wrap justify-center gap-3 sm:gap-4 pt-2">
                     {(pageData.internalLinks || []).map((link: any, idx: number) => (
-                      <Button 
-                        key={idx} 
-                        asChild 
-                        variant="outline" 
+                      <Button
+                        key={idx}
+                        asChild
+                        variant="outline"
                         className="rounded-full border-primary/10 hover:bg-primary/[0.02] text-xs sm:text-sm h-9 sm:h-10 px-4 sm:px-5 font-sans transition-all duration-300"
                         style={{ color: primaryColor }}
                       >

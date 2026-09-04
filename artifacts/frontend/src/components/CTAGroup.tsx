@@ -39,7 +39,7 @@ export default function CTAGroup({
   primaryHref,
 }: CTAGroupProps) {
   const { whatsappUrl } = useWhatsApp();
-  
+
   const size =
     variant === "hero"
       ? "h-9 sm:h-10 px-4 sm:px-5 text-sm sm:text-base rounded-lg font-sans font-medium tracking-wide"

@@ -1,0 +1,11 @@
+{
+  "keywords": {
+    "routing": ["App"],
+    "home": ["Home"],
+    "landing": ["SEOLandingPage", "AdminBuilder"],
+    "builder": ["AdminBuilder"],
+    "settings": ["AdminSettings"],
+    "api": ["adminApi", "backendRouter"],
+    "database": ["dbSchema"]
+  }
+}

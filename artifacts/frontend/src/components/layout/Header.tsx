@@ -1,11 +1,8 @@
 import { Link, useLocation } from "wouter";
 import { useState, useEffect, Suspense, lazy } from "react";
 import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { FaWhatsapp } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 const EnrollmentModal = lazy(() => import("@/components/EnrollmentModal"));
-import { useWhatsApp } from "@/hooks/use-whatsapp";
 import staticLogo from "@assets/IMG_20260507_171922.png";
 import { useSiteAssets } from "@/hooks/use-site-assets";
 import PremiumImage from "@/components/PremiumImage";
@@ -15,9 +12,6 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { assets } = useSiteAssets();
-  const { whatsappUrl } = useWhatsApp();
-
-  const logoSrc = assets["logo"] || staticLogo;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 12);
@@ -25,7 +19,6 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setIsOpen(false);
   }, [location]);
@@ -34,187 +27,145 @@ export default function Header() {
     { label: "Home", href: "/" },
     { label: "About Us", href: "/about" },
     { label: "Courses", href: "/courses" },
+    { label: "FAQs", href: "/faqs" },
     { label: "Contact Us", href: "/contact" },
-    { label: "FAQ", href: "/faqs" },
   ];
 
   return (
-    <motion.header
-      className={`fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300 ${scrolled
-          ? "bg-[#0F4D36]/95 backdrop-blur-xl border-[#ECC565]/20 shadow-lg shadow-black/[0.08]"
-          : "bg-[#0F4D36]/90 backdrop-blur-md border-[#ECC565]/10"
-        }`}
-      initial={{ y: -80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-    >
-      <div
-        className={`container mx-auto px-3 sm:px-6 flex items-center justify-between transition-all duration-300 ${
-          scrolled ? "h-12 sm:h-14" : "h-14 sm:h-16"
-        }`}
-      >
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 group min-w-0 shrink-0">
+    <header className="bg-[#003527] text-[#ffe088] sticky top-0 z-50 border-b border-[#064e3b] shadow-md transition-all">
+      <div className="flex justify-between items-center w-full px-4 md:px-12 max-w-[1280px] mx-auto h-20">
+        {/* Circular Logo Container (#0B2216 border and background, no white/grey outline) */}
+        <Link href="/" className="flex items-center gap-3.5 group shrink-0">
           <motion.div
-            whileHover={{ scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            className={`flex items-center shrink-0 transition-all duration-300 ${
-              scrolled ? "h-8 sm:h-9.5" : "h-9.5 sm:h-11"
-            }`}
+            whileHover={{ scale: 1.08, rotate: 2 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-13 h-13 md:w-15 md:h-15 rounded-full bg-[#0B2216] border border-[#0B2216] flex items-center justify-center shrink-0 shadow-md overflow-hidden p-0"
           >
             <PremiumImage
               assetKey="logo"
               fallback={staticLogo}
               alt="Hareem Academy"
-              objectFit="contain"
-              bgClass="bg-transparent"
-              widthClass={scrolled ? "w-16 sm:w-22" : "w-20 sm:w-26"}
-              heightClass="h-full"
+              objectFit="cover"
+              bgClass="bg-[#0B2216]"
+              widthClass="w-full"
+              heightClass="h-full scale-105"
               fetchPriority="high"
             />
           </motion.div>
-          <span className="whitespace-nowrap font-serif font-bold text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl tracking-[0.04em] lg:tracking-[0.08em] xl:tracking-[0.12em] text-[#ECC565] group-hover:text-[#ECC565]/90 transition-colors uppercase">
+          <span className="font-serif font-bold text-xl md:text-2xl text-white tracking-normal group-hover:text-[#ffe088] transition-colors leading-snug">
             Hareem Academy
           </span>
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-3.5 xl:gap-6">
+        {/* All Nav Links inside a Capsule with ONLY BORDERS */}
+        <nav className="hidden md:flex items-center space-x-1 border-2 border-[#ffe088] rounded-full p-1.5 bg-transparent">
           {navItems.map((item) => {
             const isActive = location === item.href;
             return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`relative text-xs xl:text-sm font-medium transition-colors duration-300 py-1 nav-link-glow ${isActive ? "text-[#ECC565]" : "text-white/80 hover:text-[#ECC565]"
-                  }`}
-              >
-                {item.label}
-                {/* Animated active underline */}
-                {isActive && (
-                  <motion.span
-                    className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-[#ECC565] rounded-full"
-                    layoutId="nav-active-underline"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                  />
-                )}
+              <Link key={item.href} href={item.href}>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`font-sans text-xs md:text-sm font-semibold px-4 py-1.5 rounded-full transition-all duration-300 cursor-pointer ${isActive
+                      ? "bg-[#ffe088] text-[#003527] font-bold shadow-sm"
+                      : "text-[#ffe088] hover:bg-[#ffe088]/20 hover:text-white"
+                    }`}
+                >
+                  {item.label}
+                </motion.div>
               </Link>
             );
           })}
-
-          <Suspense fallback={
-            <Button className="bg-[#ECC565] text-[#0F4D36] hover:bg-[#ECC565]/90 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 font-sans text-xs xl:text-sm rounded-lg px-3.5 xl:px-4.5 h-8 xl:h-9 font-semibold shadow-sm cursor-pointer">
-              Begin Your Journey
-            </Button>
-          }>
-            <EnrollmentModal mode="trial">
-              <Button className="bg-[#ECC565] text-[#0F4D36] hover:bg-[#ECC565]/90 hover:scale-[1.01] active:scale-[0.99] transition-all duration-300 font-sans text-xs xl:text-sm rounded-lg px-3.5 xl:px-4.5 h-8 xl:h-9 font-semibold shadow-sm cursor-pointer">
-                Begin Your Journey
-              </Button>
-            </EnrollmentModal>
-          </Suspense>
         </nav>
 
-        {/* Mobile Trigger */}
-        <div className="flex items-center gap-2 lg:hidden">
-          <motion.button
-            className="p-2 text-[#ECC565] rounded-lg hover:bg-white/10 transition-colors"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label="Toggle menu"
-            whileTap={{ scale: 0.9 }}
+        {/* Book Free Trial Button (Separate Action Button) */}
+        <div className="hidden md:flex items-center">
+          <Suspense
+            fallback={
+              <motion.button
+                whileHover={{ scale: 1.05, y: -1 }}
+                whileTap={{ scale: 0.95 }}
+                className="font-sans font-bold text-xs md:text-sm bg-[#ffe088] text-[#003527] px-6 py-2.5 rounded-full hover:bg-[#e9c349] transition-all shadow-md shadow-black/20 cursor-pointer"
+              >
+                Book Free Trial
+              </motion.button>
+            }
           >
-            <AnimatePresence mode="wait" initial={false}>
-              {isOpen ? (
-                <motion.span
-                  key="close"
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                >
-                  <X className="h-5 w-5" strokeWidth={1.75} />
-                </motion.span>
-              ) : (
-                <motion.span
-                  key="menu"
-                  initial={{ rotate: 90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: -90, opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                >
-                  <Menu className="h-5 w-5" strokeWidth={1.75} />
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </motion.button>
+            <EnrollmentModal mode="trial">
+              <motion.button
+                whileHover={{ scale: 1.05, y: -1 }}
+                whileTap={{ scale: 0.95 }}
+                className="font-sans font-bold text-xs md:text-sm bg-[#ffe088] text-[#003527] px-6 py-2.5 rounded-full hover:bg-[#e9c349] transition-all shadow-md shadow-black/20 cursor-pointer"
+              >
+                Book Free Trial
+              </motion.button>
+            </EnrollmentModal>
+          </Suspense>
         </div>
+
+        {/* Mobile Menu Trigger */}
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="md:hidden p-2 text-[#ffe088] hover:bg-white/10 rounded-full transition-colors cursor-pointer"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label="Toggle menu"
+        >
+          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </motion.button>
       </div>
 
-      {/* Mobile Nav — animated slide-down drawer */}
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            key="mobile-menu"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
-            className="lg:hidden overflow-hidden bg-[#0F4D36] border-b border-[#ECC565]/20 shadow-xl shadow-black/10"
+            className="md:hidden overflow-hidden bg-[#002a1f] border-b border-[#064e3b] px-4 py-4"
           >
-            <div className="p-4 flex flex-col gap-1">
-              {navItems.map((item, index) => {
-                const isActive = location === item.href;
-                return (
-                  <motion.div
-                    key={item.href}
-                    initial={{ x: -16, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: index * 0.04, duration: 0.2 }}
-                  >
+            <div className="flex flex-col space-y-3">
+              <div className="border-2 border-[#ffe088] rounded-2xl p-2 space-y-1">
+                {navItems.map((item) => {
+                  const isActive = location === item.href;
+                  return (
                     <Link
+                      key={item.href}
                       href={item.href}
                       onClick={() => setIsOpen(false)}
-                      className={`flex items-center gap-2 px-4 py-2.5 text-base font-medium rounded-xl transition-colors ${isActive
-                          ? "bg-[#ECC565]/15 text-[#ECC565]"
-                          : "text-white/80 hover:bg-white/5 hover:text-white"
-                        }`}
                     >
-                      {isActive && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#ECC565] shrink-0" />
-                      )}
-                      {item.label}
+                      <motion.div
+                        whileHover={{ scale: 1.02, x: 4 }}
+                        whileTap={{ scale: 0.98 }}
+                        className={`px-4 py-2 rounded-full font-sans text-sm font-semibold transition-all ${isActive
+                            ? "bg-[#ffe088] text-[#003527] font-bold"
+                            : "text-[#ffe088] hover:bg-white/10 hover:text-white"
+                          }`}
+                      >
+                        {item.label}
+                      </motion.div>
                     </Link>
-                  </motion.div>
-                );
-              })}
-
-              <motion.div
-                className="flex flex-col gap-2 mt-3 pt-3 border-t border-white/10"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.22 }}
-              >
-                <Suspense fallback={
-                  <Button
-                    className="bg-[#ECC565] text-[#0F4D36] hover:bg-[#ECC565]/90 rounded-lg w-full font-sans h-10 text-base shadow-sm font-semibold cursor-pointer"
-                  >
-                    Begin Your Journey
-                  </Button>
-                }>
+                  );
+                })}
+              </div>
+              <div className="pt-2 flex flex-col gap-2">
+                <Suspense fallback={null}>
                   <EnrollmentModal mode="trial">
-                    <Button
-                      className="bg-[#ECC565] text-[#0F4D36] hover:bg-[#ECC565]/90 rounded-lg w-full font-sans h-10 text-base shadow-sm font-semibold cursor-pointer"
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                       onClick={() => setIsOpen(false)}
+                      className="w-full font-sans font-bold text-sm bg-[#ffe088] text-[#003527] py-3 rounded-full hover:bg-[#e9c349] transition-all shadow-md cursor-pointer"
                     >
-                      Begin Your Journey
-                    </Button>
+                      Book Free Trial
+                    </motion.button>
                   </EnrollmentModal>
                 </Suspense>
-              </motion.div>
+              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.header>
+    </header>
   );
 }

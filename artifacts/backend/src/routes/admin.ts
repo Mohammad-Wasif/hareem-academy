@@ -35,14 +35,19 @@ router.post("/admin/login", loginLimiter, async (req, res) => {
   const { username, password } = req.body ?? {};
   
   const hash = process.env["ADMIN_PASSWORD_HASH"];
+  const plainPassword = process.env["ADMIN_PASSWORD"];
   
-  if (!hash) {
+  if (!hash && !plainPassword) {
     return res.status(500).json({ error: "Admin credentials not configured" });
   }
 
   let isValid = false;
   if (username === "admin") {
-    isValid = await bcrypt.compare(password, hash);
+    if (hash) {
+      isValid = await bcrypt.compare(password, hash);
+    } else if (plainPassword) {
+      isValid = password === plainPassword;
+    }
   }
 
   if (!isValid) {
@@ -780,8 +785,8 @@ router.put("/admin/leads/:id/assign", requireAdmin, async (req, res) => {
   }
 });
 
-// PUT /api/admin/enrollments/:id/assign - Assign enrollment to teacher
-router.put("/api/admin/enrollments/:id/assign", requireAdmin, async (req, res) => {
+// PUT /admin/enrollments/:id/assign - Assign enrollment to teacher
+router.put("/admin/enrollments/:id/assign", requireAdmin, async (req, res) => {
   try {
     const id = Number(req.params.id);
     const { assignedTo } = req.body ?? {};
@@ -863,8 +868,8 @@ router.put("/admin/tasks/:id", requireAdmin, async (req, res) => {
   }
 });
 
-// DELETE /api/admin/tasks/:id - Delete dashboard task
-router.delete("/api/admin/tasks/:id", requireAdmin, async (req, res) => {
+// DELETE /admin/tasks/:id - Delete dashboard task
+router.delete("/admin/tasks/:id", requireAdmin, async (req, res) => {
   try {
     const id = Number(req.params.id);
     const [row] = await db
@@ -894,8 +899,8 @@ router.get("/admin/settings", requireAdmin, async (req, res) => {
   }
 });
 
-// PUT /api/admin/settings/:key - Save/update settings category
-router.put("/api/admin/settings/:key", requireAdmin, async (req, res) => {
+// PUT /admin/settings/:key - Save/update settings category
+router.put("/admin/settings/:key", requireAdmin, async (req, res) => {
   try {
     const key = req.params.key as string;
     const { value } = req.body ?? {};
@@ -920,8 +925,8 @@ router.put("/api/admin/settings/:key", requireAdmin, async (req, res) => {
   }
 });
 
-// PUT /api/admin/site-assets/:key/metadata - Update media asset details
-router.put("/api/admin/site-assets/:key/metadata", requireAdmin, async (req, res) => {
+// PUT /admin/site-assets/:key/metadata - Update media asset details
+router.put("/admin/site-assets/:key/metadata", requireAdmin, async (req, res) => {
   try {
     const key = req.params.key as string;
     const { title, description, altText, tags } = req.body ?? {};

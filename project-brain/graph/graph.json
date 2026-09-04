@@ -1,0 +1,24 @@
+{
+  "name": "Hareem Academy Project Brain Graph",
+  "version": "2.0.0",
+  "nodes": [
+    { "id": "App", "label": "App.tsx", "type": "routing", "path": "artifacts/frontend/src/App.tsx" },
+    { "id": "Home", "label": "Home.tsx", "type": "page", "path": "artifacts/frontend/src/pages/Home.tsx" },
+    { "id": "SEOLandingPage", "label": "SEOLandingPage.tsx", "type": "page", "path": "artifacts/frontend/src/pages/SEOLandingPage.tsx" },
+    { "id": "AdminBuilder", "label": "AdminBuilder.tsx", "type": "admin-page", "path": "artifacts/frontend/src/pages/admin/AdminBuilder.tsx" },
+    { "id": "AdminSettings", "label": "AdminSettings.tsx", "type": "admin-page", "path": "artifacts/frontend/src/pages/admin/AdminSettings.tsx" },
+    { "id": "AdminMedia", "label": "AdminMedia.tsx", "type": "admin-page", "path": "artifacts/frontend/src/pages/admin/AdminMedia.tsx" },
+    { "id": "adminApi", "label": "adminApi.ts", "type": "api-client", "path": "artifacts/frontend/src/lib/adminApi.ts" },
+    { "id": "dbSchema", "label": "schema/index.ts", "type": "database", "path": "lib/db/src/schema/index.ts" },
+    { "id": "backendRouter", "label": "routes/index.ts", "type": "api-server", "path": "artifacts/backend/src/routes/index.ts" }
+  ],
+  "edges": [
+    { "source": "App", "target": "Home", "type": "renders" },
+    { "source": "App", "target": "SEOLandingPage", "type": "renders" },
+    { "source": "App", "target": "AdminBuilder", "type": "renders" },
+    { "source": "AdminBuilder", "target": "adminApi", "type": "calls" },
+    { "source": "SEOLandingPage", "target": "adminApi", "type": "calls" },
+    { "source": "adminApi", "target": "backendRouter", "type": "requests" },
+    { "source": "backendRouter", "target": "dbSchema", "type": "queries" }
+  ]
+}

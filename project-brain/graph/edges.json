@@ -1,0 +1,9 @@
+[
+  { "source": "App", "target": "Home", "relation": "renders" },
+  { "source": "App", "target": "SEOLandingPage", "relation": "renders" },
+  { "source": "App", "target": "AdminBuilder", "relation": "renders" },
+  { "source": "AdminBuilder", "target": "adminApi", "relation": "calls" },
+  { "source": "SEOLandingPage", "target": "adminApi", "relation": "calls" },
+  { "source": "adminApi", "target": "backendRouter", "relation": "requests" },
+  { "source": "backendRouter", "target": "dbSchema", "relation": "queries" }
+]
