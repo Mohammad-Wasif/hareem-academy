@@ -348,9 +348,9 @@ export default function Home() {
               <motion.p
                 variants={fadeUp}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="text-sm sm:text-base text-[#41493e] max-w-xl leading-relaxed font-sans"
+                className="text-xs sm:text-sm text-[#41493e] max-w-2xl leading-relaxed font-sans"
               >
-                Structured, live online classes taught by qualified female teachers — designed exclusively for sisters, from complete beginners to intermediate learners.
+                Structured, live online classes taught by qualified female teachers —<br className="hidden sm:inline" /> designed exclusively for sisters, from complete beginners to intermediate learners.
               </motion.p>
 
               {/* Action Buttons: [Book Your Free Trial] & [Explore Courses] */}
@@ -772,7 +772,7 @@ export default function Home() {
       <section className="py-16 sm:py-20 lg:py-24 bg-[#003527] text-white relative overflow-hidden">
         <div className="container px-4 max-w-6xl mx-auto relative z-10">
           <motion.div
-            className="text-center max-w-2xl mx-auto mb-14 space-y-3"
+            className="text-center max-w-4xl mx-auto mb-14 space-y-3"
             variants={fadeUp}
             initial="hidden"
             whileInView="show"
@@ -782,7 +782,7 @@ export default function Home() {
             <span className="inline-block text-xs font-bold tracking-[0.2em] text-[#ffe088] uppercase bg-white/10 px-3.5 py-1 rounded-full border border-white/20 font-sans">
               WHY HAREEM ACADEMY
             </span>
-            <h2 className="font-serif font-bold text-3xl sm:text-4xl md:text-5xl text-white">
+            <h2 className="font-serif font-bold text-xl sm:text-3xl md:text-4xl lg:text-5xl text-white whitespace-nowrap">
               Built around the needs of sisters.
             </h2>
           </motion.div>
@@ -866,7 +866,7 @@ export default function Home() {
                 Real stories
               </span>
               <h2 className="font-serif font-bold text-3xl md:text-4xl text-[#003527]">
-                Sisters who started where you are.
+                Hear From Our Sisters
               </h2>
             </div>
             <Button

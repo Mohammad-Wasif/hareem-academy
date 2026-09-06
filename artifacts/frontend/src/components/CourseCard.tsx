@@ -15,8 +15,8 @@ export default function CourseCard({ course }: { course: Course }) {
   const courseAssetKey = isUrduCourse
     ? "course_urdu"
     : isIntermediateCourse
-    ? "course_arabic_intermediate"
-    : "course_arabic";
+      ? "course_arabic_intermediate"
+      : "course_arabic";
 
   const courseFallback = isUrduCourse ? "/course-urdu.png" : "/course-arabic.png";
 
