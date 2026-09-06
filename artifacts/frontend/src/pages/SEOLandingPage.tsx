@@ -539,7 +539,7 @@ export default function SEOLandingPage({ slug }: SEOLandingPageProps) {
                       <AccordionTrigger className="hover:no-underline font-bold text-left py-4 text-sm sm:text-base font-sans" style={{ color: primaryColor }}>
                         {faq.question}
                       </AccordionTrigger>
-                      <AccordionContent className="text-muted-foreground pb-4 leading-relaxed text-sm font-sans">
+                      <AccordionContent className="text-muted-foreground pb-4 leading-relaxed text-sm font-sans text-justify [text-align-last:left]">
                         {faq.answer}
                       </AccordionContent>
                     </AccordionItem>

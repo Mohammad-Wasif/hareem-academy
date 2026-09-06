@@ -192,7 +192,7 @@ export default function Faqs() {
                   <AccordionTrigger className="w-full flex justify-between items-center p-4 md:p-5 text-left font-serif font-semibold text-base md:text-lg text-[#00450d] hover:no-underline cursor-pointer">
                     <span>{faq.question}</span>
                   </AccordionTrigger>
-                  <AccordionContent className="bg-[#f8f9fa] px-5 py-4 text-xs md:text-sm text-[#41493e] leading-relaxed border-t border-gray-100/80 whitespace-pre-line">
+                  <AccordionContent className="bg-[#f8f9fa] px-5 py-4 text-xs md:text-sm text-[#41493e] leading-relaxed border-t border-gray-100/80 whitespace-pre-line text-justify [text-align-last:left]">
                     {faq.answer}
                   </AccordionContent>
                 </AccordionItem>
