@@ -23,6 +23,7 @@ import { useCreateEnrollment, useListCourses } from "@workspace/api-client-react
 import { FaWhatsapp } from "react-icons/fa";
 import { CheckCircle2 } from "lucide-react";
 import { useWhatsApp } from "@/hooks/use-whatsapp";
+import { COUNTRIES_DATA } from "@/lib/countries";
 
 type FormFieldType = "text" | "email" | "tel" | "number" | "textarea" | "select";
 type PublicFormField = {
@@ -46,10 +47,11 @@ const BASE = import.meta.env.VITE_API_URL
 const BUILT_IN_KEYS = new Set([
   "courseSlug",
   "fullName",
+  "email",
   "age",
   "whatsappNumber",
-  "city",
   "country",
+  "city",
   "notes",
 ]);
 
@@ -74,12 +76,17 @@ export default function EnrollmentModal({
   const [step, setStep] = useState(1);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { whatsappUrl } = useWhatsApp();
+  const [countryCode, setCountryCode] = useState("+91");
+  const [phoneDigits, setPhoneDigits] = useState("");
+  const [manualCountry, setManualCountry] = useState(false);
+  const [manualCity, setManualCity] = useState(false);
   const [values, setValues] = useState<Record<string, string>>({
     fullName: "",
+    email: "",
     age: "18",
     whatsappNumber: "",
+    country: "India",
     city: "",
-    country: "",
     courseSlug: defaultCourseSlug,
     notes: "",
   });
@@ -110,11 +117,17 @@ export default function EnrollmentModal({
 
   const courseField = getBuiltIn("courseSlug", "Select Course");
   const nameField = getBuiltIn("fullName", "Full Name");
+  const emailField = getBuiltIn("email", "Email Address");
   const ageField = getBuiltIn("age", "Age");
   const whatsappField = getBuiltIn("whatsappNumber", "WhatsApp Number");
-  const cityField = getBuiltIn("city", "City");
   const countryField = getBuiltIn("country", "Country");
+  const cityField = getBuiltIn("city", "City");
   const notesField = getBuiltIn("notes", "Any questions or notes? (Optional)");
+
+  const currentCountryInfo = COUNTRIES_DATA.find(
+    (c) => c.name.toLowerCase() === (values.country || "").trim().toLowerCase(),
+  );
+  const currentCountryCities = currentCountryInfo?.cities ?? [];
 
   function setField(key: string, value: string) {
     setValues((v) => ({ ...v, [key]: value }));
@@ -140,19 +153,26 @@ export default function EnrollmentModal({
     
     if (currentStep === 2) {
       if (nameField.visible && nameField.required && !values.fullName.trim()) {
-        next.fullName = "Required";
+        next.fullName = "Please enter your full name";
       }
-      if (whatsappField.visible && whatsappField.required && !values.whatsappNumber.trim()) {
-        next.whatsappNumber = "Required";
+      if (!values.email.trim()) {
+        next.email = "Email is required";
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim())) {
+        next.email = "Please enter a valid email address";
+      }
+      if (!phoneDigits.trim()) {
+        next.whatsappNumber = "WhatsApp number is required";
+      } else if (phoneDigits.trim().length < 6 || phoneDigits.trim().length > 15) {
+        next.whatsappNumber = "Enter a valid phone number (6 - 15 digits)";
       }
     }
     
     if (currentStep === 3) {
-      if (cityField.visible && cityField.required && !values.city.trim()) {
-        next.city = "Required";
+      if (countryField.visible && !values.country.trim()) {
+        next.country = "Country is required";
       }
-      if (countryField.visible && countryField.required && !values.country.trim()) {
-        next.country = "Required";
+      if (cityField.visible && !values.city.trim()) {
+        next.city = "City is required";
       }
       if (notesField.visible && notesField.required && !values.notes.trim()) {
         next.notes = "Required";
@@ -183,20 +203,27 @@ export default function EnrollmentModal({
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!validateStep(3)) return;
+    const fullWhatsappNumber = `${countryCode} ${phoneDigits.trim()}`;
     const customData: Record<string, string> = {};
     for (const f of customFields) {
       const v = values[f.fieldKey] ?? "";
       if (v !== "") customData[f.fieldKey] = v;
     }
     if (isTrial) customData.requestType = "free_trial";
+    if (values.email) customData.email = values.email.trim();
+
+    const notesWithEmail = values.notes?.trim()
+      ? `[Email: ${values.email.trim()}]\n\n${values.notes.trim()}`
+      : `[Email: ${values.email.trim()}]`;
+
     const payload = {
-      fullName: values.fullName,
+      fullName: values.fullName.trim(),
       age: Number(values.age),
-      whatsappNumber: values.whatsappNumber,
-      city: values.city,
-      country: countryField.visible && values.country ? values.country : undefined,
+      whatsappNumber: fullWhatsappNumber,
+      city: values.city.trim(),
+      country: values.country.trim() || undefined,
       courseSlug: values.courseSlug,
-      notes: notesField.visible && values.notes ? values.notes : undefined,
+      notes: notesWithEmail,
       ...(Object.keys(customData).length ? { customData } : {}),
     };
     createEnrollment.mutate(
@@ -277,6 +304,10 @@ export default function EnrollmentModal({
             setIsSuccess(false);
             setErrors({});
             setStep(1);
+            setManualCountry(false);
+            setManualCity(false);
+            setPhoneDigits("");
+            setCountryCode("+91");
           }, 500);
         }
       }}
@@ -438,20 +469,102 @@ export default function EnrollmentModal({
                     {errors.fullName && <p className="text-xs text-destructive">{errors.fullName}</p>}
                   </div>
 
-                  {/* WhatsApp */}
+                  {/* Email Address (Mandatory) */}
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="font-semibold text-xs text-primary">
+                      {emailField.label} <span className="text-destructive">*</span>
+                    </Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={values.email}
+                      onChange={(e) => setField("email", e.target.value)}
+                      placeholder="name@example.com"
+                      className="h-10 rounded-lg border-border bg-background"
+                      autoComplete="email"
+                    />
+                    {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
+                  </div>
+
+                  {/* WhatsApp with Country Code & Numbers Only */}
                   <div className="space-y-2">
                     <Label htmlFor="whatsappNumber" className="font-semibold text-xs text-primary">
                       {whatsappField.label} <span className="text-destructive">*</span>
                     </Label>
-                    <Input
-                      id="whatsappNumber"
-                      value={values.whatsappNumber}
-                      onChange={(e) => setField("whatsappNumber", e.target.value)}
-                      placeholder={whatsappField.placeholder ?? "+91..."}
-                      className="h-10 rounded-lg border-border bg-background"
-                      autoComplete="tel"
-                    />
-                    {errors.whatsappNumber && <p className="text-xs text-destructive">{errors.whatsappNumber}</p>}
+                    <div className="flex gap-2">
+                      <Select
+                        value={countryCode}
+                        onValueChange={(val) => {
+                          setCountryCode(val);
+                          const matchedCountry = COUNTRIES_DATA.find((c) => c.code === val);
+                          if (matchedCountry && !values.country) {
+                            setField("country", matchedCountry.name);
+                          }
+                        }}
+                      >
+                        <SelectTrigger className="w-[125px] sm:w-[135px] shrink-0 h-10 rounded-lg border-border bg-background px-2 font-sans text-xs">
+                          <SelectValue placeholder="Code" />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-60">
+                          {COUNTRIES_DATA.map((c) => (
+                            <SelectItem key={`${c.name}-${c.code}`} value={c.code}>
+                              <span className="flex items-center gap-1.5 text-xs">
+                                <span>{c.flag}</span>
+                                <span className="font-mono font-semibold">{c.code}</span>
+                                <span className="text-muted-foreground text-[10px] truncate max-w-[70px]">
+                                  ({c.name})
+                                </span>
+                              </span>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Input
+                        id="whatsappNumber"
+                        type="tel"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        value={phoneDigits}
+                        onChange={(e) => {
+                          const digits = e.target.value.replace(/\D/g, "");
+                          setPhoneDigits(digits);
+                          setField("whatsappNumber", digits);
+                        }}
+                        onKeyDown={(e) => {
+                          if (
+                            [
+                              "Backspace",
+                              "Delete",
+                              "Tab",
+                              "Escape",
+                              "Enter",
+                              "ArrowLeft",
+                              "ArrowRight",
+                              "ArrowUp",
+                              "ArrowDown",
+                            ].includes(e.key) ||
+                            e.ctrlKey === true ||
+                            e.metaKey === true
+                          ) {
+                            return;
+                          }
+                          if (!/^\d$/.test(e.key)) {
+                            e.preventDefault();
+                          }
+                        }}
+                        placeholder="98765 43210 (numbers only)"
+                        className="h-10 rounded-lg border-border bg-background flex-1"
+                        autoComplete="tel-national"
+                      />
+                    </div>
+                    {whatsappField.helpText && (
+                      <p className="text-[10px] text-muted-foreground leading-normal">
+                        {whatsappField.helpText}
+                      </p>
+                    )}
+                    {errors.whatsappNumber && (
+                      <p className="text-xs text-destructive">{errors.whatsappNumber}</p>
+                    )}
                   </div>
 
                   {/* Step Actions */}
@@ -468,37 +581,135 @@ export default function EnrollmentModal({
 
               {step === 3 && (
                 <div className="space-y-4 pt-2">
-                  {/* City & Country */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
+                  {/* Country (First) */}
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <Label htmlFor="country" className="font-semibold text-xs text-primary">
+                        {countryField.label} <span className="text-destructive">*</span>
+                      </Label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const nextManual = !manualCountry;
+                          setManualCountry(nextManual);
+                          if (nextManual) {
+                            setManualCity(true);
+                          }
+                        }}
+                        className="text-[11px] text-primary hover:underline font-medium cursor-pointer"
+                      >
+                        {manualCountry ? "Choose from list" : "Type manually"}
+                      </button>
+                    </div>
+
+                    {!manualCountry ? (
+                      <Select
+                        value={values.country}
+                        onValueChange={(val) => {
+                          if (val === "OTHER") {
+                            setManualCountry(true);
+                            setManualCity(true);
+                            setField("country", "");
+                            setField("city", "");
+                          } else {
+                            setField("country", val);
+                            setField("city", "");
+                            setManualCity(false);
+                            const matched = COUNTRIES_DATA.find((c) => c.name === val);
+                            if (matched && (!phoneDigits || countryCode === "+91")) {
+                              setCountryCode(matched.code);
+                            }
+                          }
+                        }}
+                      >
+                        <SelectTrigger id="country" className="h-10 rounded-lg border-border bg-background">
+                          <SelectValue placeholder={countryField.placeholder ?? "Select your country"} />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-60">
+                          {COUNTRIES_DATA.map((c) => (
+                            <SelectItem key={c.name} value={c.name}>
+                              <span className="flex items-center gap-2 text-xs">
+                                <span>{c.flag}</span>
+                                <span>{c.name}</span>
+                              </span>
+                            </SelectItem>
+                          ))}
+                          <SelectItem value="OTHER">Other (Type manually)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <Input
+                        id="country"
+                        value={values.country}
+                        onChange={(e) => setField("country", e.target.value)}
+                        placeholder="Enter your country"
+                        className="h-10 rounded-lg border-border bg-background"
+                      />
+                    )}
+                    {errors.country && <p className="text-xs text-destructive">{errors.country}</p>}
+                  </div>
+
+                  {/* City (Second - Based on Country with manual write option) */}
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
                       <Label htmlFor="city" className="font-semibold text-xs text-primary">
                         {cityField.label} <span className="text-destructive">*</span>
                       </Label>
+                      {currentCountryCities.length > 0 && !manualCountry && (
+                        <button
+                          type="button"
+                          onClick={() => setManualCity(!manualCity)}
+                          className="text-[11px] text-primary hover:underline font-medium cursor-pointer"
+                        >
+                          {manualCity ? "Select from list" : "Type manually"}
+                        </button>
+                      )}
+                    </div>
+
+                    {!manualCity && currentCountryCities.length > 0 && !manualCountry ? (
+                      <Select
+                        value={currentCountryCities.includes(values.city) ? values.city : (values.city ? "OTHER" : "")}
+                        onValueChange={(val) => {
+                          if (val === "OTHER") {
+                            setManualCity(true);
+                            setField("city", "");
+                          } else {
+                            setField("city", val);
+                          }
+                        }}
+                      >
+                        <SelectTrigger id="city" className="h-10 rounded-lg border-border bg-background">
+                          <SelectValue
+                            placeholder={
+                              values.country
+                                ? `Select city in ${values.country}`
+                                : (cityField.placeholder ?? "Select city")
+                            }
+                          />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-60">
+                          {currentCountryCities.map((cityName) => (
+                            <SelectItem key={cityName} value={cityName}>
+                              {cityName}
+                            </SelectItem>
+                          ))}
+                          <SelectItem value="OTHER">Other (Type manually)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    ) : (
                       <Input
                         id="city"
                         value={values.city}
                         onChange={(e) => setField("city", e.target.value)}
-                        placeholder={cityField.placeholder ?? "Your city"}
+                        placeholder={
+                          values.country
+                            ? `Enter your city in ${values.country}`
+                            : (cityField.placeholder ?? "Enter your city")
+                        }
                         className="h-10 rounded-lg border-border bg-background"
                       />
-                      {errors.city && <p className="text-xs text-destructive">{errors.city}</p>}
-                    </div>
-
-                    {countryField.visible && (
-                      <div className="space-y-2">
-                        <Label htmlFor="country" className="font-semibold text-xs text-primary">
-                          {countryField.label} {countryField.required && <span className="text-destructive">*</span>}
-                        </Label>
-                        <Input
-                          id="country"
-                          value={values.country}
-                          onChange={(e) => setField("country", e.target.value)}
-                          placeholder={countryField.placeholder ?? "Your country"}
-                          className="h-10 rounded-lg border-border bg-background"
-                        />
-                        {errors.country && <p className="text-xs text-destructive">{errors.country}</p>}
-                      </div>
                     )}
+                    {errors.city && <p className="text-xs text-destructive">{errors.city}</p>}
                   </div>
 
                   {/* Custom Fields */}
