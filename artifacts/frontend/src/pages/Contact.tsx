@@ -101,6 +101,46 @@ export default function Contact() {
     );
   };
 
+  const renderSocialLinks = (extraClass: string = "") => (
+    <div className={`bg-[#003527] rounded-2xl p-6 shadow-md border border-[#003527]/30 flex-col items-center text-center gap-3 ${extraClass}`}>
+      <h4 className="font-sans text-[11px] font-bold text-[#ffe088] uppercase tracking-wider">
+        Connect With Us
+      </h4>
+      <div className="flex gap-3.5">
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="WhatsApp"
+          className="bg-white/10 text-[#ffe088] p-3 rounded-full hover:bg-[#ffe088] hover:text-[#003527] transition-all shadow-xs"
+        >
+          <FaWhatsapp className="w-5 h-5" />
+        </a>
+        <a
+          href="https://instagram.com/hareem_academy_"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Instagram"
+          className="bg-white/10 text-[#ffe088] p-3 rounded-full hover:bg-[#ffe088] hover:text-[#003527] transition-all shadow-xs"
+        >
+          <FaInstagram className="w-5 h-5" />
+        </a>
+        <a
+          href="https://www.facebook.com/share/1EnzRmToBK/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Facebook"
+          className="bg-white/10 text-[#ffe088] p-3 rounded-full hover:bg-[#ffe088] hover:text-[#003527] transition-all shadow-xs"
+        >
+          <FaFacebook className="w-5 h-5" />
+        </a>
+      </div>
+      <p className="font-sans text-[11px] text-[#ffe088]/80 font-medium">
+        @hareem_academy_
+      </p>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-[#f8f9fa] text-[#191c1d] flex flex-col font-sans">
       <SEO
@@ -188,16 +228,16 @@ export default function Contact() {
                 <p className="font-sans text-xs md:text-sm text-[#41493e]">
                   We aim to respond to all inquiries within 24 hours during working days.
                 </p>
-                <ul className="space-y-1.5 font-sans text-xs text-[#41493e]">
-                  <li className="flex justify-between border-b border-gray-200/80 pb-1">
-                    <span className="font-medium">Mon - Fri:</span>
+                <ul className="space-y-2 font-sans text-xs text-[#41493e]">
+                  <li className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-gray-200/80 pb-1.5 gap-0.5 sm:gap-2">
+                    <span className="font-medium text-[#41493e]">Mon - Fri:</span>
                     <span className="font-bold text-[#00450d]">9:00 AM - 6:00 PM (IST)</span>
                   </li>
-                  <li className="flex justify-between border-b border-gray-200/80 pb-1">
-                    <span className="font-medium">Saturday:</span>
+                  <li className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-gray-200/80 pb-1.5 gap-0.5 sm:gap-2">
+                    <span className="font-medium text-[#41493e]">Saturday:</span>
                     <span className="font-bold text-[#00450d]">10:00 AM - 2:00 PM (IST)</span>
                   </li>
-                  <li className="flex justify-between text-gray-400">
+                  <li className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-gray-400 gap-0.5 sm:gap-2">
                     <span>Sunday:</span>
                     <span>Closed</span>
                   </li>
@@ -205,55 +245,20 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* Social Links */}
-            <div className="bg-[#003527] rounded-2xl p-6 shadow-md border border-[#003527]/30 flex flex-col items-center text-center gap-3">
-              <h4 className="font-sans text-[11px] font-bold text-[#ffe088] uppercase tracking-wider">
-                Connect With Us
-              </h4>
-              <div className="flex gap-3.5">
-                <a
-                  href={whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="WhatsApp"
-                  className="bg-white/10 text-[#ffe088] p-3 rounded-full hover:bg-[#ffe088] hover:text-[#003527] transition-all shadow-xs"
-                >
-                  <FaWhatsapp className="w-5 h-5" />
-                </a>
-                <a
-                  href="https://instagram.com/hareem_academy_"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Instagram"
-                  className="bg-white/10 text-[#ffe088] p-3 rounded-full hover:bg-[#ffe088] hover:text-[#003527] transition-all shadow-xs"
-                >
-                  <FaInstagram className="w-5 h-5" />
-                </a>
-                <a
-                  href="https://www.facebook.com/share/1EnzRmToBK/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Facebook"
-                  className="bg-white/10 text-[#ffe088] p-3 rounded-full hover:bg-[#ffe088] hover:text-[#003527] transition-all shadow-xs"
-                >
-                  <FaFacebook className="w-5 h-5" />
-                </a>
-              </div>
-              <p className="font-sans text-[11px] text-[#ffe088]/80 font-medium">
-                @hareem_academy_
-              </p>
-            </div>
+            {/* Social Links (Desktop only) */}
+            {renderSocialLinks("hidden md:flex")}
           </div>
 
           {/* Contact Form (Right Col) */}
-          <div className="md:col-span-7 bg-white rounded-2xl p-4 sm:p-6 md:p-10 shadow-[0_8px_32px_-8px_rgba(0,53,39,0.06)] border border-gray-200/80 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[radial-gradient(#e0e3e5_1px,transparent_1px)] [background-size:20px_20px] opacity-50 rounded-bl-full pointer-events-none" />
-            
-            <h2 className="font-serif font-bold text-xl md:text-2xl text-[#00450d] mb-6 relative z-10">
-              Send us a Message
-            </h2>
+          <div className="md:col-span-7 flex flex-col gap-6">
+            <div className="bg-white rounded-2xl p-4 sm:p-6 md:p-10 shadow-[0_8px_32px_-8px_rgba(0,53,39,0.06)] border border-gray-200/80 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[radial-gradient(#e0e3e5_1px,transparent_1px)] [background-size:20px_20px] opacity-50 rounded-bl-full pointer-events-none" />
+              
+              <h2 className="font-serif font-bold text-xl md:text-2xl text-[#00450d] mb-6 relative z-10">
+                Send us a Message
+              </h2>
 
-            {isSuccess ? (
+              {isSuccess ? (
               <div className="text-center py-12 space-y-5 relative z-10">
                 <div className="w-14 h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto shadow-xs">
                   <CheckCircle2 className="w-7 h-7" />
@@ -412,6 +417,10 @@ export default function Contact() {
                 </p>
               </form>
             )}
+            </div>
+
+            {/* Social Links (Mobile only - after Send us a Message) */}
+            {renderSocialLinks("flex md:hidden")}
           </div>
         </section>
       </main>
