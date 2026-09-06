@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   Dialog,
@@ -21,9 +21,9 @@ import {
 } from "@/components/ui/select";
 import { useCreateEnrollment, useListCourses } from "@workspace/api-client-react";
 import { FaWhatsapp } from "react-icons/fa";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, ChevronDown, Search, X } from "lucide-react";
 import { useWhatsApp } from "@/hooks/use-whatsapp";
-import { COUNTRIES_DATA } from "@/lib/countries";
+import { ALL_COUNTRIES, CALLING_CODES, getCitiesByCountry, getCountryCityData, getStatesByCountry } from "@/lib/countries";
 
 type FormFieldType = "text" | "email" | "tel" | "number" | "textarea" | "select";
 type PublicFormField = {
@@ -61,6 +61,336 @@ async function fetchEnrollmentFields(): Promise<PublicFormField[]> {
   return res.json();
 }
 
+const ALPHABET = [
+  "ALL",
+  "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+  "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+];
+
+function CitySearchableInput({
+  value,
+  onChange,
+  countryName,
+  stateName,
+  placeholder,
+  error,
+}: {
+  value: string;
+  onChange: (val: string) => void;
+  countryName: string;
+  stateName?: string;
+  cities?: string[];
+  placeholder?: string;
+  error?: string;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [selectedLetter, setSelectedLetter] = useState<string>("ALL");
+  const [displayLimit, setDisplayLimit] = useState(100);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const cityData = useMemo(() => {
+    return getCountryCityData(countryName, stateName);
+  }, [countryName, stateName]);
+
+  // When country or state changes, reset letter, limit and query
+  useEffect(() => {
+    setSelectedLetter("ALL");
+    setDisplayLimit(100);
+    setQuery("");
+  }, [countryName, stateName]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Compute matches
+  const { filteredList, totalMatches, isSearching } = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (q) {
+      const startsWith: string[] = [];
+      const contains: string[] = [];
+      for (const c of cityData.allCities) {
+        const lower = c.toLowerCase();
+        if (lower.startsWith(q)) {
+          startsWith.push(c);
+        } else if (lower.includes(q)) {
+          contains.push(c);
+        }
+      }
+      // Also ensure major cities matching query are placed at top
+      const majorMatches = cityData.majorCities.filter((m) =>
+        m.toLowerCase().includes(q),
+      );
+      const combined = Array.from(new Set([...majorMatches, ...startsWith, ...contains]));
+      return {
+        filteredList: combined,
+        totalMatches: combined.length,
+        isSearching: true,
+      };
+    }
+
+    if (selectedLetter !== "ALL") {
+      const letterMatches = cityData.allCities.filter((c) =>
+        c.toUpperCase().startsWith(selectedLetter),
+      );
+      return {
+        filteredList: letterMatches,
+        totalMatches: letterMatches.length,
+        isSearching: false,
+      };
+    }
+
+    // Default: all cities (sorted A-Z)
+    return {
+      filteredList: cityData.allCities,
+      totalMatches: cityData.totalCount,
+      isSearching: false,
+    };
+  }, [cityData, query, selectedLetter]);
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    if (scrollHeight - scrollTop - clientHeight < 150) {
+      setDisplayLimit((prev) => prev + 100);
+    }
+  };
+
+  const visibleCities = useMemo(() => {
+    return filteredList.slice(0, displayLimit);
+  }, [filteredList, displayLimit]);
+
+  const hasExactMatch = useMemo(() => {
+    if (!value.trim()) return false;
+    const v = value.trim().toLowerCase();
+    return cityData.allCities.some((c) => c.toLowerCase() === v);
+  }, [cityData.allCities, value]);
+
+  return (
+    <div ref={containerRef} className="relative space-y-1">
+      <div className="relative flex items-center">
+        <Input
+          id="city"
+          value={value}
+          onChange={(e) => {
+            onChange(e.target.value);
+            setQuery(e.target.value);
+            setSelectedLetter("ALL");
+            setDisplayLimit(100);
+            setIsOpen(true);
+          }}
+          onFocus={() => {
+            setQuery(value);
+            setDisplayLimit(100);
+            setIsOpen(true);
+          }}
+          placeholder={
+            stateName
+              ? `Search or enter city in ${stateName}...`
+              : countryName
+                ? `Search or enter city in ${countryName}...`
+                : (placeholder ?? "Search or enter your city...")
+          }
+          className="h-10 rounded-lg border-border bg-background pr-16 font-sans text-xs md:text-sm"
+          autoComplete="off"
+        />
+
+        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
+          {value && (
+            <button
+              type="button"
+              tabIndex={-1}
+              onClick={() => {
+                onChange("");
+                setQuery("");
+                setSelectedLetter("ALL");
+                setDisplayLimit(100);
+              }}
+              className="text-muted-foreground hover:text-foreground p-1 cursor-pointer"
+              title="Clear city"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+          <button
+            type="button"
+            tabIndex={-1}
+            onClick={() => setIsOpen((prev) => !prev)}
+            className="text-muted-foreground hover:text-foreground p-1 cursor-pointer"
+            title="Toggle city list"
+          >
+            <ChevronDown
+              className={`w-4 h-4 transition-transform duration-200 ${
+                isOpen ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+        </div>
+      </div>
+
+      {isOpen && (
+        <div className="absolute left-0 right-0 z-50 mt-1 max-h-72 flex flex-col rounded-xl border border-border bg-popover shadow-xl font-sans text-xs overflow-hidden">
+          {/* Quick A-Z Letter Filter Bar */}
+          <div className="p-2 border-b border-border bg-muted/40 shrink-0">
+            <div className="flex items-center justify-between gap-1 mb-1.5 px-0.5 text-[10px] text-muted-foreground">
+              <span className="font-semibold text-foreground flex items-center gap-1 truncate">
+                <Search className="w-3 h-3 text-primary shrink-0" />
+                {cityData.totalCount > 0
+                  ? `${cityData.totalCount.toLocaleString()} cities in ${stateName ? `${stateName}, ` : ""}${countryName}`
+                  : `Cities in ${stateName || countryName || "Area"}`}
+              </span>
+              <span className="shrink-0 font-medium text-primary">
+                {isSearching
+                  ? `${totalMatches} found`
+                  : selectedLetter !== "ALL"
+                    ? `${totalMatches} starting with "${selectedLetter}"`
+                    : "Filter A-Z or scroll"}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
+              {ALPHABET.map((letter) => {
+                const isActive = !query.trim() && selectedLetter === letter;
+                return (
+                  <button
+                    key={letter}
+                    type="button"
+                    onClick={() => {
+                      setQuery("");
+                      setSelectedLetter(letter);
+                      setDisplayLimit(100);
+                    }}
+                    className={`px-1.5 py-0.5 rounded text-[10px] font-semibold transition-all shrink-0 cursor-pointer ${
+                      isActive
+                        ? "bg-primary text-primary-foreground shadow-xs scale-105"
+                        : "bg-background/80 hover:bg-accent text-muted-foreground hover:text-foreground border border-border/50"
+                    }`}
+                  >
+                    {letter}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Scrollable list of cities with infinite scroll */}
+          <div
+            onScroll={handleScroll}
+            className="flex-1 overflow-y-auto p-1.5 space-y-0.5 max-h-56"
+          >
+            {/* If no query and ALL letter selected, show Major Cities section first */}
+            {!query.trim() && selectedLetter === "ALL" && cityData.majorCities.length > 0 && (
+              <div className="mb-2 pb-1 border-b border-border/60">
+                <div className="px-2 py-1 text-[10px] font-bold text-primary uppercase tracking-wider flex items-center gap-1">
+                  <span>⭐ Popular & Major Cities</span>
+                </div>
+                <div className="grid grid-cols-2 gap-1 px-1">
+                  {cityData.majorCities.map((cityName) => {
+                    const isSelected = value.toLowerCase() === cityName.toLowerCase();
+                    return (
+                      <button
+                        key={`major-${cityName}`}
+                        type="button"
+                        onClick={() => {
+                          onChange(cityName);
+                          setQuery("");
+                          setIsOpen(false);
+                        }}
+                        className={`text-left px-2 py-1.5 rounded-md hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors text-xs flex items-center justify-between border ${
+                          isSelected
+                            ? "bg-primary/10 text-primary font-semibold border-primary/40"
+                            : "bg-background border-border/40 text-foreground"
+                        }`}
+                      >
+                        <span className="truncate">{cityName}</span>
+                        {isSelected && <span className="text-primary text-[10px]">✓</span>}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="px-2 pt-2 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                  All Cities (A-Z)
+                </div>
+              </div>
+            )}
+
+            {/* If user typed a custom city name not matching list */}
+            {query.trim() && !hasExactMatch && (
+              <button
+                type="button"
+                onClick={() => {
+                  onChange(query.trim());
+                  setIsOpen(false);
+                }}
+                className="w-full text-left px-2.5 py-2 mb-1 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 cursor-pointer transition-colors text-xs flex items-center justify-between font-medium"
+              >
+                <span>Use custom city: "{query.trim()}"</span>
+                <span className="text-[10px] font-bold underline">Select</span>
+              </button>
+            )}
+
+            {/* Filtered cities list */}
+            {visibleCities.length > 0 ? (
+              visibleCities.map((cityName) => {
+                const isSelected = value.toLowerCase() === cityName.toLowerCase();
+                return (
+                  <button
+                    key={cityName}
+                    type="button"
+                    onClick={() => {
+                      onChange(cityName);
+                      setQuery("");
+                      setIsOpen(false);
+                    }}
+                    className={`w-full text-left px-2.5 py-1.5 rounded-md hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors flex items-center justify-between text-xs ${
+                      isSelected
+                        ? "bg-primary/10 text-primary font-semibold"
+                        : "text-foreground"
+                    }`}
+                  >
+                    <span>{cityName}</span>
+                    {isSelected && <span className="text-primary text-xs">✓</span>}
+                  </button>
+                );
+              })
+            ) : (
+              <div className="p-3 text-center text-muted-foreground text-xs">
+                <p>No cities found starting with "{query || selectedLetter}".</p>
+                {query.trim() && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onChange(query.trim());
+                      setIsOpen(false);
+                    }}
+                    className="mt-2 inline-block px-3 py-1 bg-primary text-primary-foreground rounded-full text-xs font-semibold cursor-pointer"
+                  >
+                    Use "{query.trim()}" as city
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Infinite scroll load indicator */}
+            {filteredList.length > displayLimit && (
+              <div className="py-2 text-center text-[10px] text-muted-foreground">
+                Showing {displayLimit} of {filteredList.length.toLocaleString()} cities — scroll down to load more...
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      {error && <p className="text-xs text-destructive">{error}</p>}
+    </div>
+  );
+}
+
 export default function EnrollmentModal({
   children,
   defaultCourseSlug = "",
@@ -79,6 +409,7 @@ export default function EnrollmentModal({
   const [countryCode, setCountryCode] = useState("+91");
   const [phoneDigits, setPhoneDigits] = useState("");
   const [manualCountry, setManualCountry] = useState(false);
+  const [manualState, setManualState] = useState(false);
   const [manualCity, setManualCity] = useState(false);
   const [values, setValues] = useState<Record<string, string>>({
     fullName: "",
@@ -86,6 +417,7 @@ export default function EnrollmentModal({
     age: "18",
     whatsappNumber: "",
     country: "India",
+    state: "",
     city: "",
     courseSlug: defaultCourseSlug,
     notes: "",
@@ -124,10 +456,14 @@ export default function EnrollmentModal({
   const cityField = getBuiltIn("city", "City");
   const notesField = getBuiltIn("notes", "Any questions or notes? (Optional)");
 
-  const currentCountryInfo = COUNTRIES_DATA.find(
-    (c) => c.name.toLowerCase() === (values.country || "").trim().toLowerCase(),
+  const availableStates = useMemo(() => {
+    return getStatesByCountry(values.country);
+  }, [values.country]);
+
+  const currentCountryCities = useMemo(
+    () => getCitiesByCountry(values.country, values.state),
+    [values.country, values.state],
   );
-  const currentCountryCities = currentCountryInfo?.cities ?? [];
 
   function setField(key: string, value: string) {
     setValues((v) => ({ ...v, [key]: value }));
@@ -171,6 +507,9 @@ export default function EnrollmentModal({
       if (countryField.visible && !values.country.trim()) {
         next.country = "Country is required";
       }
+      if (availableStates.length > 0 && !values.state.trim()) {
+        next.state = "State / Province is required";
+      }
       if (cityField.visible && !values.city.trim()) {
         next.city = "City is required";
       }
@@ -211,10 +550,19 @@ export default function EnrollmentModal({
     }
     if (isTrial) customData.requestType = "free_trial";
     if (values.email) customData.email = values.email.trim();
+    if (values.state) customData.state = values.state.trim();
+
+    const locationDetails = [
+      values.city.trim(),
+      values.state.trim(),
+      values.country.trim(),
+    ]
+      .filter(Boolean)
+      .join(", ");
 
     const notesWithEmail = values.notes?.trim()
-      ? `[Email: ${values.email.trim()}]\n\n${values.notes.trim()}`
-      : `[Email: ${values.email.trim()}]`;
+      ? `[Email: ${values.email.trim()}]\n[Location: ${locationDetails}]\n\n${values.notes.trim()}`
+      : `[Email: ${values.email.trim()}]\n[Location: ${locationDetails}]`;
 
     const payload = {
       fullName: values.fullName.trim(),
@@ -305,6 +653,7 @@ export default function EnrollmentModal({
             setErrors({});
             setStep(1);
             setManualCountry(false);
+            setManualState(false);
             setManualCity(false);
             setPhoneDigits("");
             setCountryCode("+91");
@@ -496,7 +845,7 @@ export default function EnrollmentModal({
                         value={countryCode}
                         onValueChange={(val) => {
                           setCountryCode(val);
-                          const matchedCountry = COUNTRIES_DATA.find((c) => c.code === val);
+                          const matchedCountry = ALL_COUNTRIES.find((c) => c.code === val);
                           if (matchedCountry && !values.country) {
                             setField("country", matchedCountry.name);
                           }
@@ -506,13 +855,13 @@ export default function EnrollmentModal({
                           <SelectValue placeholder="Code" />
                         </SelectTrigger>
                         <SelectContent className="max-h-60">
-                          {COUNTRIES_DATA.map((c) => (
-                            <SelectItem key={`${c.name}-${c.code}`} value={c.code}>
+                          {CALLING_CODES.map((c) => (
+                            <SelectItem key={`${c.isoCode}-${c.code}`} value={c.code}>
                               <span className="flex items-center gap-1.5 text-xs">
                                 <span>{c.flag}</span>
                                 <span className="font-mono font-semibold">{c.code}</span>
                                 <span className="text-muted-foreground text-[10px] truncate max-w-[70px]">
-                                  ({c.name})
+                                  ({c.countryName})
                                 </span>
                               </span>
                             </SelectItem>
@@ -593,6 +942,7 @@ export default function EnrollmentModal({
                           const nextManual = !manualCountry;
                           setManualCountry(nextManual);
                           if (nextManual) {
+                            setManualState(true);
                             setManualCity(true);
                           }
                         }}
@@ -608,14 +958,19 @@ export default function EnrollmentModal({
                         onValueChange={(val) => {
                           if (val === "OTHER") {
                             setManualCountry(true);
+                            setManualState(true);
                             setManualCity(true);
                             setField("country", "");
+                            setField("state", "");
                             setField("city", "");
                           } else {
                             setField("country", val);
+                            setField("state", "");
                             setField("city", "");
+                            setManualCountry(false);
+                            setManualState(false);
                             setManualCity(false);
-                            const matched = COUNTRIES_DATA.find((c) => c.name === val);
+                            const matched = ALL_COUNTRIES.find((c) => c.name === val);
                             if (matched && (!phoneDigits || countryCode === "+91")) {
                               setCountryCode(matched.code);
                             }
@@ -626,8 +981,8 @@ export default function EnrollmentModal({
                           <SelectValue placeholder={countryField.placeholder ?? "Select your country"} />
                         </SelectTrigger>
                         <SelectContent className="max-h-60">
-                          {COUNTRIES_DATA.map((c) => (
-                            <SelectItem key={c.name} value={c.name}>
+                          {ALL_COUNTRIES.map((c) => (
+                            <SelectItem key={`${c.isoCode}-${c.name}`} value={c.name}>
                               <span className="flex items-center gap-2 text-xs">
                                 <span>{c.flag}</span>
                                 <span>{c.name}</span>
@@ -641,7 +996,11 @@ export default function EnrollmentModal({
                       <Input
                         id="country"
                         value={values.country}
-                        onChange={(e) => setField("country", e.target.value)}
+                        onChange={(e) => {
+                          setField("country", e.target.value);
+                          setField("state", "");
+                          setField("city", "");
+                        }}
                         placeholder="Enter your country"
                         className="h-10 rounded-lg border-border bg-background"
                       />
@@ -649,67 +1008,102 @@ export default function EnrollmentModal({
                     {errors.country && <p className="text-xs text-destructive">{errors.country}</p>}
                   </div>
 
-                  {/* City (Second - Based on Country with manual write option) */}
+                  {/* State / Province (Second - Based on Country) */}
+                  {availableStates.length > 0 && (
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <Label htmlFor="state" className="font-semibold text-xs text-primary">
+                          State / Province <span className="text-destructive">*</span>
+                        </Label>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const next = !manualState;
+                            setManualState(next);
+                            setField("state", "");
+                            setField("city", "");
+                          }}
+                          className="text-[11px] text-primary hover:underline font-medium cursor-pointer"
+                        >
+                          {manualState ? "Choose from list" : "Type manually"}
+                        </button>
+                      </div>
+
+                      {!manualState ? (
+                        <Select
+                          value={values.state}
+                          onValueChange={(val) => {
+                            if (val === "OTHER") {
+                              setManualState(true);
+                              setField("state", "");
+                              setField("city", "");
+                            } else {
+                              setField("state", val);
+                              setField("city", "");
+                            }
+                          }}
+                        >
+                          <SelectTrigger id="state" className="h-10 rounded-lg border-border bg-background">
+                            <SelectValue
+                              placeholder={
+                                values.country
+                                  ? `Select state / province in ${values.country}`
+                                  : "Select state / province"
+                              }
+                            />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-60">
+                            {availableStates.map((s) => (
+                              <SelectItem
+                                key={`${s.countryCode}-${s.isoCode}-${s.name}`}
+                                value={s.name}
+                              >
+                                {s.name}
+                              </SelectItem>
+                            ))}
+                            <SelectItem value="OTHER">Other (Type manually)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        <Input
+                          id="state"
+                          value={values.state}
+                          onChange={(e) => {
+                            setField("state", e.target.value);
+                            setField("city", "");
+                          }}
+                          placeholder="Enter your state or province"
+                          className="h-10 rounded-lg border-border bg-background"
+                        />
+                      )}
+                      {errors.state && <p className="text-xs text-destructive">{errors.state}</p>}
+                    </div>
+                  )}
+
+                  {/* City (Third - Based on Country and State with searchable combobox & manual entry) */}
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
                       <Label htmlFor="city" className="font-semibold text-xs text-primary">
                         {cityField.label} <span className="text-destructive">*</span>
                       </Label>
-                      {currentCountryCities.length > 0 && !manualCountry && (
-                        <button
-                          type="button"
-                          onClick={() => setManualCity(!manualCity)}
-                          className="text-[11px] text-primary hover:underline font-medium cursor-pointer"
-                        >
-                          {manualCity ? "Select from list" : "Type manually"}
-                        </button>
-                      )}
+                      <span className="text-[10px] text-muted-foreground">
+                        {values.state ? `Cities in ${values.state}` : "Select or type custom"}
+                      </span>
                     </div>
 
-                    {!manualCity && currentCountryCities.length > 0 && !manualCountry ? (
-                      <Select
-                        value={currentCountryCities.includes(values.city) ? values.city : (values.city ? "OTHER" : "")}
-                        onValueChange={(val) => {
-                          if (val === "OTHER") {
-                            setManualCity(true);
-                            setField("city", "");
-                          } else {
-                            setField("city", val);
-                          }
-                        }}
-                      >
-                        <SelectTrigger id="city" className="h-10 rounded-lg border-border bg-background">
-                          <SelectValue
-                            placeholder={
-                              values.country
-                                ? `Select city in ${values.country}`
-                                : (cityField.placeholder ?? "Select city")
-                            }
-                          />
-                        </SelectTrigger>
-                        <SelectContent className="max-h-60">
-                          {currentCountryCities.map((cityName) => (
-                            <SelectItem key={cityName} value={cityName}>
-                              {cityName}
-                            </SelectItem>
-                          ))}
-                          <SelectItem value="OTHER">Other (Type manually)</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    ) : (
-                      <Input
-                        id="city"
-                        value={values.city}
-                        onChange={(e) => setField("city", e.target.value)}
-                        placeholder={
-                          values.country
-                            ? `Enter your city in ${values.country}`
-                            : (cityField.placeholder ?? "Enter your city")
-                        }
-                        className="h-10 rounded-lg border-border bg-background"
-                      />
-                    )}
-                    {errors.city && <p className="text-xs text-destructive">{errors.city}</p>}
+                    <CitySearchableInput
+                      value={values.city}
+                      onChange={(val) => setField("city", val)}
+                      countryName={values.country}
+                      stateName={values.state}
+                      cities={currentCountryCities}
+                      placeholder={
+                        values.state
+                          ? `Search or enter city in ${values.state}`
+                          : cityField.placeholder ?? "Search or enter your city"
+                      }
+                      error={errors.city}
+                    />
                   </div>
 
                   {/* Custom Fields */}
