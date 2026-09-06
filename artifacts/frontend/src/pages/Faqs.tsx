@@ -202,7 +202,7 @@ export default function Faqs() {
         </div>
 
         {/* Still Have Questions CTA */}
-        <div className="mt-14 w-full max-w-3xl relative rounded-2xl overflow-hidden p-6 md:p-10 text-center bg-white border border-gray-200/80 shadow-[0_16px_40px_rgba(0,53,39,0.05)]">
+        <div className="mt-14 w-full max-w-4xl lg:max-w-5xl relative rounded-2xl overflow-hidden p-5 sm:p-7 md:p-10 text-center bg-white border border-gray-200/80 shadow-[0_16px_40px_rgba(0,53,39,0.05)]">
           <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/40 via-white to-amber-50/30 opacity-70 pointer-events-none" />
           <div className="relative z-10 flex flex-col items-center">
             <div className="w-12 h-12 rounded-full bg-[#00450d]/10 flex items-center justify-center mb-4 text-[#00450d]">
@@ -211,8 +211,14 @@ export default function Faqs() {
             <h2 className="font-serif font-bold text-xl md:text-2xl text-[#00450d] mb-2">
               Still have questions?
             </h2>
-            <p className="font-sans text-xs md:text-sm text-[#41493e] mb-6 max-w-md leading-relaxed">
-              We're happy to help. If you're unsure which course is right for you, have questions about timings, or simply want to know more about Hareem Academy, speak with our team on WhatsApp.
+            <p className="font-sans text-xs sm:text-[13px] md:text-sm text-[#41493e] mb-6 w-full max-w-5xl mx-auto leading-relaxed text-center">
+              <span className="min-[560px]:whitespace-nowrap inline-block">
+                We're happy to help. If you're unsure which course is right for you, have questions about timings,
+              </span>
+              <br className="hidden min-[560px]:inline" />{" "}
+              <span className="min-[560px]:whitespace-nowrap inline-block">
+                or simply want to know more about Hareem Academy, speak with our team on WhatsApp.
+              </span>
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <a

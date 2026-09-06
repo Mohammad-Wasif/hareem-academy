@@ -26,13 +26,13 @@ export default function Footer() {
             Structured online Arabic and Urdu classes taught by qualified female teachers designed exclusively for sisters.
           </p>
           <div className="flex items-center gap-4 pt-1">
-            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-[#ffe088] hover:text-white transition-colors">
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="text-[#ffe088] hover:text-white transition-colors">
               <FaWhatsapp className="h-5 w-5" />
             </a>
-            <a href="#" className="text-[#d0e5d8] hover:text-[#ffe088] transition-colors">
+            <a href="https://instagram.com/hareem_academy_" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-[#d0e5d8] hover:text-[#ffe088] transition-colors">
               <FaInstagram className="h-5 w-5" />
             </a>
-            <a href="#" className="text-[#d0e5d8] hover:text-[#ffe088] transition-colors">
+            <a href="https://www.facebook.com/share/1EnzRmToBK/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-[#d0e5d8] hover:text-[#ffe088] transition-colors">
               <FaFacebook className="h-5 w-5" />
             </a>
           </div>
