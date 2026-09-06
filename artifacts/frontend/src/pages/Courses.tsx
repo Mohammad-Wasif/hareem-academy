@@ -103,7 +103,7 @@ export default function Courses() {
                 Live interactive classes designed exclusively for sisters
               </p>
             </div>
-            <div className="flex items-center space-x-1.5 bg-white p-1 rounded-xl shadow-xs border border-gray-200/80 max-w-full overflow-x-auto scrollbar-none">
+            <div className="flex flex-wrap items-center gap-1.5 bg-white p-1 rounded-xl shadow-xs border border-gray-200/80 max-w-full">
               <button
                 onClick={() => setFilter("all")}
                 className={`px-3.5 py-1.5 rounded-lg font-sans text-xs font-semibold transition-all cursor-pointer ${

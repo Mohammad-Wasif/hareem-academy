@@ -82,7 +82,7 @@ export default function CourseCard({ course }: { course: Course }) {
                   <CreditCard className="w-3 h-3 text-[#735c00]" />
                   <span>Monthly Fee</span>
                 </div>
-                <div className="text-xs sm:text-sm font-bold text-[#00450d]">
+                <div className="text-[11px] min-[360px]:text-xs sm:text-sm font-bold text-[#00450d] truncate">
                   {formattedFee}
                 </div>
               </div>

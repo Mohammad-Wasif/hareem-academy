@@ -107,7 +107,7 @@ function AnimatedCounter({ target, duration = 1500 }: { target: number; duration
 
 export default function Home() {
   const { assets } = useSiteAssets();
-  const { data: courses = [] } = useListCourses();
+  const { data: courses = [], isLoading: isCoursesLoading } = useListCourses();
   const { data: testimonials = [] } = useListTestimonials();
   const { data: stats } = useGetSiteStats();
   const [homeConfig, setHomeConfig] = useState<any>(null);
@@ -340,7 +340,7 @@ export default function Home() {
               </motion.div>
 
               {/* Headline */}
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-serif font-bold text-[#00450d] leading-[1.15] tracking-tight">
+              <h1 className="text-[28px] min-[380px]:text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-serif font-bold text-[#00450d] leading-[1.18] tracking-tight">
                 {splitWords("Learn Arabic & Urdu with Confidence.")}
               </h1>
 
@@ -377,7 +377,7 @@ export default function Home() {
                   <Button
                     asChild
                     variant="outline"
-                    className="h-11 px-6 rounded-full border-2 border-[#00450d] text-[#00450d] hover:bg-[#00450d] hover:text-white font-sans font-bold text-sm transition-all cursor-pointer justify-center"
+                    className="h-11 px-6 rounded-full border-2 border-[#00450d] text-[#00450d] hover:bg-[#00450d] hover:text-white font-sans font-bold text-sm transition-all cursor-pointer justify-center w-full sm:w-auto"
                   >
                     <Link href="/courses">
                       Explore Courses
@@ -535,8 +535,8 @@ export default function Home() {
               INTRODUCTION
             </span>
             <h2 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl lg:text-[42px] text-[#00450d] leading-[1.25] max-w-4xl mx-auto">
-              <span className="block sm:whitespace-nowrap">Learning should feel</span>
-              <span className="block sm:whitespace-nowrap">comfortable, structured, and achievable.</span>
+              <span className="block min-[520px]:inline">Learning should feel </span>
+              <span className="block min-[520px]:inline">comfortable, structured, and achievable.</span>
             </h2>
             <div className="h-[2px] w-12 bg-[#735c00] mx-auto rounded-full" />
             <div className="bg-white rounded-xl p-6 sm:p-8 border border-[#00450d]/15 shadow-[0_4px_20px_-4px_rgba(0,53,39,0.06)] text-left space-y-4 max-w-3xl mx-auto">
@@ -752,19 +752,45 @@ export default function Home() {
             </Button>
           </motion.div>
 
-          <motion.div
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-          >
-            {courses.slice(0, 3).map((course) => (
-              <motion.div key={course.id || course.slug} variants={fadeUp} transition={{ duration: 0.4 }} className="h-full">
-                <CourseCard course={course} />
-              </motion.div>
-            ))}
-          </motion.div>
+          {isCoursesLoading && courses.length === 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+              {[1, 2, 3].map((n) => (
+                <div
+                  key={n}
+                  className="bg-white rounded-2xl overflow-hidden border border-gray-200/80 shadow-[0_4px_20px_rgba(0,53,39,0.04)] animate-pulse flex flex-col justify-between h-[380px]"
+                >
+                  <div>
+                    <div className="h-44 bg-gray-100" />
+                    <div className="p-5 space-y-3">
+                      <div className="h-3 w-20 bg-gray-200 rounded" />
+                      <div className="h-5 w-40 bg-gray-200 rounded" />
+                      <div className="h-3 w-full bg-gray-100 rounded" />
+                      <div className="h-3 w-3/4 bg-gray-100 rounded" />
+                    </div>
+                  </div>
+                  <div className="p-5 pt-0">
+                    <div className="pt-3 border-t border-gray-100 flex justify-end">
+                      <div className="h-4 w-20 bg-gray-200 rounded" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <motion.div
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch"
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+            >
+              {courses.slice(0, 3).map((course) => (
+                <motion.div key={course.id || course.slug} variants={fadeUp} transition={{ duration: 0.4 }} className="h-full">
+                  <CourseCard course={course} />
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
         </div>
       </section>
 
@@ -782,7 +808,7 @@ export default function Home() {
             <span className="inline-block text-xs font-bold tracking-[0.2em] text-[#ffe088] uppercase bg-white/10 px-3.5 py-1 rounded-full border border-white/20 font-sans">
               WHY HAREEM ACADEMY
             </span>
-            <h2 className="font-serif font-bold text-xl sm:text-3xl md:text-4xl lg:text-5xl text-white whitespace-nowrap">
+            <h2 className="font-serif font-bold text-xl sm:text-3xl md:text-4xl lg:text-5xl text-white">
               Built around the needs of sisters.
             </h2>
           </motion.div>

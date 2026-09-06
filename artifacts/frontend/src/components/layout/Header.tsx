@@ -33,13 +33,13 @@ export default function Header() {
 
   return (
     <header className="bg-[#003527] text-[#ffe088] sticky top-0 z-50 border-b border-[#064e3b] shadow-md transition-all">
-      <div className="flex justify-between items-center w-full px-4 md:px-12 max-w-[1280px] mx-auto h-20">
+      <div className="flex justify-between items-center w-full px-3.5 sm:px-6 md:px-12 max-w-[1280px] mx-auto h-16 sm:h-18 md:h-20">
         {/* Circular Logo Container (#0B2216 border and background, no white/grey outline) */}
-        <Link href="/" className="flex items-center gap-3.5 group shrink-0">
+        <Link href="/" className="flex items-center gap-2.5 sm:gap-3.5 group shrink-0">
           <motion.div
             whileHover={{ scale: 1.08, rotate: 2 }}
             whileTap={{ scale: 0.95 }}
-            className="w-13 h-13 md:w-15 md:h-15 rounded-full bg-[#0B2216] border border-[#0B2216] flex items-center justify-center shrink-0 shadow-md overflow-hidden p-0"
+            className="w-10 h-10 sm:w-12 sm:h-12 md:w-15 md:h-15 rounded-full bg-[#0B2216] border border-[#0B2216] flex items-center justify-center shrink-0 shadow-md overflow-hidden p-0"
           >
             <PremiumImage
               assetKey="logo"
@@ -52,7 +52,7 @@ export default function Header() {
               fetchPriority="high"
             />
           </motion.div>
-          <span className="font-serif font-bold text-xl md:text-2xl text-white tracking-normal group-hover:text-[#ffe088] transition-colors leading-snug">
+          <span className="font-serif font-bold text-lg sm:text-xl md:text-2xl text-white tracking-normal group-hover:text-[#ffe088] transition-colors leading-snug">
             Hareem Academy
           </span>
         </Link>
@@ -122,7 +122,7 @@ export default function Header() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="md:hidden overflow-hidden bg-[#002a1f] border-b border-[#064e3b] px-4 py-4"
+            className="md:hidden overflow-hidden bg-[#002a1f] border-b border-[#064e3b] px-4 py-4 max-h-[80vh] overflow-y-auto"
           >
             <div className="flex flex-col space-y-3">
               <div className="border-2 border-[#ffe088] rounded-2xl p-2 space-y-1">

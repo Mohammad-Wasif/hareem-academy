@@ -167,7 +167,7 @@ export default function Contact() {
                     href={whatsappUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-xs md:text-sm shadow-md shadow-[#25D366]/20 hover:shadow-lg transition-all hover:-translate-y-0.5 cursor-pointer"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-xs md:text-sm shadow-md shadow-[#25D366]/20 hover:shadow-lg transition-all hover:-translate-y-0.5 cursor-pointer w-full sm:w-auto text-center"
                   >
                     <FaWhatsapp className="w-4 h-4 text-white shrink-0" />
                     <span>Chat on WhatsApp ({whatsappNumber})</span>
@@ -246,7 +246,7 @@ export default function Contact() {
           </div>
 
           {/* Contact Form (Right Col) */}
-          <div className="md:col-span-7 bg-white rounded-2xl p-6 md:p-10 shadow-[0_8px_32px_-8px_rgba(0,53,39,0.06)] border border-gray-200/80 relative overflow-hidden">
+          <div className="md:col-span-7 bg-white rounded-2xl p-4 sm:p-6 md:p-10 shadow-[0_8px_32px_-8px_rgba(0,53,39,0.06)] border border-gray-200/80 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-[radial-gradient(#e0e3e5_1px,transparent_1px)] [background-size:20px_20px] opacity-50 rounded-bl-full pointer-events-none" />
             
             <h2 className="font-serif font-bold text-xl md:text-2xl text-[#00450d] mb-6 relative z-10">

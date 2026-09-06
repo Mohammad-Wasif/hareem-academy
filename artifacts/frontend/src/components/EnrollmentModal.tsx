@@ -315,9 +315,9 @@ export default function EnrollmentModal({
           </div>
         ) : (
           <div className="flex flex-col">
-            <div className="p-6 pb-4 border-b border-border">
+            <div className="p-4 sm:p-6 pb-3 sm:pb-4 border-b border-border">
               <DialogHeader>
-                <DialogTitle className="font-serif text-2xl text-primary font-bold">
+                <DialogTitle className="font-serif text-xl sm:text-2xl text-primary font-bold">
                   {isTrial ? "Book Your Free Trial Class" : "Enroll Now"}
                 </DialogTitle>
                 <DialogDescription className="text-xs text-muted-foreground mt-1">
@@ -336,33 +336,34 @@ export default function EnrollmentModal({
             </div>
 
             {/* Step progress dots */}
-            <div className="flex items-center justify-between px-6 py-2.5 border-b border-border bg-muted/20 select-none">
+            <div className="flex items-center justify-between px-4 sm:px-6 py-2 border-b border-border bg-muted/20 select-none">
               {[1, 2, 3].map((s) => (
                 <div key={s} className="flex items-center gap-2">
                   <div
-                    className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold font-sans transition-all duration-300 ${
+                    className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold font-sans transition-colors ${
                       step === s
-                        ? "bg-primary text-primary-foreground scale-105 shadow-sm"
+                        ? "bg-primary text-primary-foreground shadow-xs"
                         : step > s
-                          ? "bg-accent text-accent-foreground"
+                          ? "bg-primary/20 text-primary"
                           : "bg-muted text-muted-foreground"
                     }`}
                   >
-                    {s}
+                    {step > s ? "✓" : s}
                   </div>
                   <span
-                    className={`text-[10px] font-sans font-semibold transition-colors duration-300 ${
-                      step === s ? "text-primary font-bold" : "text-muted-foreground"
+                    className={`text-xs font-sans ${
+                      step === s
+                        ? "font-bold text-foreground"
+                        : "text-muted-foreground"
                     }`}
                   >
-                    {s === 1 ? "Program" : s === 2 ? "Contact" : "Location"}
+                    {s === 1 ? "Course" : s === 2 ? "Your Info" : "Details"}
                   </span>
-                  {s < 3 && <div className="h-[1px] w-6 bg-border" />}
                 </div>
               ))}
             </div>
 
-            <form onSubmit={onSubmit} className="p-6 pt-2 space-y-4">
+            <form onSubmit={onSubmit} className="p-4 sm:p-6 space-y-4">
               {step === 1 && (
                 <div className="space-y-4 pt-2">
                   {/* Select Course */}
