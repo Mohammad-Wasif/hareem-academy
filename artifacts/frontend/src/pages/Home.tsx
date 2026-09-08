@@ -266,22 +266,22 @@ export default function Home() {
     homeConfig?.theme?.fontFamily === "sans"
       ? "font-sans"
       : homeConfig?.theme?.fontFamily === "mono"
-      ? "font-mono"
-      : "font-serif";
+        ? "font-mono"
+        : "font-serif";
 
   const sizeClass =
     homeConfig?.theme?.baseFontSize === "lg"
       ? "text-lg"
       : homeConfig?.theme?.baseFontSize === "sm"
-      ? "text-sm"
-      : "text-base";
+        ? "text-sm"
+        : "text-base";
 
   const primaryColor = homeConfig?.theme?.primaryColor;
   const accentColor = homeConfig?.theme?.accentColor;
   const backgroundColor = homeConfig?.theme?.backgroundColor;
 
   return (
-    <div 
+    <div
       className={`flex flex-col min-h-screen w-full overflow-x-hidden ${computedFont} ${sizeClass}`}
       style={homeConfig?.theme ? { backgroundColor } as React.CSSProperties : undefined}
     >
@@ -354,8 +354,8 @@ export default function Home() {
               </motion.p>
 
               {/* Action Buttons: [Book Your Free Trial] & [Explore Courses] */}
-              <motion.div 
-                variants={fadeUp} 
+              <motion.div
+                variants={fadeUp}
                 transition={{ duration: 0.5, delay: 0.15 }}
                 className="flex flex-col gap-3.5"
               >
@@ -419,7 +419,7 @@ export default function Home() {
               <div className="relative w-full max-w-[420px] mx-auto">
                 {/* Decorative glow/gradient background behind the image */}
                 <div className="absolute -inset-2 bg-gradient-to-tr from-primary/3 to-accent/3 rounded-2xl blur-2xl opacity-25" />
-                
+
                 {/* Visual card frame */}
                 <div className="relative bg-card border border-primary/5 rounded-2xl p-1.5 shadow-[0_8px_30px_rgba(19,94,70,0.02)] hover:border-primary/10 transition-all duration-500">
                   <PremiumImage
@@ -432,7 +432,7 @@ export default function Home() {
                     heightClass="h-auto"
                     fetchPriority="high"
                   />
-                  
+
                   {/* Floating badge 1: sisters-only */}
                   <div className="absolute -bottom-3 -left-4 bg-background border border-primary/5 shadow-sm rounded-xl p-2 flex items-center gap-2 hover:-translate-y-0.5 transition-transform duration-300">
                     <div className="w-6.5 h-6.5 rounded-full bg-primary/[0.03] border border-primary/8 flex items-center justify-center text-primary">
@@ -443,7 +443,7 @@ export default function Home() {
                       <p className="text-[8px] text-muted-foreground font-sans leading-none mt-0.5">100% Private Classes</p>
                     </div>
                   </div>
- 
+
                   {/* Floating badge 2: Stars/Rating */}
                   <div className="absolute -top-3 -right-4 bg-background border border-primary/5 shadow-sm rounded-xl p-2 flex items-center gap-1.5 hover:translate-y-0.5 transition-transform duration-300">
                     <div className="flex gap-0.5">
@@ -736,7 +736,7 @@ export default function Home() {
             transition={{ duration: 0.5 }}
           >
             <div className="max-w-2xl">
-              <span className="inline-block text-xs font-bold tracking-widest text-primary uppercase mb-2">
+              <span className="inline-block text-xs font-bold tracking-[0.2em] text-[#00450d] uppercase bg-[#00450d]/5 px-3.5 py-1 rounded-full border border-[#00450d]/10 font-sans mb-3">
                 Programs
               </span>
               <h2 className="font-serif font-bold text-3xl md:text-4xl text-foreground">
@@ -757,20 +757,20 @@ export default function Home() {
               {[1, 2, 3].map((n) => (
                 <div
                   key={n}
-                  className="bg-white rounded-2xl overflow-hidden border border-gray-200/80 shadow-[0_4px_20px_rgba(0,53,39,0.04)] animate-pulse flex flex-col justify-between h-[380px]"
+                  className="bg-[#003527] rounded-t-[44px] rounded-b-2xl overflow-hidden border border-[#003527] shadow-[0_4px_20px_rgba(0,53,39,0.12)] animate-pulse flex flex-col justify-between h-[380px]"
                 >
                   <div>
-                    <div className="h-44 bg-gray-100" />
+                    <div className="h-44 bg-[#00281d]" />
                     <div className="p-5 space-y-3">
-                      <div className="h-3 w-20 bg-gray-200 rounded" />
-                      <div className="h-5 w-40 bg-gray-200 rounded" />
-                      <div className="h-3 w-full bg-gray-100 rounded" />
-                      <div className="h-3 w-3/4 bg-gray-100 rounded" />
+                      <div className="h-3 w-20 bg-white/20 rounded" />
+                      <div className="h-5 w-40 bg-white/20 rounded" />
+                      <div className="h-3 w-full bg-white/10 rounded" />
+                      <div className="h-3 w-3/4 bg-white/10 rounded" />
                     </div>
                   </div>
                   <div className="p-5 pt-0">
-                    <div className="pt-3 border-t border-gray-100 flex justify-end">
-                      <div className="h-4 w-20 bg-gray-200 rounded" />
+                    <div className="pt-3 border-t border-white/10 flex justify-end">
+                      <div className="h-4 w-20 bg-white/20 rounded" />
                     </div>
                   </div>
                 </div>
@@ -806,7 +806,7 @@ export default function Home() {
             transition={{ duration: 0.5 }}
           >
             <span className="inline-block text-xs font-bold tracking-[0.2em] text-[#ffe088] uppercase bg-white/10 px-3.5 py-1 rounded-full border border-white/20 font-sans">
-              WHY HAREEM ACADEMY
+              WHY HAREEM ACADEMY?
             </span>
             <h2 className="font-serif font-bold text-xl sm:text-3xl md:text-4xl lg:text-5xl text-white">
               Built around the needs of sisters.
@@ -888,7 +888,7 @@ export default function Home() {
             transition={{ duration: 0.5 }}
           >
             <div className="max-w-2xl">
-              <span className="inline-block text-xs font-bold tracking-widest text-[#003527] uppercase mb-2">
+              <span className="inline-block text-xs font-bold tracking-[0.2em] text-[#00450d] uppercase bg-[#00450d]/5 px-3.5 py-1 rounded-full border border-[#00450d]/10 font-sans mb-3">
                 Real stories
               </span>
               <h2 className="font-serif font-bold text-3xl md:text-4xl text-[#003527]">
@@ -914,9 +914,9 @@ export default function Home() {
             viewport={{ once: true }}
           >
             {testimonials.slice(0, 3).map((t, idx) => (
-              <motion.div 
-                key={t.id} 
-                variants={fadeUp} 
+              <motion.div
+                key={t.id}
+                variants={fadeUp}
                 transition={{ duration: 0.4 }}
                 className="w-full min-w-0 max-w-full h-full"
               >

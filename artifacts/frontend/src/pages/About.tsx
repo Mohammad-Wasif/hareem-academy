@@ -104,7 +104,7 @@ export default function About() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] text-[#191c1d] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#f8f9fa] text-[#191c1d] flex flex-col font-sans overflow-x-hidden">
       <SEO
         title="About Us"
         description="Hareem Academy is an online learning space created for girls and women who want to learn Arabic and Urdu in a comfortable, structured, and supportive environment."
@@ -128,31 +128,31 @@ export default function About() {
 
       <main className="flex-grow">
         {/* 1. HERO SECTION (Adjusted spacing with navbar) */}
-        <section className="relative pt-6 pb-10 md:pt-10 md:pb-14 px-4 md:px-12 overflow-hidden border-b border-gray-200/60">
+        <section className="relative pt-6 pb-8 sm:pb-10 md:pt-10 md:pb-14 px-4 sm:px-6 md:px-12 overflow-hidden border-b border-gray-200/60">
           <div className="absolute inset-0 bg-pattern opacity-60 pointer-events-none -z-10" />
           <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            <div className="lg:col-span-7 space-y-4">
+            <div className="lg:col-span-7 space-y-3.5 sm:space-y-4">
               <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-[#00450d] bg-[#00450d]/5 px-3 py-0.5 rounded-full border border-[#00450d]/10">
                 About Us
               </span>
               <h1 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl text-[#00450d] leading-tight">
                 A Dedicated Space for Sisters to Learn
               </h1>
-              <p className="font-sans font-semibold text-xs sm:text-sm md:text-base text-[#00450d] leading-relaxed bg-[#00450d]/5 p-3.5 sm:p-4 rounded-xl border-l-4 border-[#cca72f]">
+              <p className="font-sans font-semibold text-xs sm:text-sm md:text-base text-[#00450d] leading-relaxed bg-[#00450d]/5 p-3.5 sm:p-4 rounded-xl border-l-4 border-[#cca72f] text-justify [text-align-last:left]">
                 Hareem Academy is an online learning space created for girls and women who want to learn Arabic and Urdu in a comfortable, structured, and supportive environment.
               </p>
-              <p className="font-sans text-xs sm:text-sm text-[#41493e] leading-relaxed">
+              <p className="font-sans text-xs sm:text-sm text-[#41493e] leading-relaxed text-justify [text-align-last:left]">
                 Through live online classes taught by qualified female teachers, we aim to make language learning accessible for sisters in India and for Indian families living abroad.
               </p>
-              <div className="pt-1.5 flex flex-wrap gap-3">
+              <div className="pt-1.5 flex flex-col min-[380px]:flex-row gap-2.5 sm:gap-3 w-full min-[380px]:w-auto">
                 <EnrollmentModal mode="trial">
-                  <button className="inline-flex items-center justify-center h-10 px-5 rounded-full bg-[#00450d] text-white hover:bg-[#00350d] font-sans font-bold text-xs shadow-md transition-all">
+                  <button className="inline-flex items-center justify-center h-10 sm:h-11 px-5 sm:px-6 rounded-full bg-[#00450d] text-white hover:bg-[#00350d] font-sans font-bold text-xs shadow-md transition-all w-full min-[380px]:w-auto">
                     Book Free Trial
                   </button>
                 </EnrollmentModal>
                 <Link
                   href="/courses"
-                  className="inline-flex items-center justify-center h-10 px-5 rounded-full border border-[#00450d]/20 text-[#00450d] hover:bg-[#00450d]/5 font-sans font-semibold text-xs transition-colors"
+                  className="inline-flex items-center justify-center h-10 sm:h-11 px-5 sm:px-6 rounded-full border border-[#00450d]/20 text-[#00450d] hover:bg-[#00450d]/5 font-sans font-semibold text-xs transition-colors w-full min-[380px]:w-auto"
                 >
                   Explore Courses
                 </Link>
@@ -160,22 +160,22 @@ export default function About() {
             </div>
 
             <div className="lg:col-span-5 relative">
-              <div className="relative h-[280px] sm:h-[340px] md:h-[360px] w-full rounded-2xl overflow-hidden shadow-[0_16px_36px_-10px_rgba(0,69,13,0.12)] border border-gray-200/80">
+              <div className="relative h-[250px] min-[400px]:h-[290px] sm:h-[340px] md:h-[360px] w-full rounded-2xl overflow-hidden shadow-[0_16px_36px_-10px_rgba(0,69,13,0.12)] border border-gray-200/80">
                 <img
-                  src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1000&q=80"
-                  alt="Sisters learning together in live online Arabic class at Hareem Academy"
+                  src="/about-arabic-study.png"
+                  alt="Arabic and Urdu language study by the sunlit window at Hareem Academy"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="absolute -bottom-3.5 left-2 sm:-left-3.5 bg-white p-3 rounded-xl shadow-lg border border-gray-100 flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-full bg-[#00450d]/10 flex items-center justify-center text-[#00450d]">
-                  <ShieldCheck className="w-4 h-4" />
+              <div className="absolute -bottom-3.5 left-2 sm:-left-3.5 bg-white p-2.5 sm:p-3 rounded-xl shadow-lg border border-gray-100 flex items-center gap-2 sm:gap-2.5 max-w-[calc(100%-16px)]">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#00450d]/10 flex items-center justify-center text-[#00450d] shrink-0">
+                  <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
                 <div>
                   <div className="font-sans font-bold text-xs text-[#191c1d]">
                     100% Female-Only
                   </div>
-                  <div className="font-sans text-[10px] sm:text-[11px] text-[#41493e]">
+                  <div className="font-sans text-[10px] sm:text-[11px] text-[#41493e] truncate">
                     Safe, private live online classes
                   </div>
                 </div>
@@ -185,15 +185,15 @@ export default function About() {
         </section>
 
         {/* 2. OUR STORY SECTION */}
-        <section className="py-10 md:py-14 px-4 md:px-12 bg-[#f3f4f5]">
+        <section className="py-8 sm:py-10 md:py-14 px-4 sm:px-6 md:px-12 bg-[#f3f4f5] overflow-hidden">
           <div className="max-w-[1280px] mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
-              <div className="lg:col-span-5 relative order-2 lg:order-1">
-                <div className="h-[300px] md:h-[360px] w-full rounded-tl-[60px] md:rounded-tl-[80px] rounded-br-[60px] md:rounded-br-[80px] overflow-hidden shadow-[0_16px_36px_-10px_rgba(0,69,13,0.1)] border border-gray-200/60">
+              <div className="lg:col-span-5 relative order-2 lg:order-1 flex justify-center">
+                <div className="w-full max-w-[440px] h-[320px] min-[400px]:h-[380px] sm:h-[460px] md:h-[520px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_16px_36px_-10px_rgba(0,69,13,0.1)] border border-gray-200/60">
                   <img
-                    src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=800&q=80"
-                    alt="Traditional learning and scholarship"
-                    className="w-full h-full object-cover"
+                    src="/about-cozy-desk.png"
+                    alt="A cozy, dedicated online learning space for sisters at Hareem Academy"
+                    className="w-full h-full object-cover object-center"
                   />
                 </div>
                 <div className="absolute -bottom-5 -right-5 w-32 h-32 bg-[#cca72f]/20 rounded-full blur-2xl pointer-events-none" />
@@ -203,10 +203,10 @@ export default function About() {
                 <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-[#00450d] bg-[#00450d]/5 px-3 py-0.5 rounded-full border border-[#00450d]/10 font-sans">
                   Our Story
                 </span>
-                <h2 className="font-serif font-bold text-2xl md:text-3xl text-[#00450d] leading-snug">
+                <h2 className="font-serif font-bold text-xl sm:text-2xl md:text-3xl text-[#00450d] leading-snug">
                   Learning Should Feel Comfortable, Structured, and Achievable
                 </h2>
-                <div className="space-y-3 text-xs sm:text-sm text-[#41493e] leading-relaxed">
+                <div className="space-y-3 text-xs sm:text-sm text-[#41493e] leading-relaxed text-justify [text-align-last:left]">
                   <p>
                     Hareem Academy was created with a simple idea: <strong className="text-[#00450d] font-semibold">sisters deserve a learning environment where they can learn confidently, ask questions freely, and grow at their own pace.</strong>
                   </p>
@@ -229,40 +229,40 @@ export default function About() {
         </section>
 
         {/* 3. WHY HAREEM ACADEMY? SECTION */}
-        <section className="py-10 md:py-14 px-4 md:px-12">
+        <section className="py-8 sm:py-10 md:py-14 px-4 sm:px-6 md:px-12">
           <div className="max-w-[1280px] mx-auto">
-            <div className="text-center mb-8 md:mb-10 space-y-1.5">
+            <div className="text-center mb-6 sm:mb-8 md:mb-10 space-y-1.5">
               <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-[#00450d] bg-[#00450d]/5 px-3 py-0.5 rounded-full border border-[#00450d]/10">
                 Why Hareem Academy?
               </span>
-              <h2 className="font-serif font-bold text-2xl md:text-3xl text-[#00450d]">
+              <h2 className="font-serif font-bold text-xl sm:text-2xl md:text-3xl text-[#00450d]">
                 Created With Sisters in Mind
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4 md:gap-5">
               {whyChooseUsPoints.map((point, index) => {
                 const IconComponent = point.icon;
                 return (
                   <div
                     key={index}
-                    className={`bg-white p-5 md:p-6 rounded-2xl shadow-[0_8px_24px_rgba(0,53,39,0.04)] border border-gray-200/80 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between ${
+                    className={`bg-gradient-to-t from-[#9bd9ad] via-[#f9e087] to-[#ffe088] p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl shadow-[0_8px_24px_rgba(0,53,39,0.06)] border border-[#8ecfa0]/50 hover:border-[#003527]/30 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between ${
                       index === 4 ? "md:col-span-2 lg:col-span-2" : ""
                     }`}
                   >
                     <div>
-                      <div className="flex items-center justify-between mb-3.5">
-                        <div className="w-10 h-10 rounded-xl bg-[#00450d]/10 text-[#00450d] flex items-center justify-center shadow-xs">
+                      <div className="flex items-center justify-between mb-3 sm:mb-3.5">
+                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#003527] text-[#ffe088] flex items-center justify-center shadow-xs">
                           <IconComponent className="w-4 h-4 md:w-5 md:h-5" />
                         </div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#735c00] bg-[#cca72f]/15 px-2 py-0.5 rounded-md">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#003527] bg-white/70 px-2 sm:px-2.5 py-0.5 rounded-md border border-[#003527]/10">
                           {point.tag}
                         </span>
                       </div>
-                      <h3 className="font-serif font-bold text-sm sm:text-base md:text-lg text-[#00450d] mb-2">
+                      <h3 className="font-serif font-bold text-sm sm:text-base md:text-lg text-[#003527] mb-1.5 sm:mb-2">
                         {point.title}
                       </h3>
-                      <p className="font-sans text-xs sm:text-sm text-[#41493e] leading-relaxed">
+                      <p className="font-sans text-xs sm:text-sm text-[#003527]/90 leading-relaxed text-justify [text-align-last:left]">
                         {point.desc}
                       </p>
                     </div>
@@ -274,38 +274,38 @@ export default function About() {
         </section>
 
         {/* 4. OUR VALUES SECTION */}
-        <section className="py-10 md:py-14 px-4 md:px-12 bg-[#f3f4f5]">
+        <section className="py-8 sm:py-10 md:py-14 px-4 sm:px-6 md:px-12 bg-[#f3f4f5]">
           <div className="max-w-[1280px] mx-auto">
-            <div className="text-center mb-8 md:mb-10 space-y-1.5">
+            <div className="text-center mb-6 sm:mb-8 md:mb-10 space-y-1.5">
               <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-[#00450d] bg-[#00450d]/5 px-3 py-0.5 rounded-full border border-[#00450d]/10 font-sans">
                 Our Values
               </span>
-              <h2 className="font-serif font-bold text-2xl md:text-3xl text-[#00450d]">
+              <h2 className="font-serif font-bold text-xl sm:text-2xl md:text-3xl text-[#00450d]">
                 What We Believe In
               </h2>
-              <p className="font-sans text-xs md:text-sm text-[#41493e] max-w-xl mx-auto">
+              <p className="font-sans text-xs md:text-sm text-[#41493e] max-w-xl mx-auto text-justify [text-align-last:left]">
                 The principles that guide the way we teach and support our students.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 md:gap-5">
               {values.map((val, index) => {
                 const IconComp = val.icon;
                 return (
                   <div
                     key={index}
-                    className="bg-white p-5 md:p-6 rounded-2xl shadow-[0_8px_24px_rgba(0,53,39,0.04)] border border-gray-200/80 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+                    className="bg-white p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl shadow-[0_8px_24px_rgba(0,53,39,0.04)] border border-gray-200/80 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
                   >
                     <div>
                       <div
-                        className={`w-9 h-9 rounded-xl flex items-center justify-center mb-3.5 shadow-xs ${val.accent}`}
+                        className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center mb-3 sm:mb-3.5 shadow-xs ${val.accent}`}
                       >
                         <IconComp className="w-4 h-4" />
                       </div>
                       <h3 className="font-serif font-bold text-sm sm:text-base md:text-lg text-[#00450d] mb-1.5">
                         {val.title}
                       </h3>
-                      <p className="font-sans text-xs sm:text-sm text-[#41493e] leading-relaxed">
+                      <p className="font-sans text-xs sm:text-sm text-[#41493e] leading-relaxed text-justify [text-align-last:left]">
                         {val.desc}
                       </p>
                     </div>
@@ -317,21 +317,21 @@ export default function About() {
         </section>
 
         {/* 5. OUR VISION SECTION */}
-        <section className="py-10 md:py-14 px-4 md:px-12">
+        <section className="py-8 sm:py-10 md:py-14 px-4 sm:px-6 md:px-12 overflow-hidden">
           <div className="max-w-[1080px] mx-auto">
-            <div className="bg-[#00450d] text-white rounded-3xl p-6 sm:p-8 md:p-12 relative overflow-hidden shadow-[0_20px_50px_rgba(0,69,13,0.18)]">
+            <div className="bg-[#00450d] text-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-12 relative overflow-hidden shadow-[0_20px_50px_rgba(0,69,13,0.18)]">
               <div className="absolute top-0 right-0 w-80 h-80 bg-[#1b5e20] rounded-full blur-3xl opacity-35 translate-x-1/3 -translate-y-1/3 pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-60 h-60 bg-[#cca72f] rounded-full blur-3xl opacity-20 -translate-x-1/3 translate-y-1/3 pointer-events-none" />
 
-              <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-                <div className="md:col-span-7 lg:col-span-7 space-y-3.5">
+              <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-center">
+                <div className="md:col-span-7 lg:col-span-7 space-y-3 sm:space-y-3.5">
                   <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-[#cca72f] bg-[#cca72f]/15 px-3 py-0.5 rounded-full border border-[#cca72f]/25">
                     Our Vision
                   </span>
-                  <h2 className="font-serif font-bold text-2xl md:text-3xl text-white leading-snug">
+                  <h2 className="font-serif font-bold text-xl sm:text-2xl md:text-3xl text-white leading-snug">
                     Making Quality Learning Accessible to More Sisters
                   </h2>
-                  <div className="space-y-3 text-xs md:text-sm text-[#d0e5d8] leading-relaxed pt-1">
+                  <div className="space-y-2.5 sm:space-y-3 text-xs md:text-sm text-[#d0e5d8] leading-relaxed pt-1 text-justify [text-align-last:left]">
                     <p>
                       We envision Hareem Academy as a trusted online learning space where sisters can access quality Arabic and Urdu education without compromising on comfort, privacy, or personal values.
                     </p>
@@ -341,15 +341,15 @@ export default function About() {
                   </div>
                 </div>
 
-                <div className="md:col-span-5 lg:col-span-5 flex flex-col items-center justify-center gap-3">
-                  <div className="w-48 h-48 sm:w-56 sm:h-56 md:w-60 md:h-60 lg:w-64 lg:h-64 aspect-square rounded-2xl sm:rounded-3xl bg-[#0B2216] border-2 border-[#cca72f]/40 p-2 shadow-2xl flex items-center justify-center overflow-hidden hover:scale-[1.03] transition-transform duration-300 shrink-0">
+                <div className="md:col-span-5 lg:col-span-5 flex flex-col items-center justify-center gap-2.5 sm:gap-3 pt-2 md:pt-0">
+                  <div className="w-36 h-36 min-[400px]:w-44 min-[400px]:h-44 sm:w-56 sm:h-56 md:w-60 md:h-60 lg:w-64 lg:h-64 aspect-square rounded-2xl sm:rounded-3xl bg-[#0B2216] border-2 border-[#cca72f]/40 p-2 shadow-2xl flex items-center justify-center overflow-hidden hover:scale-[1.03] transition-transform duration-300 shrink-0">
                     <img
                       src={logoSrc}
                       alt="Hareem Academy"
                       className="w-full h-full object-cover rounded-xl sm:rounded-2xl"
                     />
                   </div>
-                  <span className="font-serif font-bold text-lg sm:text-xl md:text-2xl text-[#ffe088] tracking-normal text-center select-none">
+                  <span className="font-serif font-bold text-base sm:text-xl md:text-2xl text-[#ffe088] tracking-normal text-center select-none">
                     Hareem Academy
                   </span>
                 </div>
@@ -359,29 +359,29 @@ export default function About() {
         </section>
 
         {/* 6. START YOUR LEARNING JOURNEY (CLOSING CTA - Tightened with footer) */}
-        <section className="px-4 md:px-12 max-w-[1280px] mx-auto text-center pt-2 pb-6 md:pb-10">
-          <div className="bg-white rounded-2xl p-6 md:p-8 border border-gray-200/80 flex flex-col items-center max-w-3xl mx-auto shadow-[0_8px_30px_rgba(0,53,39,0.05)]">
+        <section className="px-4 sm:px-6 md:px-12 max-w-[1280px] mx-auto text-center pt-2 pb-8 sm:pb-10 md:pb-12">
+          <div className="bg-white rounded-2xl p-5 sm:p-6 md:p-8 border border-gray-200/80 flex flex-col items-center max-w-3xl mx-auto shadow-[0_8px_30px_rgba(0,53,39,0.05)]">
             <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-[#00450d] bg-[#00450d]/5 px-3 py-0.5 rounded-full border border-[#00450d]/10 mb-2">
               Start Your Learning Journey
             </span>
             <h2 className="font-serif font-bold text-lg sm:text-xl md:text-2xl text-[#00450d] mb-1.5">
               Ready to Take the First Step?
             </h2>
-            <p className="font-sans text-xs md:text-sm text-[#41493e] mb-1 leading-relaxed">
+            <p className="font-sans text-xs md:text-sm text-[#41493e] mb-1 leading-relaxed text-justify [text-align-last:left]">
               Experience a Hareem Academy class before you enroll.
             </p>
-            <p className="font-sans font-medium text-xs md:text-sm text-[#00450d] mb-5 max-w-md leading-relaxed">
+            <p className="font-sans font-medium text-xs md:text-sm text-[#00450d] mb-4 sm:mb-5 max-w-md leading-relaxed text-justify [text-align-last:left]">
               Book your free trial and discover a comfortable, structured way to learn Arabic or Urdu.
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-3">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-3 w-full sm:w-auto">
               <EnrollmentModal mode="trial">
-                <button className="inline-flex items-center gap-2 bg-[#00450d] text-white font-sans font-bold text-xs md:text-sm px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl hover:bg-[#00450d]/90 transition-all shadow-md shadow-[#00450d]/10 hover:-translate-y-0.5 cursor-pointer">
+                <button className="inline-flex items-center justify-center gap-2 bg-[#00450d] text-white font-sans font-bold text-xs md:text-sm px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl hover:bg-[#00450d]/90 transition-all shadow-md shadow-[#00450d]/10 hover:-translate-y-0.5 cursor-pointer w-full sm:w-auto">
                   <span>Book a Free Trial</span>
                   <ArrowRight className="w-3.5 h-3.5 ml-0.5" />
                 </button>
               </EnrollmentModal>
-              <Link href="/courses">
-                <button className="font-sans font-bold text-xs md:text-sm bg-white text-[#00450d] border border-[#00450d]/25 px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl hover:bg-[#00450d]/5 transition-all shadow-xs cursor-pointer">
+              <Link href="/courses" className="w-full sm:w-auto">
+                <button className="font-sans font-bold text-xs md:text-sm bg-white text-[#00450d] border border-[#00450d]/25 px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl hover:bg-[#00450d]/5 transition-all shadow-xs cursor-pointer w-full sm:w-auto">
                   Explore Courses
                 </button>
               </Link>

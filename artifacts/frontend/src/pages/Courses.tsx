@@ -99,9 +99,6 @@ export default function Courses() {
               <h2 className="font-serif font-bold text-xl md:text-2xl text-[#00450d]">
                 Our Courses
               </h2>
-              <p className="text-xs text-[#525e54] font-sans mt-0.5">
-                Live interactive classes designed exclusively for sisters
-              </p>
             </div>
             <div className="flex flex-wrap items-center gap-1.5 bg-white p-1 rounded-xl shadow-xs border border-gray-200/80 max-w-full">
               <button
@@ -143,24 +140,24 @@ export default function Courses() {
               {[1, 2, 3].map((n) => (
                 <div
                   key={n}
-                  className="bg-white rounded-2xl overflow-hidden border border-gray-200/80 shadow-[0_4px_20px_rgba(0,53,39,0.04)] animate-pulse flex flex-col justify-between h-[420px]"
+                  className="bg-[#003527] rounded-t-[44px] rounded-b-2xl overflow-hidden border border-[#003527] shadow-[0_4px_20px_rgba(0,53,39,0.12)] animate-pulse flex flex-col justify-between h-[420px]"
                 >
                   <div>
-                    <div className="h-44 bg-gray-100" />
+                    <div className="h-44 bg-[#00281d]" />
                     <div className="p-5 space-y-3">
-                      <div className="h-3 w-24 bg-gray-200 rounded" />
-                      <div className="h-5 w-44 bg-gray-200 rounded" />
-                      <div className="h-3 w-full bg-gray-100 rounded" />
-                      <div className="h-3 w-3/4 bg-gray-100 rounded" />
-                      <div className="grid grid-cols-2 gap-2 pt-2.5 border-t border-gray-100">
-                        <div className="h-12 bg-gray-100 rounded-xl" />
-                        <div className="h-12 bg-gray-100 rounded-xl" />
+                      <div className="h-3 w-24 bg-white/20 rounded" />
+                      <div className="h-5 w-44 bg-white/20 rounded" />
+                      <div className="h-3 w-full bg-white/10 rounded" />
+                      <div className="h-3 w-3/4 bg-white/10 rounded" />
+                      <div className="grid grid-cols-2 gap-2 pt-2.5 border-t border-white/10">
+                        <div className="h-12 bg-white/10 rounded-xl" />
+                        <div className="h-12 bg-white/10 rounded-xl" />
                       </div>
                     </div>
                   </div>
                   <div className="p-5 pt-0">
-                    <div className="pt-3 border-t border-gray-100 flex justify-end">
-                      <div className="h-4 w-20 bg-gray-200 rounded" />
+                    <div className="pt-3 border-t border-white/10 flex justify-end">
+                      <div className="h-4 w-20 bg-white/20 rounded" />
                     </div>
                   </div>
                 </div>

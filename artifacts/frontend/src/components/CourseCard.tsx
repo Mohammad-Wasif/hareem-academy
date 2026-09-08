@@ -27,16 +27,11 @@ export default function CourseCard({ course }: { course: Course }) {
 
   return (
     <Link href={`/courses/${course.slug}`} className="block h-full cursor-pointer group">
-      <div className="bg-white rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(0,53,39,0.04)] hover:shadow-[0_10px_30px_rgba(0,53,39,0.08)] border border-gray-200/80 group-hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between h-full">
+      <div className="bg-[#003527] text-white rounded-t-[44px] rounded-b-2xl overflow-hidden shadow-[0_4px_20px_rgba(0,53,39,0.12)] hover:shadow-[0_12px_35px_rgba(0,53,39,0.25)] border border-[#003527] hover:border-white/20 group-hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between h-full">
         <div>
-          {/* Image Header with Arch Mask */}
-          <div className="h-44 relative overflow-hidden bg-[#003527]/5">
-            <div
-              className="w-full h-full relative group-hover:scale-105 transition-transform duration-700 overflow-hidden"
-              style={{
-                clipPath: "ellipse(150% 100% at 50% 100%)",
-              }}
-            >
+          {/* Image Header */}
+          <div className="h-44 relative overflow-hidden bg-[#00281d]">
+            <div className="w-full h-full relative group-hover:scale-105 transition-transform duration-700 overflow-hidden">
               <PremiumImage
                 assetKey={courseAssetKey}
                 fallback={courseFallback}
@@ -47,42 +42,42 @@ export default function CourseCard({ course }: { course: Course }) {
                 width={480}
               />
             </div>
-            <div className="absolute top-3 right-3 bg-[#003527]/90 backdrop-blur-xs text-[#86d881] px-2.5 py-0.5 rounded-full font-sans text-[10px] font-bold shadow-xs uppercase tracking-wider z-10">
+            <div className="absolute top-3.5 right-4 bg-[#001f16]/90 backdrop-blur-xs text-[#86d881] border border-white/10 px-2.5 py-0.5 rounded-full font-sans text-[10px] font-bold shadow-xs uppercase tracking-wider z-10">
               {course.language || "Language"}
             </div>
           </div>
 
           {/* Content Details */}
           <div className="p-5 space-y-3">
-            <div className="flex items-center space-x-1.5 text-[#735c00] font-sans text-[11px] font-bold tracking-wide uppercase">
-              <GraduationCap className="w-3.5 h-3.5" />
+            <div className="flex items-center space-x-1.5 text-[#ffe088] font-sans text-[11px] font-bold tracking-wide uppercase">
+              <GraduationCap className="w-3.5 h-3.5 text-[#ffe088]" />
               <span>{course.level}</span>
             </div>
-            <h3 className="font-serif font-bold text-lg md:text-xl text-[#00450d] leading-snug group-hover:text-[#003527] transition-colors">
+            <h3 className="font-serif font-bold text-lg md:text-xl text-white leading-snug group-hover:text-[#ffe088] transition-colors">
               {course.title}
             </h3>
-            <p className="text-[#41493e] font-sans text-xs leading-relaxed line-clamp-3">
+            <p className="text-white/80 font-sans text-xs leading-relaxed line-clamp-3">
               {course.summary}
             </p>
 
             {/* Prominent Course Meta: Duration & Fee */}
-            <div className="grid grid-cols-2 gap-2 pt-2.5 border-t border-gray-100 font-sans">
-              <div className="bg-[#f8f9fa] p-2 rounded-xl border border-gray-200/70 flex flex-col justify-center">
-                <div className="text-[10px] font-medium text-gray-500 flex items-center gap-1 mb-0.5">
-                  <Clock className="w-3 h-3 text-[#00450d]" />
+            <div className="grid grid-cols-2 gap-2 pt-2.5 border-t border-white/10 font-sans">
+              <div className="bg-white/10 p-2 rounded-xl border border-white/10 flex flex-col justify-center">
+                <div className="text-[10px] font-medium text-white/70 flex items-center gap-1 mb-0.5">
+                  <Clock className="w-3 h-3 text-[#ffe088]" />
                   <span>Duration</span>
                 </div>
-                <div className="text-xs sm:text-sm font-bold text-[#00450d]">
+                <div className="text-xs sm:text-sm font-bold text-white">
                   {course.durationMonths} Months
                 </div>
               </div>
 
-              <div className="bg-[#00450d]/5 p-2 rounded-xl border border-[#00450d]/10 flex flex-col justify-center">
-                <div className="text-[10px] font-medium text-[#735c00] flex items-center gap-1 mb-0.5">
-                  <CreditCard className="w-3 h-3 text-[#735c00]" />
+              <div className="bg-[#ffe088]/15 p-2 rounded-xl border border-[#ffe088]/20 flex flex-col justify-center">
+                <div className="text-[10px] font-medium text-[#ffe088] flex items-center gap-1 mb-0.5">
+                  <CreditCard className="w-3 h-3 text-[#ffe088]" />
                   <span>Monthly Fee</span>
                 </div>
-                <div className="text-[11px] min-[360px]:text-xs sm:text-sm font-bold text-[#00450d] truncate">
+                <div className="text-[11px] min-[360px]:text-xs sm:text-sm font-bold text-[#ffe088] truncate">
                   {formattedFee}
                 </div>
               </div>
@@ -92,8 +87,8 @@ export default function CourseCard({ course }: { course: Course }) {
 
         {/* Footer Action */}
         <div className="p-5 pt-0">
-          <div className="pt-3 flex items-center justify-end border-t border-gray-100">
-            <span className="text-[#735c00] group-hover:text-[#00450d] font-sans text-xs font-bold flex items-center transition-colors">
+          <div className="pt-3 flex items-center justify-end border-t border-white/10">
+            <span className="text-[#ffe088] group-hover:text-white font-sans text-xs font-bold flex items-center transition-colors">
               Enroll Now{" "}
               <ArrowRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1 transition-transform" />
             </span>
