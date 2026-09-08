@@ -28,7 +28,6 @@ const Faqs = React.lazy(() => import("@/pages/Faqs"));
 const Privacy = React.lazy(() => import("@/pages/legal/Privacy"));
 const Terms = React.lazy(() => import("@/pages/legal/Terms"));
 const Refund = React.lazy(() => import("@/pages/legal/Refund"));
-const SEOLandingPage = React.lazy(() => import("@/pages/SEOLandingPage"));
 
 // Admin Pages (Lazy)
 const AdminLayout = React.lazy(() => import("@/pages/admin/AdminLayout"));
@@ -83,13 +82,6 @@ function PublicRoutes() {
           <Route path="/privacy" component={Privacy} />
           <Route path="/terms" component={Terms} />
           <Route path="/refund" component={Refund} />
-
-
-
-          {/* Dynamic catch-all route for database-defined landing pages */}
-          <Route path="/:slug">
-            {(params) => <SEOLandingPage slug={params.slug} />}
-          </Route>
 
           <Route component={NotFound} />
         </Switch>

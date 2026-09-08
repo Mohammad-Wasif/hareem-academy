@@ -59,30 +59,6 @@ async function generateSitemap() {
       { path: "/refund", priority: "0.5", freq: "monthly" },
     ];
 
-    // 13 SEO landing page routes
-    const seoRoutes = [
-      "/learn-arabic-online-for-sisters",
-      "/arabic-classes-for-muslim-women",
-      "/beginner-arabic-course-online",
-      "/quranic-arabic-classes",
-      "/female-arabic-teachers-online",
-      "/learn-urdu-online",
-      "/urdu-course-for-beginners",
-      "/urdu-reading-classes",
-      "/online-urdu-classes-for-sisters",
-      "/learn-quran-with-meaning",
-      "/quran-reading-classes-for-sisters",
-      "/online-tajweed-classes",
-      "/understand-quranic-arabic",
-    ];
-
-    const toTitleCase = (str) =>
-      str
-        .replace(/^\//, "")
-        .split("-")
-        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(" ");
-
     // 3. Construct XML with Image Sitemap Namespace
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
     xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n`;
@@ -116,19 +92,6 @@ async function generateSitemap() {
       xml += `    <image:image>\n`;
       xml += `      <image:loc>${baseUrl}/${imgName}</image:loc>\n`;
       xml += `      <image:title>${imgTitle}</image:title>\n`;
-      xml += `    </image:image>\n`;
-      xml += `  </url>\n`;
-    }
-
-    // SEO landing page routes
-    for (const route of seoRoutes) {
-      xml += `  <url>\n`;
-      xml += `    <loc>${baseUrl}${route}</loc>\n`;
-      xml += `    <changefreq>weekly</changefreq>\n`;
-      xml += `    <priority>0.85</priority>\n`;
-      xml += `    <image:image>\n`;
-      xml += `      <image:loc>${baseUrl}/premium-hero-showcase.png</image:loc>\n`;
-      xml += `      <image:title>${toTitleCase(route)} - Hareem Academy</image:title>\n`;
       xml += `    </image:image>\n`;
       xml += `  </url>\n`;
     }

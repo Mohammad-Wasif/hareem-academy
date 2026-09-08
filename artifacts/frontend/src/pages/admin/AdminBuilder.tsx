@@ -484,9 +484,9 @@ export default function AdminBuilder() {
   // Delete dynamic custom page configuration
   const handleDeletePage = async () => {
     if (!activePage) return;
-    const coreSlugs = ["home", "privacy", "terms", "refund", "about", "courses", "testimonials", "faqs", "contact", "learn-arabic-online-for-sisters"];
+    const coreSlugs = ["home", "privacy", "terms", "refund", "about", "courses", "testimonials", "faqs", "contact"];
     if (coreSlugs.includes(activePage.slug)) {
-      toast.error("Cannot delete core system or primary landing pages!");
+      toast.error("Cannot delete core system pages!");
       return;
     }
 
