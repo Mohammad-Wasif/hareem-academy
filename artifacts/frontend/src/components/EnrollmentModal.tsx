@@ -23,7 +23,7 @@ import { useCreateEnrollment, useListCourses } from "@workspace/api-client-react
 import { FaWhatsapp } from "react-icons/fa";
 import { CheckCircle2, ChevronDown, Search, X } from "lucide-react";
 import { useWhatsApp } from "@/hooks/use-whatsapp";
-import { ALL_COUNTRIES, CALLING_CODES, getCitiesByCountry, getCountryCityData, getStatesByCountry } from "@/lib/countries";
+import { ALL_COUNTRIES, CALLING_CODES, getCitiesByCountry, getCountryCityData, getStatesByCountry, getPhoneRule } from "@/lib/countries";
 
 type FormFieldType = "text" | "email" | "tel" | "number" | "textarea" | "select";
 type PublicFormField = {
@@ -465,6 +465,18 @@ export default function EnrollmentModal({
     [values.country, values.state],
   );
 
+  // Active phone rule based on selected country or calling code
+  const activePhoneRule = useMemo(() => {
+    // Try matching by values.country ISO code first
+    const countryObj = ALL_COUNTRIES.find(
+      (c) => c.name.toLowerCase() === (values.country || "").toLowerCase(),
+    );
+    if (countryObj) {
+      return getPhoneRule(countryObj.isoCode);
+    }
+    return getPhoneRule(countryCode);
+  }, [values.country, countryCode]);
+
   function setField(key: string, value: string) {
     setValues((v) => ({ ...v, [key]: value }));
     setErrors((e) => {
@@ -498,8 +510,15 @@ export default function EnrollmentModal({
       }
       if (!phoneDigits.trim()) {
         next.whatsappNumber = "WhatsApp number is required";
-      } else if (phoneDigits.trim().length < 6 || phoneDigits.trim().length > 15) {
-        next.whatsappNumber = "Enter a valid phone number (6 - 15 digits)";
+      } else {
+        const len = phoneDigits.trim().length;
+        if (activePhoneRule.exact) {
+          if (len !== activePhoneRule.exact) {
+            next.whatsappNumber = `Please enter exactly ${activePhoneRule.exact} digits for this country (e.g. ${activePhoneRule.example})`;
+          }
+        } else if (len < activePhoneRule.min || len > activePhoneRule.max) {
+          next.whatsappNumber = `Please enter ${activePhoneRule.min} to ${activePhoneRule.max} digits (e.g. ${activePhoneRule.example})`;
+        }
       }
     }
     
@@ -846,9 +865,14 @@ export default function EnrollmentModal({
                         onValueChange={(val) => {
                           setCountryCode(val);
                           const matchedCountry = ALL_COUNTRIES.find((c) => c.code === val);
-                          if (matchedCountry && !values.country) {
+                          if (matchedCountry) {
                             setField("country", matchedCountry.name);
                           }
+                          // Clear previous phone errors so the user sees the new format hint
+                          setErrors((e) => {
+                            const { whatsappNumber, ...rest } = e;
+                            return rest;
+                          });
                         }}
                       >
                         <SelectTrigger className="w-[125px] sm:w-[135px] shrink-0 h-10 rounded-lg border-border bg-background px-2 font-sans text-xs">
@@ -873,11 +897,14 @@ export default function EnrollmentModal({
                         type="tel"
                         inputMode="numeric"
                         pattern="[0-9]*"
+                        maxLength={activePhoneRule.max}
                         value={phoneDigits}
                         onChange={(e) => {
                           const digits = e.target.value.replace(/\D/g, "");
-                          setPhoneDigits(digits);
-                          setField("whatsappNumber", digits);
+                          // Limit to country max digits
+                          const trimmedDigits = digits.slice(0, activePhoneRule.max);
+                          setPhoneDigits(trimmedDigits);
+                          setField("whatsappNumber", trimmedDigits);
                         }}
                         onKeyDown={(e) => {
                           if (
@@ -901,10 +928,24 @@ export default function EnrollmentModal({
                             e.preventDefault();
                           }
                         }}
-                        placeholder="98765 43210 (numbers only)"
+                        placeholder={
+                          activePhoneRule.exact
+                            ? `e.g. ${activePhoneRule.example}`
+                            : `e.g. ${activePhoneRule.min}-${activePhoneRule.max} digits`
+                        }
                         className="h-10 rounded-lg border-border bg-background flex-1"
                         autoComplete="tel-national"
                       />
+                    </div>
+                    <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                      <span>
+                        {activePhoneRule.exact
+                          ? `Required: exactly ${activePhoneRule.exact} digits`
+                          : `Required: ${activePhoneRule.min} to ${activePhoneRule.max} digits`}
+                      </span>
+                      <span className="font-mono">
+                        {phoneDigits.length} / {activePhoneRule.exact || activePhoneRule.max} digits
+                      </span>
                     </div>
                     {whatsappField.helpText && (
                       <p className="text-[10px] text-muted-foreground leading-normal">

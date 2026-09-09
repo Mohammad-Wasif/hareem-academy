@@ -346,3 +346,73 @@ export function getCitiesByCountry(countryNameOrIso: string, stateNameOrCode?: s
   }
   return data.allCities;
 }
+
+export interface CountryPhoneRule {
+  min: number;
+  max: number;
+  exact?: number;
+  example: string;
+}
+
+/**
+ * National significant phone number lengths (excluding country calling code)
+ * tailored for popular countries where sisters register.
+ */
+export const COUNTRY_PHONE_RULES: Record<string, CountryPhoneRule> = {
+  IN: { min: 10, max: 10, exact: 10, example: "98765 43210 (10 digits)" },
+  US: { min: 10, max: 10, exact: 10, example: "415 555 2671 (10 digits)" },
+  CA: { min: 10, max: 10, exact: 10, example: "416 555 0199 (10 digits)" },
+  GB: { min: 10, max: 10, exact: 10, example: "7911 123456 (10 digits)" },
+  AU: { min: 9, max: 9, exact: 9, example: "412 345 678 (9 digits)" },
+  AE: { min: 9, max: 9, exact: 9, example: "50 123 4567 (9 digits)" },
+  SA: { min: 9, max: 9, exact: 9, example: "50 123 4567 (9 digits)" },
+  QA: { min: 8, max: 8, exact: 8, example: "3312 3456 (8 digits)" },
+  KW: { min: 8, max: 8, exact: 8, example: "9876 5432 (8 digits)" },
+  OM: { min: 8, max: 8, exact: 8, example: "9123 4567 (8 digits)" },
+  BH: { min: 8, max: 8, exact: 8, example: "3912 3456 (8 digits)" },
+  PK: { min: 10, max: 10, exact: 10, example: "300 1234567 (10 digits)" },
+  BD: { min: 10, max: 10, exact: 10, example: "1712 345678 (10 digits)" },
+  MY: { min: 9, max: 10, example: "12 345 6789 (9-10 digits)" },
+  SG: { min: 8, max: 8, exact: 8, example: "9123 4567 (8 digits)" },
+  NZ: { min: 8, max: 10, example: "21 123 4567 (8-10 digits)" },
+  ZA: { min: 9, max: 9, exact: 9, example: "82 123 4567 (9 digits)" },
+  DE: { min: 10, max: 11, example: "151 12345678 (10-11 digits)" },
+  IE: { min: 9, max: 9, exact: 9, example: "85 123 4567 (9 digits)" },
+  TR: { min: 10, max: 10, exact: 10, example: "532 123 4567 (10 digits)" },
+  EG: { min: 10, max: 10, exact: 10, example: "10 1234 5678 (10 digits)" },
+  FR: { min: 9, max: 9, exact: 9, example: "6 12 34 56 78 (9 digits)" },
+  IT: { min: 9, max: 10, example: "330 1234567 (9-10 digits)" },
+  ES: { min: 9, max: 9, exact: 9, example: "612 345 678 (9 digits)" },
+  NL: { min: 9, max: 9, exact: 9, example: "6 12345678 (9 digits)" },
+  SE: { min: 9, max: 9, exact: 9, example: "70 123 45 67 (9 digits)" },
+  NO: { min: 8, max: 8, exact: 8, example: "412 34 567 (8 digits)" },
+  DK: { min: 8, max: 8, exact: 8, example: "20 12 34 56 (8 digits)" },
+  FI: { min: 9, max: 10, example: "40 123 4567 (9-10 digits)" },
+  CH: { min: 9, max: 9, exact: 9, example: "79 123 45 67 (9 digits)" },
+  AT: { min: 10, max: 11, example: "664 1234567 (10-11 digits)" },
+  BE: { min: 9, max: 9, exact: 9, example: "470 12 34 56 (9 digits)" },
+  JO: { min: 9, max: 9, exact: 9, example: "7 9123 4567 (9 digits)" },
+  LB: { min: 7, max: 8, example: "70 123 456 (7-8 digits)" },
+  LK: { min: 9, max: 9, exact: 9, example: "71 234 5678 (9 digits)" },
+  NP: { min: 10, max: 10, exact: 10, example: "984 1234567 (10 digits)" },
+  NG: { min: 10, max: 10, exact: 10, example: "802 123 4567 (10 digits)" },
+  KE: { min: 9, max: 9, exact: 9, example: "712 345 678 (9 digits)" },
+  ID: { min: 9, max: 12, example: "812 3456 7890 (9-12 digits)" },
+  PH: { min: 10, max: 10, exact: 10, example: "917 123 4567 (10 digits)" },
+};
+
+export function getPhoneRule(isoCodeOrCountryCode?: string): CountryPhoneRule {
+  if (!isoCodeOrCountryCode) {
+    return { min: 7, max: 15, example: "phone number without country code" };
+  }
+  const clean = isoCodeOrCountryCode.trim().toUpperCase();
+  if (COUNTRY_PHONE_RULES[clean]) {
+    return COUNTRY_PHONE_RULES[clean];
+  }
+  // Try matching by calling code (e.g. "+91")
+  const found = CALLING_CODES.find((c) => c.code === isoCodeOrCountryCode || c.isoCode === clean);
+  if (found && COUNTRY_PHONE_RULES[found.isoCode]) {
+    return COUNTRY_PHONE_RULES[found.isoCode];
+  }
+  return { min: 7, max: 15, example: "phone number (7-15 digits)" };
+}
