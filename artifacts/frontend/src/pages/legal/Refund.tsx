@@ -62,14 +62,14 @@ export default function Refund() {
 
       <main className="max-w-3xl mx-auto px-4 md:px-0">
         {/* Header Section */}
-        <div className="mb-10 text-center">
+        <div className="mb-10 text-left">
           <h1 className="font-serif font-bold text-2xl md:text-4xl text-[#003527] mb-3">
             Refund Policy
           </h1>
           <p className="font-sans text-xs md:text-sm text-[#404944] font-medium">
             Last Updated: {lastUpdated}
           </p>
-          <div className="h-1 w-20 bg-[#cca72f] mx-auto mt-4 rounded-full"></div>
+          <div className="h-1 w-20 bg-[#cca72f] mt-4 rounded-full"></div>
         </div>
 
         {/* Content Canvas */}
@@ -294,7 +294,7 @@ export default function Refund() {
         </div>
 
         {/* Bottom CTA Block */}
-        <div className="mt-10 text-center space-y-3">
+        <div className="mt-10 text-left space-y-3">
           <p className="font-sans text-xs md:text-sm text-[#404944]">
             If you have any questions regarding refunds, please contact our administrative team.
           </p>

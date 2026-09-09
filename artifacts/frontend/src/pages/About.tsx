@@ -132,9 +132,11 @@ export default function About() {
           <div className="absolute inset-0 bg-pattern opacity-60 pointer-events-none -z-10" />
           <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             <div className="lg:col-span-7 space-y-3.5 sm:space-y-4">
-              <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-[#00450d] bg-[#00450d]/5 px-3 py-0.5 rounded-full border border-[#00450d]/10">
-                About Us
-              </span>
+              <div className="flex justify-center lg:justify-start">
+                <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-[#00450d] bg-[#00450d]/5 px-3 py-0.5 rounded-full border border-[#00450d]/10">
+                  About Us
+                </span>
+              </div>
               <h1 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl text-[#00450d] leading-tight">
                 A Dedicated Space for Sisters to Learn
               </h1>
@@ -200,9 +202,11 @@ export default function About() {
               </div>
 
               <div className="lg:col-span-7 order-1 lg:order-2 space-y-3.5">
-                <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-[#00450d] bg-[#00450d]/5 px-3 py-0.5 rounded-full border border-[#00450d]/10 font-sans">
-                  Our Story
-                </span>
+                <div className="flex justify-center lg:justify-start">
+                  <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-[#00450d] bg-[#00450d]/5 px-3 py-0.5 rounded-full border border-[#00450d]/10 font-sans">
+                    Our Story
+                  </span>
+                </div>
                 <h2 className="font-serif font-bold text-xl sm:text-2xl md:text-3xl text-[#00450d] leading-snug">
                   Learning Should Feel Comfortable, Structured, and Achievable
                 </h2>
@@ -246,9 +250,8 @@ export default function About() {
                 return (
                   <div
                     key={index}
-                    className={`bg-gradient-to-t from-[#9bd9ad] via-[#f9e087] to-[#ffe088] p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl shadow-[0_8px_24px_rgba(0,53,39,0.06)] border border-[#8ecfa0]/50 hover:border-[#003527]/30 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between ${
-                      index === 4 ? "md:col-span-2 lg:col-span-2" : ""
-                    }`}
+                    className={`bg-gradient-to-t from-[#9bd9ad] via-[#f9e087] to-[#ffe088] p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl shadow-[0_8px_24px_rgba(0,53,39,0.06)] border border-[#8ecfa0]/50 hover:border-[#003527]/30 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between ${index === 4 ? "md:col-span-2 lg:col-span-2" : ""
+                      }`}
                   >
                     <div>
                       <div className="flex items-center justify-between mb-3 sm:mb-3.5">
@@ -283,7 +286,7 @@ export default function About() {
               <h2 className="font-serif font-bold text-xl sm:text-2xl md:text-3xl text-[#00450d]">
                 What We Believe In
               </h2>
-              <p className="font-sans text-xs md:text-sm text-[#41493e] max-w-xl mx-auto text-justify [text-align-last:left]">
+              <p className="font-sans text-xs md:text-sm text-[#41493e] max-w-xl mx-auto text-center sm:text-left sm:[text-align-last:left]">
                 The principles that guide the way we teach and support our students.
               </p>
             </div>
@@ -325,9 +328,11 @@ export default function About() {
 
               <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-center">
                 <div className="md:col-span-7 lg:col-span-7 space-y-3 sm:space-y-3.5">
-                  <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-[#cca72f] bg-[#cca72f]/15 px-3 py-0.5 rounded-full border border-[#cca72f]/25">
-                    Our Vision
-                  </span>
+                  <div className="flex justify-center md:justify-start">
+                    <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-[#cca72f] bg-[#cca72f]/15 px-3 py-0.5 rounded-full border border-[#cca72f]/25">
+                      Our Vision
+                    </span>
+                  </div>
                   <h2 className="font-serif font-bold text-xl sm:text-2xl md:text-3xl text-white leading-snug">
                     Making Quality Learning Accessible to More Sisters
                   </h2>

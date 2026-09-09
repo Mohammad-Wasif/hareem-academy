@@ -348,7 +348,7 @@ export default function Home() {
               <motion.p
                 variants={fadeUp}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="text-xs sm:text-sm text-[#41493e] max-w-2xl leading-relaxed font-sans"
+                className="text-xs sm:text-sm text-[#41493e] max-w-2xl leading-relaxed font-sans text-justify sm:text-left"
               >
                 Structured, live online classes taught by qualified female teachers —<br className="hidden sm:inline" /> designed exclusively for sisters, from complete beginners to intermediate learners.
               </motion.p>
@@ -728,14 +728,14 @@ export default function Home() {
 
         <div className="container px-4">
           <motion.div
-            className="flex flex-col md:flex-row justify-between items-end gap-6 mb-10"
+            className="flex flex-col md:flex-row justify-between items-center md:items-end gap-6 mb-10 text-center md:text-left"
             variants={fadeUp}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="max-w-2xl">
+            <div className="max-w-2xl flex flex-col items-center md:items-start">
               <span className="inline-block text-xs font-bold tracking-[0.2em] text-[#00450d] uppercase bg-[#00450d]/5 px-3.5 py-1 rounded-full border border-[#00450d]/10 font-sans mb-3">
                 Programs
               </span>
@@ -880,14 +880,14 @@ export default function Home() {
       <section className="py-12 sm:py-14 lg:py-16 bg-[#f7f9fb]">
         <div className="container px-4 max-w-6xl mx-auto">
           <motion.div
-            className="flex flex-col md:flex-row justify-between items-end gap-6 mb-10"
+            className="flex flex-col md:flex-row justify-between items-center md:items-end gap-6 mb-10 text-center md:text-left"
             variants={fadeUp}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="max-w-2xl">
+            <div className="max-w-2xl flex flex-col items-center md:items-start">
               <span className="inline-block text-xs font-bold tracking-[0.2em] text-[#00450d] uppercase bg-[#00450d]/5 px-3.5 py-1 rounded-full border border-[#00450d]/10 font-sans mb-3">
                 Real stories
               </span>
