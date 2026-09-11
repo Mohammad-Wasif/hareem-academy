@@ -433,6 +433,7 @@ export default function EnrollmentModal({
     state: "",
     city: "",
     courseSlug: defaultCourseSlug,
+    currentLevel: "",
     notes: "",
   });
 
@@ -490,6 +491,84 @@ export default function EnrollmentModal({
     return getPhoneRule(countryCode);
   }, [values.country, countryCode]);
 
+  // Dynamic level options based on the selected course
+  const levelConfig = useMemo(() => {
+    if (!values.courseSlug) return null;
+    const course = courses.find((c) => c.slug === values.courseSlug);
+    const slug = (values.courseSlug || "").toLowerCase();
+    const title = (course?.title || "").toLowerCase();
+    const language = (course?.language || "").toLowerCase();
+    const level = (course?.level || "").toLowerCase();
+
+    // 1. Urdu course
+    const isUrdu = language.includes("urdu") || title.includes("urdu") || slug.includes("urdu");
+    if (isUrdu) {
+      return {
+        title: "What is your current Urdu level?",
+        subtitle: "This helps us understand where to begin.",
+        options: [
+          "I'm a complete beginner",
+          "I understand some Urdu",
+          "I can read/write basic Urdu",
+          "I've studied Urdu before",
+        ],
+      };
+    }
+
+    // 2. Intermediate Arabic (e.g. Intermediate Arabic — Level 2)
+    const isIntermediateArabic =
+      (language.includes("arabic") || title.includes("arabic") || slug.includes("arabic")) &&
+      (level.includes("intermediate") ||
+        title.includes("intermediate") ||
+        title.includes("level 2") ||
+        title.includes("level-2") ||
+        slug.includes("intermediate") ||
+        slug.includes("level-2") ||
+        slug.includes("level2"));
+
+    if (isIntermediateArabic) {
+      return {
+        title: "What is your current Arabic level?",
+        subtitle: "This helps us understand where to begin.",
+        options: [
+          "I can read Arabic comfortably",
+          "I know basic Arabic grammar",
+          "I can understand simple Arabic sentences",
+          "I've completed a beginner Arabic course",
+        ],
+      };
+    }
+
+    // 3. Arabic (Standard / Beginner)
+    const isArabic =
+      language.includes("arabic") || title.includes("arabic") || slug.includes("arabic");
+
+    if (isArabic) {
+      return {
+        title: "What is your current Arabic level?",
+        subtitle: "This helps us understand where to begin.",
+        options: [
+          "I'm a complete beginner",
+          "I can read Arabic but can't understand",
+          "I can read and understand Arabic but don't know grammar well",
+          "I've studied some Arabic before",
+        ],
+      };
+    }
+
+    // 4. Fallback for any other custom course
+    return {
+      title: "What is your current level?",
+      subtitle: "This helps us understand where to begin.",
+      options: [
+        "I'm a complete beginner",
+        "I understand some basics",
+        "I can read/write basic sentences",
+        "I've studied this subject before",
+      ],
+    };
+  }, [values.courseSlug, courses]);
+
   function setField(key: string, value: string) {
     setValues((v) => ({ ...v, [key]: value }));
     setErrors((e) => {
@@ -509,6 +588,9 @@ export default function EnrollmentModal({
         if (!values.age || !Number.isFinite(ageNum) || ageNum < 4 || ageNum > 120) {
           next.age = "Enter a valid age (4 - 120)";
         }
+      }
+      if (levelConfig && !values.currentLevel) {
+        next.currentLevel = "Please select your current level";
       }
     }
     
@@ -583,6 +665,7 @@ export default function EnrollmentModal({
     if (isTrial) customData.requestType = "free_trial";
     if (values.email) customData.email = values.email.trim();
     if (values.state) customData.state = values.state.trim();
+    if (values.currentLevel) customData.currentLevel = values.currentLevel.trim();
 
     const locationDetails = [
       values.city.trim(),
@@ -592,9 +675,19 @@ export default function EnrollmentModal({
       .filter(Boolean)
       .join(", ");
 
+    const levelDetails = values.currentLevel ? `[Current Level: ${values.currentLevel.trim()}]` : "";
+
+    const detailLines = [
+      values.email ? `[Email: ${values.email.trim()}]` : "",
+      levelDetails,
+      locationDetails ? `[Location: ${locationDetails}]` : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
+
     const notesWithEmail = values.notes?.trim()
-      ? `[Email: ${values.email.trim()}]\n[Location: ${locationDetails}]\n\n${values.notes.trim()}`
-      : `[Email: ${values.email.trim()}]\n[Location: ${locationDetails}]`;
+      ? `${detailLines}\n\n${values.notes.trim()}`
+      : detailLines;
 
     const payload = {
       fullName: values.fullName.trim(),
@@ -689,6 +782,7 @@ export default function EnrollmentModal({
             setManualCity(false);
             setPhoneDigits("");
             setCountryCode("+91");
+            setValues((v) => ({ ...v, currentLevel: "" }));
           }, 500);
         }
       }}
@@ -785,10 +879,13 @@ export default function EnrollmentModal({
                     </Label>
                     <Select
                       value={values.courseSlug}
-                      onValueChange={(v) => setField("courseSlug", v)}
+                      onValueChange={(v) => {
+                        setField("courseSlug", v);
+                        setField("currentLevel", "");
+                      }}
                     >
                       <SelectTrigger id="courseSlug" className="h-10 rounded-lg border-border bg-background">
-                        <SelectValue placeholder={courseField.placeholder ?? "Choose a course"} />
+                        <SelectValue placeholder={courseField.placeholder ?? "Select the course you'd like to try."} />
                       </SelectTrigger>
                       <SelectContent>
                         {courses
@@ -819,6 +916,56 @@ export default function EnrollmentModal({
                         className="h-10 rounded-lg border-border bg-background"
                       />
                       {errors.age && <p className="text-xs text-destructive">{errors.age}</p>}
+                    </div>
+                  )}
+
+                  {/* Current Level Question (🔒 Hidden Initially, shown once a course is selected) */}
+                  {levelConfig && (
+                    <div className="space-y-2.5 pt-2 border-t border-border/60">
+                      <div>
+                        <Label className="font-semibold text-xs text-primary block">
+                          {levelConfig.title} <span className="text-destructive">*</span>
+                        </Label>
+                        <p className="text-[11px] text-muted-foreground mt-0.5 leading-normal">
+                          {levelConfig.subtitle}
+                        </p>
+                      </div>
+
+                      <div className="space-y-2 pt-0.5" role="radiogroup" aria-label={levelConfig.title}>
+                        {levelConfig.options.map((opt) => {
+                          const isSelected = values.currentLevel === opt;
+                          return (
+                            <button
+                              key={opt}
+                              type="button"
+                              onClick={() => setField("currentLevel", opt)}
+                              role="radio"
+                              aria-checked={isSelected}
+                              className={`w-full text-left px-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-sans transition-all flex items-center gap-3 cursor-pointer ${
+                                isSelected
+                                  ? "bg-primary/10 border-primary text-primary font-semibold shadow-xs"
+                                  : "bg-background border-border hover:border-primary/40 hover:bg-muted/30 text-foreground"
+                              }`}
+                            >
+                              <span
+                                className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 transition-all ${
+                                  isSelected
+                                    ? "border-primary bg-primary text-primary-foreground"
+                                    : "border-muted-foreground/40 bg-background"
+                                }`}
+                              >
+                                {isSelected && (
+                                  <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                                )}
+                              </span>
+                              <span className="flex-1 leading-snug">{opt}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                      {errors.currentLevel && (
+                        <p className="text-xs text-destructive">{errors.currentLevel}</p>
+                      )}
                     </div>
                   )}
                   
