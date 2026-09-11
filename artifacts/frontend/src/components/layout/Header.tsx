@@ -10,6 +10,7 @@ import PremiumImage from "@/components/PremiumImage";
 export default function Header() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const [isTrialOpen, setIsTrialOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { assets } = useSiteAssets();
 
@@ -21,6 +22,7 @@ export default function Header() {
 
   useEffect(() => {
     setIsOpen(false);
+    setIsTrialOpen(false);
   }, [location]);
 
   const navItems = [
@@ -80,27 +82,14 @@ export default function Header() {
 
         {/* Book Free Trial Button (Separate Action Button) */}
         <div className="hidden md:flex items-center">
-          <Suspense
-            fallback={
-              <motion.button
-                whileHover={{ scale: 1.05, y: -1 }}
-                whileTap={{ scale: 0.95 }}
-                className="font-sans font-bold text-xs md:text-sm bg-[#ffe088] text-[#003527] px-6 py-2.5 rounded-full hover:bg-[#e9c349] transition-all shadow-md shadow-black/20 cursor-pointer"
-              >
-                Book Free Trial
-              </motion.button>
-            }
+          <motion.button
+            whileHover={{ scale: 1.05, y: -1 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setIsTrialOpen(true)}
+            className="font-sans font-bold text-xs md:text-sm bg-[#ffe088] text-[#003527] px-6 py-2.5 rounded-full hover:bg-[#e9c349] transition-all shadow-md shadow-black/20 cursor-pointer"
           >
-            <EnrollmentModal mode="trial">
-              <motion.button
-                whileHover={{ scale: 1.05, y: -1 }}
-                whileTap={{ scale: 0.95 }}
-                className="font-sans font-bold text-xs md:text-sm bg-[#ffe088] text-[#003527] px-6 py-2.5 rounded-full hover:bg-[#e9c349] transition-all shadow-md shadow-black/20 cursor-pointer"
-              >
-                Book Free Trial
-              </motion.button>
-            </EnrollmentModal>
-          </Suspense>
+            Book Free Trial
+          </motion.button>
         </div>
 
         {/* Mobile Menu Trigger */}
@@ -149,23 +138,31 @@ export default function Header() {
                 })}
               </div>
               <div className="pt-2 flex flex-col gap-2">
-                <Suspense fallback={null}>
-                  <EnrollmentModal mode="trial">
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => setIsOpen(false)}
-                      className="w-full font-sans font-bold text-sm bg-[#ffe088] text-[#003527] py-3 rounded-full hover:bg-[#e9c349] transition-all shadow-md cursor-pointer"
-                    >
-                      Book Free Trial
-                    </motion.button>
-                  </EnrollmentModal>
-                </Suspense>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => {
+                    setIsOpen(false);
+                    setIsTrialOpen(true);
+                  }}
+                  className="w-full font-sans font-bold text-sm bg-[#ffe088] text-[#003527] py-3 rounded-full hover:bg-[#e9c349] transition-all shadow-md cursor-pointer"
+                >
+                  Book Free Trial
+                </motion.button>
               </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Trial Modal rendered outside drawer so it survives drawer close */}
+      <Suspense fallback={null}>
+        <EnrollmentModal
+          mode="trial"
+          open={isTrialOpen}
+          onOpenChange={setIsTrialOpen}
+        />
+      </Suspense>
     </header>
   );
 }

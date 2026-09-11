@@ -395,13 +395,26 @@ export default function EnrollmentModal({
   children,
   defaultCourseSlug = "",
   mode = "enroll",
+  open: controlledOpen,
+  onOpenChange: setControlledOpen,
 }: {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   defaultCourseSlug?: string;
   mode?: "enroll" | "trial";
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }) {
   const isTrial = mode === "trial";
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isControlled = controlledOpen !== undefined;
+  const isOpen = isControlled ? controlledOpen : internalOpen;
+  const setIsOpen = (open: boolean) => {
+    if (isControlled) {
+      setControlledOpen?.(open);
+    } else {
+      setInternalOpen(open);
+    }
+  };
   const [isSuccess, setIsSuccess] = useState(false);
   const [step, setStep] = useState(1);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -680,7 +693,7 @@ export default function EnrollmentModal({
         }
       }}
     >
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      {children && <DialogTrigger asChild>{children}</DialogTrigger>}
       <DialogContent className="w-[94vw] sm:max-w-[480px] max-h-[92vh] overflow-y-auto p-0 rounded-2xl border border-accent/15">
         {isSuccess ? (
           <div className="py-12 px-6 flex flex-col items-center justify-center text-center space-y-6">

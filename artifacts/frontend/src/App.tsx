@@ -15,7 +15,7 @@ if (import.meta.env.VITE_API_URL) {
   setBaseUrl(import.meta.env.VITE_API_URL);
 }
 
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 
 // Public Pages (Lazy)
 const Home = React.lazy(() => import("@/pages/Home"));
@@ -117,6 +117,16 @@ function AdminRoutes() {
   );
 }
 
+function ScrollToTop() {
+  const [location] = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [location]);
+  return null;
+}
+
 function Router() {
   const [location] = useLocation();
   if (location === "/admin" || location.startsWith("/admin/")) {
@@ -131,6 +141,7 @@ function App() {
       <MediaProvider>
         <TooltipProvider>
           <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+            <ScrollToTop />
             <Router />
           </WouterRouter>
           <Toaster />
