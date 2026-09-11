@@ -790,23 +790,79 @@ export default function EnrollmentModal({
       {children && <DialogTrigger asChild>{children}</DialogTrigger>}
       <DialogContent className="w-[94vw] sm:max-w-[480px] max-h-[92vh] overflow-y-auto p-0 rounded-2xl border border-accent/15">
         {isSuccess ? (
-          <div className="py-12 px-6 flex flex-col items-center justify-center text-center space-y-6">
-            <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center shadow-inner">
-              <CheckCircle2 className="w-10 h-10" />
-            </div>
-            <div className="space-y-2">
-              <h2 className="text-2xl font-serif font-bold text-primary">
-                Alhamdulillah!
+          <div className="py-7 px-5 sm:px-6 flex flex-col space-y-5">
+            {/* Header / Celebration */}
+            <div className="text-center space-y-2">
+              <div className="w-14 h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
+                <CheckCircle2 className="w-7 h-7" />
+              </div>
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-primary">
+                {isTrial ? "Your Free Trial Request Is In! 🎉" : "Your Enrollment Request Is In! 🎉"}
               </h2>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                {isTrial
-                  ? "Your free trial request is in. A sister from our team will WhatsApp you within minutes to schedule your trial class."
-                  : "Your enrollment request has been received. Our team will WhatsApp you within minutes to confirm your admission."}
-              </p>
+              <div className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
+                <p className="font-semibold text-foreground">
+                  Thank you, {values.fullName?.trim() || "Sister"}.
+                </p>
+                <p>
+                  We've received your request for{" "}
+                  <span className="font-medium text-primary">
+                    {courses.find((c) => c.slug === values.courseSlug)?.title || values.courseSlug || "your chosen course"}
+                  </span>
+                  .
+                </p>
+              </div>
             </div>
+
+            {/* What happens next? */}
+            <div className="bg-muted/30 border border-border/70 rounded-2xl p-4 sm:p-4.5 space-y-3 text-left">
+              <h3 className="font-semibold text-xs text-primary uppercase tracking-wider">
+                What happens next?
+              </h3>
+              <div className="space-y-3 text-xs sm:text-sm">
+                <div className="flex items-start gap-3">
+                  <span className="w-5 h-5 rounded-full bg-primary/10 text-primary font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                    1
+                  </span>
+                  <div>
+                    <p className="font-semibold text-foreground">We'll contact you on WhatsApp</p>
+                    <p className="text-muted-foreground text-[11px] sm:text-xs">
+                      {isTrial ? "We'll confirm your trial class." : "We'll confirm your enrollment."}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <span className="w-5 h-5 rounded-full bg-primary/10 text-primary font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                    2
+                  </span>
+                  <div>
+                    <p className="font-semibold text-foreground">We'll share the class details</p>
+                    <p className="text-muted-foreground text-[11px] sm:text-xs">
+                      You'll receive the Google Meet information.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <span className="w-5 h-5 rounded-full bg-primary/10 text-primary font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                    3
+                  </span>
+                  <div>
+                    <p className="font-semibold text-foreground">
+                      {isTrial ? "Join your free class" : "Join your first class"}
+                    </p>
+                    <p className="text-muted-foreground text-[11px] sm:text-xs">
+                      Meet your teacher and experience the class.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* WhatsApp CTA Button */}
             <Button
               asChild
-              className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white py-6 text-lg rounded-full mt-4 transition-all duration-300 font-sans shadow-md"
+              className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white py-5 sm:py-6 text-sm sm:text-base rounded-full transition-all duration-300 font-sans font-semibold shadow-md"
             >
               <a
                 href={whatsappUrl}
@@ -814,10 +870,15 @@ export default function EnrollmentModal({
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 justify-center"
               >
-                <FaWhatsapp className="w-5 h-5 animate-pulse" />
-                Message Us on WhatsApp Now
+                <FaWhatsapp className="w-5 h-5" />
+                <span>Open WhatsApp →</span>
               </a>
             </Button>
+
+            {/* Secondary Text */}
+            <p className="text-xs text-muted-foreground text-center">
+              We look forward to learning with you. 🌸
+            </p>
           </div>
         ) : (
           <div className="flex flex-col">
@@ -1097,21 +1158,9 @@ export default function EnrollmentModal({
                         autoComplete="tel-national"
                       />
                     </div>
-                    <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-                      <span>
-                        {activePhoneRule.exact
-                          ? `Required: exactly ${activePhoneRule.exact} digits`
-                          : `Required: ${activePhoneRule.min} to ${activePhoneRule.max} digits`}
-                      </span>
-                      <span className="font-mono">
-                        {phoneDigits.length} / {activePhoneRule.exact || activePhoneRule.max} digits
-                      </span>
-                    </div>
-                    {whatsappField.helpText && (
-                      <p className="text-[10px] text-muted-foreground leading-normal">
-                        {whatsappField.helpText}
-                      </p>
-                    )}
+                    <p className="text-[11px] text-muted-foreground leading-normal">
+                      We'll use WhatsApp to confirm your trial class.
+                    </p>
                     {errors.whatsappNumber && (
                       <p className="text-xs text-destructive">{errors.whatsappNumber}</p>
                     )}
