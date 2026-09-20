@@ -1722,9 +1722,6 @@ function UrduCourseDetailView({
                 Speak With Our Team
               </a>
             </div>
-            <p className="font-sans text-xs sm:text-sm text-[#95d3ba] tracking-wide">
-              ₹550 / month • 6 months • Live online • Sisters only
-            </p>
           </div>
         </div>
       </section>
