@@ -539,8 +539,8 @@ export default function Home() {
               <span className="block min-[520px]:inline">comfortable, structured, and achievable.</span>
             </h2>
             <div className="h-[2px] w-12 bg-[#735c00] mx-auto rounded-full" />
-            <div className="bg-white rounded-xl p-6 sm:p-8 border border-[#00450d]/15 shadow-[0_4px_20px_-4px_rgba(0,53,39,0.06)] text-left space-y-4 max-w-3xl mx-auto">
-              <p className="text-sm sm:text-base text-[#41493e] font-sans leading-relaxed text-justify [text-align-last:left]">
+            <div className="bg-white rounded-xl p-6 sm:p-8 border border-[#00450d]/15 shadow-[0_4px_20px_-4px_rgba(0,53,39,0.06)] text-center space-y-4 max-w-3xl mx-auto">
+              <p className="text-sm sm:text-base text-[#41493e] font-sans leading-relaxed text-center">
                 Learning a new language can feel overwhelming when you don't know where to begin. Hareem Academy provides a clear learning path, supportive female teachers, and a comfortable sisters-only environment where you can learn, ask questions, and grow with confidence.
               </p>
               <p className="font-semibold text-sm sm:text-base text-[#00450d] font-sans leading-relaxed pt-2 border-t border-gray-100 text-center">
