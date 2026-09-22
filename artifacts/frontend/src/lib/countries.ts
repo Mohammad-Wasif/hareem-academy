@@ -1,5 +1,3 @@
-import { Country, State, City, type ICountry } from "country-state-city";
-
 export interface CountryItem {
   name: string;
   code: string;
@@ -7,235 +5,49 @@ export interface CountryItem {
   flag: string;
 }
 
-const PRIORITY_ISO_CODES = [
-  "IN", // India
-  "AE", // United Arab Emirates
-  "SA", // Saudi Arabia
-  "GB", // United Kingdom
-  "US", // United States
-  "CA", // Canada
-  "QA", // Qatar
-  "KW", // Kuwait
-  "OM", // Oman
-  "BH", // Bahrain
-  "PK", // Pakistan
-  "BD", // Bangladesh
-  "MY", // Malaysia
-  "SG", // Singapore
-  "AU", // Australia
-  "DE", // Germany
-  "ZA", // South Africa
-  "NZ", // New Zealand
-  "TR", // Turkey
-  "IE", // Ireland
+/**
+ * Priority and popular countries for Hareem Academy students.
+ * Static lightweight dataset (< 5 KB) replacing the 8.75 MB country-state-city dependency.
+ */
+export const ALL_COUNTRIES: CountryItem[] = [
+  // Priority countries explicitly requested
+  { name: "India", code: "+91", isoCode: "IN", flag: "🇮🇳" },
+  { name: "United Arab Emirates", code: "+971", isoCode: "AE", flag: "🇦🇪" },
+  { name: "Saudi Arabia", code: "+966", isoCode: "SA", flag: "🇸🇦" },
+  { name: "United Kingdom", code: "+44", isoCode: "GB", flag: "🇬🇧" },
+  { name: "United States", code: "+1", isoCode: "US", flag: "🇺🇸" },
+  { name: "Canada", code: "+1", isoCode: "CA", flag: "🇨🇦" },
+  { name: "Qatar", code: "+974", isoCode: "QA", flag: "🇶🇦" },
+  { name: "Oman", code: "+968", isoCode: "OM", flag: "🇴🇲" },
+  { name: "Kuwait", code: "+965", isoCode: "KW", flag: "🇰🇼" },
+
+  // Additional key diaspora & regional countries
+  { name: "Bahrain", code: "+973", isoCode: "BH", flag: "🇧🇭" },
+  { name: "Pakistan", code: "+92", isoCode: "PK", flag: "🇵🇰" },
+  { name: "Bangladesh", code: "+880", isoCode: "BD", flag: "🇧🇩" },
+  { name: "Malaysia", code: "+60", isoCode: "MY", flag: "🇲🇾" },
+  { name: "Singapore", code: "+65", isoCode: "SG", flag: "🇸🇬" },
+  { name: "Australia", code: "+61", isoCode: "AU", flag: "🇦🇺" },
+  { name: "Germany", code: "+49", isoCode: "DE", flag: "🇩🇪" },
+  { name: "New Zealand", code: "+64", isoCode: "NZ", flag: "🇳🇿" },
+  { name: "South Africa", code: "+27", isoCode: "ZA", flag: "🇿🇦" },
+  { name: "Ireland", code: "+353", isoCode: "IE", flag: "🇮🇪" },
+  { name: "Turkey", code: "+90", isoCode: "TR", flag: "🇹🇷" },
+  { name: "Egypt", code: "+20", isoCode: "EG", flag: "🇪🇬" },
+  { name: "Jordan", code: "+962", isoCode: "JO", flag: "🇯🇴" },
+  { name: "Indonesia", code: "+62", isoCode: "ID", flag: "🇮🇩" },
+  { name: "France", code: "+33", isoCode: "FR", flag: "🇫🇷" },
+  { name: "Italy", code: "+39", isoCode: "IT", flag: "🇮🇹" },
+  { name: "Netherlands", code: "+31", isoCode: "NL", flag: "🇳🇱" },
+  { name: "Sweden", code: "+46", isoCode: "SE", flag: "🇸🇪" },
+  { name: "Norway", code: "+47", isoCode: "NO", flag: "🇳🇴" },
+  { name: "Switzerland", code: "+41", isoCode: "CH", flag: "🇨🇭" },
+  { name: "Belgium", code: "+32", isoCode: "BE", flag: "🇧🇪" },
+  { name: "Kenya", code: "+254", isoCode: "KE", flag: "🇰🇪" },
+  { name: "Nigeria", code: "+234", isoCode: "NG", flag: "🇳🇬" },
+  { name: "Sri Lanka", code: "+94", isoCode: "LK", flag: "🇱🇰" },
+  { name: "Nepal", code: "+977", isoCode: "NP", flag: "🇳🇵" },
 ];
-
-export const MAJOR_CITIES_BY_COUNTRY: Record<string, string[]> = {
-  India: [
-    "Delhi",
-    "New Delhi",
-    "Mumbai",
-    "Bengaluru",
-    "Hyderabad",
-    "Chennai",
-    "Kolkata",
-    "Lucknow",
-    "Pune",
-    "Ahmedabad",
-    "Srinagar",
-    "Jaipur",
-    "Patna",
-    "Bhopal",
-    "Chandigarh",
-    "Aligarh",
-    "Calicut",
-    "Kochi",
-    "Kanpur",
-    "Nagpur",
-    "Indore",
-    "Varanasi",
-    "Agra",
-    "Surat",
-    "Meerut",
-    "Bareilly",
-    "Ranchi",
-    "Guwahati",
-    "Amritsar",
-    "Ludhiana",
-    "Coimbatore",
-    "Madurai",
-    "Mysuru",
-    "Mangalore",
-    "Thiruvananthapuram",
-  ],
-  "United Arab Emirates": [
-    "Dubai",
-    "Abu Dhabi",
-    "Sharjah",
-    "Ajman",
-    "Ras Al Khaimah",
-    "Fujairah",
-    "Al Ain",
-    "Umm Al Quwain",
-  ],
-  "Saudi Arabia": [
-    "Riyadh",
-    "Jeddah",
-    "Mecca",
-    "Medina",
-    "Dammam",
-    "Khobar",
-    "Dhahran",
-    "Tabuk",
-    "Taif",
-    "Jubail",
-    "Abha",
-    "Yanbu",
-  ],
-  "United Kingdom": [
-    "London",
-    "Birmingham",
-    "Manchester",
-    "Leeds",
-    "Glasgow",
-    "Bradford",
-    "Leicester",
-    "Luton",
-    "Cardiff",
-    "Sheffield",
-    "Bristol",
-    "Coventry",
-    "Slough",
-    "Blackburn",
-  ],
-  "United States": [
-    "New York",
-    "Chicago",
-    "Houston",
-    "Dallas",
-    "Los Angeles",
-    "Atlanta",
-    "Detroit",
-    "Washington D.C.",
-    "Philadelphia",
-    "San Francisco",
-    "Boston",
-    "Seattle",
-    "Austin",
-    "Minneapolis",
-  ],
-  Canada: [
-    "Toronto",
-    "Mississauga",
-    "Calgary",
-    "Vancouver",
-    "Ottawa",
-    "Montreal",
-    "Edmonton",
-    "Brampton",
-    "Hamilton",
-    "Winnipeg",
-  ],
-  Qatar: ["Doha", "Al Rayyan", "Al Wakrah", "Al Khor", "Lusail"],
-  Kuwait: [
-    "Kuwait City",
-    "Hawalli",
-    "Salmiya",
-    "Al Ahmadi",
-    "Farwaniya",
-    "Jahra",
-    "Fahaheel",
-  ],
-  Oman: ["Muscat", "Salalah", "Seeb", "Sohar", "Nizwa", "Barka"],
-  Bahrain: ["Manama", "Riffa", "Muharraq", "Hamad Town", "Isa Town"],
-  Pakistan: [
-    "Karachi",
-    "Lahore",
-    "Islamabad",
-    "Rawalpindi",
-    "Faisalabad",
-    "Peshawar",
-    "Multan",
-    "Gujranwala",
-    "Quetta",
-    "Sialkot",
-  ],
-  Bangladesh: [
-    "Dhaka",
-    "Chittagong",
-    "Sylhet",
-    "Rajshahi",
-    "Khulna",
-    "Comilla",
-  ],
-  Malaysia: [
-    "Kuala Lumpur",
-    "Penang",
-    "Johor Bahru",
-    "Shah Alam",
-    "Malacca",
-    "Petaling Jaya",
-  ],
-  Singapore: ["Singapore"],
-  Australia: [
-    "Sydney",
-    "Melbourne",
-    "Brisbane",
-    "Perth",
-    "Adelaide",
-    "Canberra",
-  ],
-  Germany: [
-    "Berlin",
-    "Munich",
-    "Frankfurt",
-    "Hamburg",
-    "Cologne",
-    "Düsseldorf",
-  ],
-  Turkey: ["Istanbul", "Ankara", "Izmir", "Bursa", "Antalya", "Adana", "Konya"],
-  Egypt: ["Cairo", "Alexandria", "Giza", "Port Said", "Suez", "Luxor", "Aswan"],
-  "South Africa": [
-    "Johannesburg",
-    "Cape Town",
-    "Durban",
-    "Pretoria",
-    "Port Elizabeth",
-  ],
-  "New Zealand": ["Auckland", "Wellington", "Christchurch", "Hamilton", "Tauranga"],
-  Ireland: ["Dublin", "Cork", "Galway", "Limerick", "Waterford"],
-  Jordan: ["Amman", "Zarqa", "Irbid", "Aqaba"],
-};
-
-export const ALL_COUNTRIES: CountryItem[] = (() => {
-  const raw = Country.getAllCountries();
-  const map = new Map<string, ICountry>(raw.map((c) => [c.isoCode, c]));
-
-  const priorityList: CountryItem[] = [];
-  for (const iso of PRIORITY_ISO_CODES) {
-    const c = map.get(iso);
-    if (c) {
-      priorityList.push({
-        name: c.name,
-        code: `+${c.phonecode.replace(/^\+/, "")}`,
-        isoCode: c.isoCode,
-        flag: c.flag,
-      });
-      map.delete(iso);
-    }
-  }
-
-  const remaining: CountryItem[] = Array.from(map.values())
-    .map((c) => ({
-      name: c.name,
-      code: `+${c.phonecode.replace(/^\+/, "")}`,
-      isoCode: c.isoCode,
-      flag: c.flag,
-    }))
-    .sort((a, b) => a.name.localeCompare(b.name));
-
-  return [...priorityList, ...remaining];
-})();
 
 export const CALLING_CODES = (() => {
   const seen = new Set<string>();
@@ -264,6 +76,38 @@ export interface StateItem {
   countryCode: string;
 }
 
+const STATES_BY_COUNTRY: Record<string, string[]> = {
+  IN: [
+    "Andhra Pradesh", "Assam", "Bihar", "Chandigarh", "Chhattisgarh", "Delhi",
+    "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jammu and Kashmir",
+    "Jharkhand", "Karnataka", "Kerala", "Ladakh", "Madhya Pradesh", "Maharashtra",
+    "Manipur", "Meghalaya", "Odisha", "Punjab", "Rajasthan", "Tamil Nadu",
+    "Telangana", "Uttar Pradesh", "Uttarakhand", "West Bengal",
+  ],
+  AE: [
+    "Abu Dhabi", "Ajman", "Dubai", "Fujairah", "Ras Al Khaimah", "Sharjah", "Umm Al Quwain",
+  ],
+  SA: [
+    "Al Bahah", "Al Jawf", "Al Madinah", "Al Qasim", "Asir", "Eastern Province",
+    "Ha'il", "Jazan", "Makkah", "Najran", "Northern Borders", "Riyadh", "Tabuk",
+  ],
+  US: [
+    "California", "Texas", "Florida", "New York", "Illinois", "Pennsylvania",
+    "Ohio", "Georgia", "North Carolina", "Michigan", "New Jersey", "Virginia",
+    "Washington", "Massachusetts", "Indiana", "Maryland", "Missouri", "Wisconsin",
+  ],
+  CA: [
+    "Alberta", "British Columbia", "Manitoba", "New Brunswick", "Newfoundland and Labrador",
+    "Nova Scotia", "Ontario", "Prince Edward Island", "Quebec", "Saskatchewan",
+  ],
+  GB: [
+    "England", "Scotland", "Wales", "Northern Ireland", "Greater London", "West Midlands", "Greater Manchester",
+  ],
+  AU: [
+    "New South Wales", "Victoria", "Queensland", "Western Australia", "South Australia", "Tasmania", "Australian Capital Territory",
+  ],
+};
+
 export function getStatesByCountry(countryNameOrIso: string): StateItem[] {
   if (!countryNameOrIso) return [];
   const query = countryNameOrIso.trim().toLowerCase();
@@ -272,14 +116,12 @@ export function getStatesByCountry(countryNameOrIso: string): StateItem[] {
   );
   if (!found) return [];
 
-  const rawStates = State.getStatesOfCountry(found.isoCode) || [];
-  return rawStates
-    .map((s) => ({
-      name: s.name,
-      isoCode: s.isoCode,
-      countryCode: s.countryCode,
-    }))
-    .sort((a, b) => a.name.localeCompare(b.name));
+  const raw = STATES_BY_COUNTRY[found.isoCode] || [];
+  return raw.map((s) => ({
+    name: s,
+    isoCode: s,
+    countryCode: found.isoCode,
+  }));
 }
 
 export interface CountryCityData {
@@ -288,63 +130,12 @@ export interface CountryCityData {
   totalCount: number;
 }
 
-export function getCountryCityData(
-  countryNameOrIso: string,
-  stateNameOrCode?: string,
-): CountryCityData {
-  if (!countryNameOrIso) return { majorCities: [], allCities: [], totalCount: 0 };
-  const query = countryNameOrIso.trim().toLowerCase();
-  const found = ALL_COUNTRIES.find(
-    (c) => c.isoCode.toLowerCase() === query || c.name.toLowerCase() === query,
-  );
-  if (!found) return { majorCities: [], allCities: [], totalCount: 0 };
-
-  // If a specific state is selected, fetch cities of that state
-  if (stateNameOrCode && stateNameOrCode.trim()) {
-    const sQuery = stateNameOrCode.trim().toLowerCase();
-    const states = State.getStatesOfCountry(found.isoCode) || [];
-    const matchedState = states.find(
-      (s) => s.isoCode.toLowerCase() === sQuery || s.name.toLowerCase() === sQuery,
-    );
-    if (matchedState) {
-      const stateCities = City.getCitiesOfState(found.isoCode, matchedState.isoCode) || [];
-      const uniqueNames = Array.from(new Set(stateCities.map((c) => c.name))).filter(Boolean);
-      uniqueNames.sort((a, b) => a.localeCompare(b));
-
-      const countryMajor = MAJOR_CITIES_BY_COUNTRY[found.name] || [];
-      const stateMajor = countryMajor.filter((m) =>
-        uniqueNames.some((c) => c.toLowerCase() === m.toLowerCase()),
-      );
-
-      return {
-        majorCities: stateMajor,
-        allCities: uniqueNames,
-        totalCount: uniqueNames.length,
-      };
-    }
-  }
-
-  // Fallback: all cities of the country
-  const rawCities = City.getCitiesOfCountry(found.isoCode) || [];
-  const uniqueNames = Array.from(new Set(rawCities.map((c) => c.name))).filter(Boolean);
-  uniqueNames.sort((a, b) => a.localeCompare(b));
-
-  const major = MAJOR_CITIES_BY_COUNTRY[found.name] || [];
-  return {
-    majorCities: major,
-    allCities: uniqueNames,
-    totalCount: uniqueNames.length,
-  };
+export function getCountryCityData(_countryNameOrIso?: string, _stateNameOrCode?: string): CountryCityData {
+  return { majorCities: [], allCities: [], totalCount: 0 };
 }
 
-export function getCitiesByCountry(countryNameOrIso: string, stateNameOrCode?: string): string[] {
-  const data = getCountryCityData(countryNameOrIso, stateNameOrCode);
-  if (data.majorCities.length > 0) {
-    const majorSet = new Set(data.majorCities.map((m) => m.toLowerCase()));
-    const otherCities = data.allCities.filter((c) => !majorSet.has(c.toLowerCase()));
-    return [...data.majorCities, ...otherCities];
-  }
-  return data.allCities;
+export function getCitiesByCountry(_countryNameOrIso?: string, _stateNameOrCode?: string): string[] {
+  return [];
 }
 
 export interface CountryPhoneRule {

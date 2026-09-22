@@ -185,7 +185,7 @@ export default function CourseDetail() {
         "hareem academy"
       ];
 
-  const courseImage = `https://hareemacademy.com/${isUrdu ? "course-urdu.png" : "course-arabic.png"}`;
+  const courseImage = `https://hareemacademy.com/${isUrdu ? "course-urdu.webp" : "course-arabic.webp"}`;
 
   if (isUrdu) {
     return (
@@ -539,7 +539,7 @@ function ArabicCourseDetailView({
                     className="w-full h-full object-cover"
                     src="https://lh3.googleusercontent.com/aida/AEtjO1XpREDpNsG4dTQDX_yricoy5nTv-bjM5upRhBrWAL8qgQQXfxUA-NkFphCTbIutQ12bfLqprIX1-o-QlHHHA4SMXbz21HLz44fvqH4PDQ3-sJc8Pa1_8xqJ2OihJWZacRL25yvADX99PLda__v-VitLyNI7MQYV82QuRPUGJFv4tjLLgFZA0iWxGsWoaNT4YdTO6TShT3MYMQL3sL5bqMz7B6NUk8cBmS5DYpfz6Oz2HiBG0OHVjsXOzQ"
                     onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = "/course-arabic.png";
+                      (e.currentTarget as HTMLImageElement).src = "/course-arabic.webp";
                     }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#003527]/85 via-[#003527]/30 to-transparent"></div>
@@ -1096,7 +1096,7 @@ function UrduCourseDetailView({
                     className="w-full h-full object-cover"
                     src="https://lh3.googleusercontent.com/aida/AEtjO1XpREDpNsG4dTQDX_yricoy5nTv-bjM5upRhBrWAL8qgQQXfxUA-NkFphCTbIutQ12bfLqprIX1-o-QlHHHA4SMXbz21HLz44fvqH4PDQ3-sJc8Pa1_8xqJ2OihJWZacRL25yvADX99PLda__v-VitLyNI7MQYV82QuRPUGJFv4tjLLgFZA0iWxGsWoaNT4YdTO6TShT3MYMQL3sL5bqMz7B6NUk8cBmS5DYpfz6Oz2HiBG0OHVjsXOzQ"
                     onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = "/course-urdu.png";
+                      (e.currentTarget as HTMLImageElement).src = "/course-urdu.webp";
                     }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#003527]/85 via-[#003527]/30 to-transparent"></div>

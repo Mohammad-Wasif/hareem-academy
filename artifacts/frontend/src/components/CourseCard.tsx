@@ -18,7 +18,7 @@ export default function CourseCard({ course }: { course: Course }) {
       ? "course_arabic_intermediate"
       : "course_arabic";
 
-  const courseFallback = isUrduCourse ? "/course-urdu.png" : "/course-arabic.png";
+  const courseFallback = isUrduCourse ? "/course-urdu.webp" : "/course-arabic.webp";
 
   const currencySymbol = course.currency === "INR" ? "₹" : "$";
   const formattedFee = course.feeMonthly

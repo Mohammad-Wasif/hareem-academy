@@ -1,10 +1,31 @@
 import { Router, type IRouter } from "express";
 import { db, enrollmentsTable } from "@workspace/db";
 import { CreateEnrollmentBody } from "@workspace/api-zod";
+import rateLimit from "express-rate-limit";
 
 const router: IRouter = Router();
 
-router.post("/enrollments", async (req, res) => {
+const enrollmentLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 10, // 10 enrollments per 15 minutes per IP
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: {
+    error: "Too many enrollment attempts from this network. Please try again after 15 minutes or contact us directly on WhatsApp.",
+  },
+});
+
+router.post("/enrollments", enrollmentLimiter, async (req, res) => {
+  // Honeypot bot protection
+  const hp = req.body?.hp || req.body?.website || req.body?.fax;
+  if (hp) {
+    return res.status(200).json({
+      id: 0,
+      fullName: req.body?.fullName || "Guest",
+      status: "received",
+    });
+  }
+
   const parsed = CreateEnrollmentBody.safeParse(req.body);
   if (!parsed.success) {
     return res.status(400).json({
@@ -12,6 +33,7 @@ router.post("/enrollments", async (req, res) => {
       details: parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`),
     });
   }
+
   try {
     const customData =
       req.body &&
@@ -25,6 +47,7 @@ router.post("/enrollments", async (req, res) => {
             ),
           )
         : {};
+
     const [row] = await db
       .insert(enrollmentsTable)
       .values({
@@ -38,6 +61,7 @@ router.post("/enrollments", async (req, res) => {
         customData,
       })
       .returning();
+
     return res.status(201).json({
       id: row!.id,
       fullName: row!.fullName,

@@ -1,10 +1,31 @@
 import { Router, type IRouter } from "express";
 import { db, contactMessagesTable } from "@workspace/db";
 import { CreateContactMessageBody } from "@workspace/api-zod";
+import rateLimit from "express-rate-limit";
 
 const router: IRouter = Router();
 
-router.post("/contact", async (req, res) => {
+const contactLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 10, // 10 messages per 15 minutes per IP
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: {
+    error: "Too many contact messages from this IP. Please try again after 15 minutes or message us on WhatsApp.",
+  },
+});
+
+router.post("/contact", contactLimiter, async (req, res) => {
+  // Honeypot bot protection
+  const hp = req.body?.hp || req.body?.website || req.body?.fax;
+  if (hp) {
+    return res.status(200).json({
+      id: 0,
+      fullName: req.body?.fullName || "Guest",
+      status: "received",
+    });
+  }
+
   const parsed = CreateContactMessageBody.safeParse(req.body);
   if (!parsed.success) {
     return res.status(400).json({
@@ -12,6 +33,7 @@ router.post("/contact", async (req, res) => {
       details: parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`),
     });
   }
+
   try {
     const [row] = await db
       .insert(contactMessagesTable)
@@ -23,6 +45,7 @@ router.post("/contact", async (req, res) => {
         message: parsed.data.message,
       })
       .returning();
+
     return res.status(201).json({
       id: row!.id,
       fullName: row!.fullName,

@@ -21,9 +21,9 @@ import {
 } from "@/components/ui/select";
 import { useCreateEnrollment, useListCourses } from "@workspace/api-client-react";
 import { FaWhatsapp } from "react-icons/fa";
-import { CheckCircle2, ChevronDown, Search, X } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { useWhatsApp } from "@/hooks/use-whatsapp";
-import { ALL_COUNTRIES, CALLING_CODES, getCitiesByCountry, getCountryCityData, getStatesByCountry, getPhoneRule } from "@/lib/countries";
+import { ALL_COUNTRIES, CALLING_CODES, getStatesByCountry, getPhoneRule } from "@/lib/countries";
 
 type FormFieldType = "text" | "email" | "tel" | "number" | "textarea" | "select";
 type PublicFormField = {
@@ -61,336 +61,6 @@ async function fetchEnrollmentFields(): Promise<PublicFormField[]> {
   return res.json();
 }
 
-const ALPHABET = [
-  "ALL",
-  "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
-  "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-];
-
-function CitySearchableInput({
-  value,
-  onChange,
-  countryName,
-  stateName,
-  placeholder,
-  error,
-}: {
-  value: string;
-  onChange: (val: string) => void;
-  countryName: string;
-  stateName?: string;
-  cities?: string[];
-  placeholder?: string;
-  error?: string;
-}) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [selectedLetter, setSelectedLetter] = useState<string>("ALL");
-  const [displayLimit, setDisplayLimit] = useState(100);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const cityData = useMemo(() => {
-    return getCountryCityData(countryName, stateName);
-  }, [countryName, stateName]);
-
-  // When country or state changes, reset letter, limit and query
-  useEffect(() => {
-    setSelectedLetter("ALL");
-    setDisplayLimit(100);
-    setQuery("");
-  }, [countryName, stateName]);
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  // Compute matches
-  const { filteredList, totalMatches, isSearching } = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (q) {
-      const startsWith: string[] = [];
-      const contains: string[] = [];
-      for (const c of cityData.allCities) {
-        const lower = c.toLowerCase();
-        if (lower.startsWith(q)) {
-          startsWith.push(c);
-        } else if (lower.includes(q)) {
-          contains.push(c);
-        }
-      }
-      // Also ensure major cities matching query are placed at top
-      const majorMatches = cityData.majorCities.filter((m) =>
-        m.toLowerCase().includes(q),
-      );
-      const combined = Array.from(new Set([...majorMatches, ...startsWith, ...contains]));
-      return {
-        filteredList: combined,
-        totalMatches: combined.length,
-        isSearching: true,
-      };
-    }
-
-    if (selectedLetter !== "ALL") {
-      const letterMatches = cityData.allCities.filter((c) =>
-        c.toUpperCase().startsWith(selectedLetter),
-      );
-      return {
-        filteredList: letterMatches,
-        totalMatches: letterMatches.length,
-        isSearching: false,
-      };
-    }
-
-    // Default: all cities (sorted A-Z)
-    return {
-      filteredList: cityData.allCities,
-      totalMatches: cityData.totalCount,
-      isSearching: false,
-    };
-  }, [cityData, query, selectedLetter]);
-
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-    if (scrollHeight - scrollTop - clientHeight < 150) {
-      setDisplayLimit((prev) => prev + 100);
-    }
-  };
-
-  const visibleCities = useMemo(() => {
-    return filteredList.slice(0, displayLimit);
-  }, [filteredList, displayLimit]);
-
-  const hasExactMatch = useMemo(() => {
-    if (!value.trim()) return false;
-    const v = value.trim().toLowerCase();
-    return cityData.allCities.some((c) => c.toLowerCase() === v);
-  }, [cityData.allCities, value]);
-
-  return (
-    <div ref={containerRef} className="relative space-y-1">
-      <div className="relative flex items-center">
-        <Input
-          id="city"
-          value={value}
-          onChange={(e) => {
-            onChange(e.target.value);
-            setQuery(e.target.value);
-            setSelectedLetter("ALL");
-            setDisplayLimit(100);
-            setIsOpen(true);
-          }}
-          onFocus={() => {
-            setQuery(value);
-            setDisplayLimit(100);
-            setIsOpen(true);
-          }}
-          placeholder={
-            stateName
-              ? `Search or enter city in ${stateName}...`
-              : countryName
-                ? `Search or enter city in ${countryName}...`
-                : (placeholder ?? "Search or enter your city...")
-          }
-          className="h-10 rounded-lg border-border bg-background pr-16 font-sans text-xs md:text-sm"
-          autoComplete="off"
-        />
-
-        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
-          {value && (
-            <button
-              type="button"
-              tabIndex={-1}
-              onClick={() => {
-                onChange("");
-                setQuery("");
-                setSelectedLetter("ALL");
-                setDisplayLimit(100);
-              }}
-              className="text-muted-foreground hover:text-foreground p-1 cursor-pointer"
-              title="Clear city"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
-          )}
-          <button
-            type="button"
-            tabIndex={-1}
-            onClick={() => setIsOpen((prev) => !prev)}
-            className="text-muted-foreground hover:text-foreground p-1 cursor-pointer"
-            title="Toggle city list"
-          >
-            <ChevronDown
-              className={`w-4 h-4 transition-transform duration-200 ${
-                isOpen ? "rotate-180" : ""
-              }`}
-            />
-          </button>
-        </div>
-      </div>
-
-      {isOpen && (
-        <div className="absolute left-0 right-0 z-50 mt-1 max-h-72 flex flex-col rounded-xl border border-border bg-popover shadow-xl font-sans text-xs overflow-hidden">
-          {/* Quick A-Z Letter Filter Bar */}
-          <div className="p-2 border-b border-border bg-muted/40 shrink-0">
-            <div className="flex items-center justify-between gap-1 mb-1.5 px-0.5 text-[10px] text-muted-foreground">
-              <span className="font-semibold text-foreground flex items-center gap-1 truncate">
-                <Search className="w-3 h-3 text-primary shrink-0" />
-                {cityData.totalCount > 0
-                  ? `${cityData.totalCount.toLocaleString()} cities in ${stateName ? `${stateName}, ` : ""}${countryName}`
-                  : `Cities in ${stateName || countryName || "Area"}`}
-              </span>
-              <span className="shrink-0 font-medium text-primary">
-                {isSearching
-                  ? `${totalMatches} found`
-                  : selectedLetter !== "ALL"
-                    ? `${totalMatches} starting with "${selectedLetter}"`
-                    : "Filter A-Z or scroll"}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
-              {ALPHABET.map((letter) => {
-                const isActive = !query.trim() && selectedLetter === letter;
-                return (
-                  <button
-                    key={letter}
-                    type="button"
-                    onClick={() => {
-                      setQuery("");
-                      setSelectedLetter(letter);
-                      setDisplayLimit(100);
-                    }}
-                    className={`px-1.5 py-0.5 rounded text-[10px] font-semibold transition-all shrink-0 cursor-pointer ${
-                      isActive
-                        ? "bg-primary text-primary-foreground shadow-xs scale-105"
-                        : "bg-background/80 hover:bg-accent text-muted-foreground hover:text-foreground border border-border/50"
-                    }`}
-                  >
-                    {letter}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Scrollable list of cities with infinite scroll */}
-          <div
-            onScroll={handleScroll}
-            className="flex-1 overflow-y-auto p-1.5 space-y-0.5 max-h-56"
-          >
-            {/* If no query and ALL letter selected, show Major Cities section first */}
-            {!query.trim() && selectedLetter === "ALL" && cityData.majorCities.length > 0 && (
-              <div className="mb-2 pb-1 border-b border-border/60">
-                <div className="px-2 py-1 text-[10px] font-bold text-primary uppercase tracking-wider flex items-center gap-1">
-                  <span>⭐ Popular & Major Cities</span>
-                </div>
-                <div className="grid grid-cols-2 gap-1 px-1">
-                  {cityData.majorCities.map((cityName) => {
-                    const isSelected = value.toLowerCase() === cityName.toLowerCase();
-                    return (
-                      <button
-                        key={`major-${cityName}`}
-                        type="button"
-                        onClick={() => {
-                          onChange(cityName);
-                          setQuery("");
-                          setIsOpen(false);
-                        }}
-                        className={`text-left px-2 py-1.5 rounded-md hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors text-xs flex items-center justify-between border ${
-                          isSelected
-                            ? "bg-primary/10 text-primary font-semibold border-primary/40"
-                            : "bg-background border-border/40 text-foreground"
-                        }`}
-                      >
-                        <span className="truncate">{cityName}</span>
-                        {isSelected && <span className="text-primary text-[10px]">✓</span>}
-                      </button>
-                    );
-                  })}
-                </div>
-                <div className="px-2 pt-2 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                  All Cities (A-Z)
-                </div>
-              </div>
-            )}
-
-            {/* If user typed a custom city name not matching list */}
-            {query.trim() && !hasExactMatch && (
-              <button
-                type="button"
-                onClick={() => {
-                  onChange(query.trim());
-                  setIsOpen(false);
-                }}
-                className="w-full text-left px-2.5 py-2 mb-1 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 cursor-pointer transition-colors text-xs flex items-center justify-between font-medium"
-              >
-                <span>Use custom city: "{query.trim()}"</span>
-                <span className="text-[10px] font-bold underline">Select</span>
-              </button>
-            )}
-
-            {/* Filtered cities list */}
-            {visibleCities.length > 0 ? (
-              visibleCities.map((cityName) => {
-                const isSelected = value.toLowerCase() === cityName.toLowerCase();
-                return (
-                  <button
-                    key={cityName}
-                    type="button"
-                    onClick={() => {
-                      onChange(cityName);
-                      setQuery("");
-                      setIsOpen(false);
-                    }}
-                    className={`w-full text-left px-2.5 py-1.5 rounded-md hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors flex items-center justify-between text-xs ${
-                      isSelected
-                        ? "bg-primary/10 text-primary font-semibold"
-                        : "text-foreground"
-                    }`}
-                  >
-                    <span>{cityName}</span>
-                    {isSelected && <span className="text-primary text-xs">✓</span>}
-                  </button>
-                );
-              })
-            ) : (
-              <div className="p-3 text-center text-muted-foreground text-xs">
-                <p>No cities found starting with "{query || selectedLetter}".</p>
-                {query.trim() && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onChange(query.trim());
-                      setIsOpen(false);
-                    }}
-                    className="mt-2 inline-block px-3 py-1 bg-primary text-primary-foreground rounded-full text-xs font-semibold cursor-pointer"
-                  >
-                    Use "{query.trim()}" as city
-                  </button>
-                )}
-              </div>
-            )}
-
-            {/* Infinite scroll load indicator */}
-            {filteredList.length > displayLimit && (
-              <div className="py-2 text-center text-[10px] text-muted-foreground">
-                Showing {displayLimit} of {filteredList.length.toLocaleString()} cities — scroll down to load more...
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-      {error && <p className="text-xs text-destructive">{error}</p>}
-    </div>
-  );
-}
-
 export default function EnrollmentModal({
   children,
   defaultCourseSlug = "",
@@ -423,7 +93,6 @@ export default function EnrollmentModal({
   const [phoneDigits, setPhoneDigits] = useState("");
   const [manualCountry, setManualCountry] = useState(false);
   const [manualState, setManualState] = useState(false);
-  const [manualCity, setManualCity] = useState(false);
   const [values, setValues] = useState<Record<string, string>>({
     fullName: "",
     email: "",
@@ -473,11 +142,6 @@ export default function EnrollmentModal({
   const availableStates = useMemo(() => {
     return getStatesByCountry(values.country);
   }, [values.country]);
-
-  const currentCountryCities = useMemo(
-    () => getCitiesByCountry(values.country, values.state),
-    [values.country, values.state],
-  );
 
   // Active phone rule based on selected country or calling code
   const activePhoneRule = useMemo(() => {
@@ -779,7 +443,6 @@ export default function EnrollmentModal({
             setStep(1);
             setManualCountry(false);
             setManualState(false);
-            setManualCity(false);
             setPhoneDigits("");
             setCountryCode("+91");
             setValues((v) => ({ ...v, currentLevel: "" }));
@@ -1193,7 +856,6 @@ export default function EnrollmentModal({
                           setManualCountry(nextManual);
                           if (nextManual) {
                             setManualState(true);
-                            setManualCity(true);
                           }
                         }}
                         className="text-[11px] text-primary hover:underline font-medium cursor-pointer"
@@ -1209,7 +871,6 @@ export default function EnrollmentModal({
                           if (val === "OTHER") {
                             setManualCountry(true);
                             setManualState(true);
-                            setManualCity(true);
                             setField("country", "");
                             setField("state", "");
                             setField("city", "");
@@ -1219,7 +880,6 @@ export default function EnrollmentModal({
                             setField("city", "");
                             setManualCountry(false);
                             setManualState(false);
-                            setManualCity(false);
                             const matched = ALL_COUNTRIES.find((c) => c.name === val);
                             if (matched && (!phoneDigits || countryCode === "+91")) {
                               setCountryCode(matched.code);
@@ -1330,30 +990,19 @@ export default function EnrollmentModal({
                     </div>
                   )}
 
-                  {/* City (Third - Based on Country and State with searchable combobox & manual entry) */}
+                  {/* City (Third - Simple text input) */}
                   <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <Label htmlFor="city" className="font-semibold text-xs text-primary">
-                        {cityField.label} <span className="text-destructive">*</span>
-                      </Label>
-                      <span className="text-[10px] text-muted-foreground">
-                        {values.state ? `Cities in ${values.state}` : "Select or type custom"}
-                      </span>
-                    </div>
-
-                    <CitySearchableInput
+                    <Label htmlFor="city" className="font-semibold text-xs text-primary">
+                      {cityField.label} <span className="text-destructive">*</span>
+                    </Label>
+                    <Input
+                      id="city"
                       value={values.city}
-                      onChange={(val) => setField("city", val)}
-                      countryName={values.country}
-                      stateName={values.state}
-                      cities={currentCountryCities}
-                      placeholder={
-                        values.state
-                          ? `Search or enter city in ${values.state}`
-                          : cityField.placeholder ?? "Search or enter your city"
-                      }
-                      error={errors.city}
+                      onChange={(e) => setField("city", e.target.value)}
+                      placeholder={cityField.placeholder ?? "Enter your city"}
+                      className="h-10 rounded-lg border-border bg-background"
                     />
+                    {errors.city && <p className="text-xs text-destructive">{errors.city}</p>}
                   </div>
 
                   {/* Custom Fields */}

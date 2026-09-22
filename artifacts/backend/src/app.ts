@@ -109,10 +109,6 @@ app.use("/api", (req, res, next) => {
   next();
 }, router);
 
-app.get("/api/debug-sentry", function mainHandler(req, res) {
-  throw new Error("My first Sentry error!");
-});
-
 Sentry.setupExpressErrorHandler(app);
 
 export default app;

@@ -44,7 +44,7 @@ export function SEO({
   };
 
   const currentUrl = getCanonicalUrl();
-  const defaultImage = "https://hareemacademy.com/premium-hero-showcase.png";
+  const defaultImage = "https://hareemacademy.com/premium-hero-showcase.webp";
   const resolvedImage = imageUrl || defaultImage;
   const keywordsString = Array.isArray(keywords) ? keywords.join(", ") : keywords;
 

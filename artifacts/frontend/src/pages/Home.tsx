@@ -159,7 +159,7 @@ export default function Home() {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": "Hareem Academy",
-    "image": assets["hero_showcase"] || "https://hareemacademy.com/premium-hero-showcase.png",
+    "image": assets["hero_showcase"] || "https://hareemacademy.com/premium-hero-showcase.webp",
     "telephone": "+91-9315118289",
     "url": "https://hareemacademy.com",
     "address": {
@@ -308,7 +308,7 @@ export default function Home() {
           <div className="absolute inset-0 w-full h-full opacity-[0.03]">
             <PremiumImage
               assetKey="hero_bg"
-              fallback="/hero-bg.png"
+              fallback="/hero-bg.webp"
               alt=""
               className="w-full h-full object-cover"
               widthClass="w-full"
@@ -398,7 +398,7 @@ export default function Home() {
                 <div className="relative bg-card border border-primary/5 rounded-xl p-1 shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
                   <PremiumImage
                     assetKey="hero_showcase"
-                    fallback="/premium-hero-showcase.png"
+                    fallback="/premium-hero-showcase.webp"
                     alt="Live online Arabic and Quran classes for sisters at Hareem Academy"
                     className="rounded-lg object-cover"
                     aspectRatio="aspect-[1.12/1]"
@@ -424,7 +424,7 @@ export default function Home() {
                 <div className="relative bg-card border border-primary/5 rounded-2xl p-1.5 shadow-[0_8px_30px_rgba(19,94,70,0.02)] hover:border-primary/10 transition-all duration-500">
                   <PremiumImage
                     assetKey="hero_showcase"
-                    fallback="/premium-hero-showcase.png"
+                    fallback="/premium-hero-showcase.webp"
                     alt="Live online Arabic and Quran classes for sisters at Hareem Academy"
                     className="rounded-xl object-cover transition-transform duration-500 group-hover:scale-105"
                     aspectRatio="aspect-[1.12/1]"

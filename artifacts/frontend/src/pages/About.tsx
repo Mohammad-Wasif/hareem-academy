@@ -164,7 +164,7 @@ export default function About() {
             <div className="lg:col-span-5 relative">
               <div className="relative h-[250px] min-[400px]:h-[290px] sm:h-[340px] md:h-[360px] w-full rounded-2xl overflow-hidden shadow-[0_16px_36px_-10px_rgba(0,69,13,0.12)] border border-gray-200/80">
                 <img
-                  src="/about-arabic-study.png"
+                  src="/about-arabic-study.webp"
                   alt="Arabic and Urdu language study by the sunlit window at Hareem Academy"
                   className="w-full h-full object-cover"
                 />
@@ -193,7 +193,7 @@ export default function About() {
               <div className="lg:col-span-5 relative order-2 lg:order-1 flex justify-center">
                 <div className="w-full max-w-[440px] h-[320px] min-[400px]:h-[380px] sm:h-[460px] md:h-[520px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_16px_36px_-10px_rgba(0,69,13,0.1)] border border-gray-200/60">
                   <img
-                    src="/about-cozy-desk.png"
+                    src="/about-cozy-desk.webp"
                     alt="A cozy, dedicated online learning space for sisters at Hareem Academy"
                     className="w-full h-full object-cover object-center"
                   />
