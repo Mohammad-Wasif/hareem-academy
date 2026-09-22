@@ -36,8 +36,8 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks(id) {
             if (id.includes("node_modules")) {
-              if (id.includes("react") || id.includes("react-dom") || id.includes("wouter")) {
-                return "vendor-react";
+              if (id.includes("@sentry")) {
+                return "vendor-sentry";
               }
               if (id.includes("lucide-react") || id.includes("react-icons")) {
                 return "vendor-icons";
@@ -47,6 +47,23 @@ export default defineConfig(({ mode }) => {
               }
               if (id.includes("@tanstack")) {
                 return "vendor-query";
+              }
+              if (id.includes("@radix-ui") || id.includes("cmdk") || id.includes("vaul")) {
+                return "vendor-ui";
+              }
+              if (id.includes("recharts") || id.includes("d3-")) {
+                return "vendor-charts";
+              }
+              if (
+                id.includes("/node_modules/react/") ||
+                id.includes("\\node_modules\\react\\") ||
+                id.includes("/node_modules/react-dom/") ||
+                id.includes("\\node_modules\\react-dom\\") ||
+                id.includes("/node_modules/scheduler/") ||
+                id.includes("\\node_modules\\scheduler\\") ||
+                id.includes("wouter")
+              ) {
+                return "vendor-react";
               }
             }
           },

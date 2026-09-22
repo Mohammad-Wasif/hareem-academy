@@ -46,6 +46,8 @@ app.use(
 app.use(helmet());
 
 const allowedOrigins = [
+  "https://hareemacademy.com",
+  "https://www.hareemacademy.com",
   process.env.VITE_APP_URL,
   process.env.VITE_SITE_URL,
   "http://localhost:5173",
