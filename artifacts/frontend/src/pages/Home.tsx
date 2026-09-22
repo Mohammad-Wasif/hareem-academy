@@ -543,7 +543,7 @@ export default function Home() {
               <p className="text-sm sm:text-base text-[#41493e] font-sans leading-relaxed text-justify [text-align-last:left]">
                 Learning a new language can feel overwhelming when you don't know where to begin. Hareem Academy provides a clear learning path, supportive female teachers, and a comfortable sisters-only environment where you can learn, ask questions, and grow with confidence.
               </p>
-              <p className="font-semibold text-sm sm:text-base text-[#00450d] font-sans leading-relaxed pt-2 border-t border-gray-100 text-center sm:text-justify sm:[text-align-last:left]">
+              <p className="font-semibold text-sm sm:text-base text-[#00450d] font-sans leading-relaxed pt-2 border-t border-gray-100 text-center">
                 Whether you're starting from the alphabet or strengthening your existing Arabic skills, we'll help you take the next step.
               </p>
             </div>
