@@ -159,6 +159,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     queryKey: ["admin", "me"],
     queryFn: () => adminApi.me(),
     retry: false,
+    enabled: !isLogin,
   });
 
   const logoutMut = useMutation({

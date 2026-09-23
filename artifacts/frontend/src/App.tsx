@@ -129,7 +129,7 @@ function ScrollToTop() {
 
 function Router() {
   const [location] = useLocation();
-  if (location === "/admin" || location.startsWith("/admin/")) {
+  if (location.startsWith("/admin")) {
     return <AdminRoutes />;
   }
   return <PublicRoutes />;

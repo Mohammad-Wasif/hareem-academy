@@ -617,10 +617,10 @@ export default function Home() {
                   {item.emoji}
                 </div>
                 <div className="space-y-2 text-center w-full">
-                  <h3 className="font-serif font-bold text-xl text-[#ffe088] leading-snug text-center">
+                  <h3 className="font-serif font-bold text-lg text-[#ffe088] leading-snug text-center">
                     {item.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-white/80 font-sans leading-relaxed text-center">
+                  <p className="text-xs text-white/80 font-sans leading-relaxed text-center">
                     {item.desc}
                   </p>
                 </div>
