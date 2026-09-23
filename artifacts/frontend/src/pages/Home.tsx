@@ -742,6 +742,9 @@ export default function Home() {
               <h2 className="font-serif font-bold text-3xl md:text-4xl text-foreground">
                 Pick what fits your level.
               </h2>
+              <p className="text-xs text-muted-foreground font-sans mt-1">
+                Click on courses to view details
+              </p>
             </div>
             <Button
               variant="outline"
@@ -857,16 +860,16 @@ export default function Home() {
                 variants={fadeUp}
                 transition={{ duration: 0.45 }}
                 whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="bg-white/5 border border-white/15 rounded-2xl p-7 text-left flex flex-col space-y-4 hover:bg-white/10 hover:border-white/30 transition-all duration-300 backdrop-blur-sm"
+                className="bg-white border border-gray-100 rounded-2xl p-7 text-left flex flex-col space-y-4 hover:shadow-xl transition-all duration-300 shadow-md"
               >
-                <div className="w-12 h-12 rounded-xl bg-[#ffe088] flex items-center justify-center text-[#003527] shrink-0 shadow-md">
+                <div className="w-12 h-12 rounded-xl bg-[#00450d] flex items-center justify-center text-[#ffe088] shrink-0 shadow-sm">
                   <feature.icon className="w-6 h-6" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="font-serif font-bold text-xl text-white leading-snug">
+                  <h3 className="font-serif font-bold text-xl text-[#00450d] leading-snug">
                     {feature.title}
                   </h3>
-                  <p className="text-white/80 text-sm font-sans leading-relaxed">
+                  <p className="text-black text-sm font-sans leading-relaxed">
                     {feature.desc}
                   </p>
                 </div>
