@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminApi } from "@/lib/adminApi";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import { Loader2, Trash2, ExternalLink } from "lucide-react";
 
 export default function AdminEnrollments() {
@@ -9,10 +10,17 @@ export default function AdminEnrollments() {
     queryKey: ["admin", "enrollments"],
     queryFn: () => adminApi.listEnrollments(),
   });
+  const { toast } = useToast();
   const delMut = useMutation({
     mutationFn: (id: number) => adminApi.deleteEnrollment(id),
-    onSuccess: () =>
-      qc.invalidateQueries({ queryKey: ["admin", "enrollments"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin", "enrollments"] });
+      qc.invalidateQueries({ queryKey: ["admin", "dashboard"] });
+      toast({
+        title: "Enrollment Deleted",
+        description: "The enrollment record has been removed.",
+      });
+    },
   });
 
   return (

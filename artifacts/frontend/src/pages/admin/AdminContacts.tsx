@@ -1,17 +1,26 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminApi } from "@/lib/adminApi";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import { Loader2, Trash2 } from "lucide-react";
 
 export default function AdminContacts() {
   const qc = useQueryClient();
+  const { toast } = useToast();
   const { data, isLoading } = useQuery({
     queryKey: ["admin", "contacts"],
     queryFn: () => adminApi.listContacts(),
   });
   const delMut = useMutation({
     mutationFn: (id: number) => adminApi.deleteContact(id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "contacts"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin", "contacts"] });
+      qc.invalidateQueries({ queryKey: ["admin", "dashboard"] });
+      toast({
+        title: "Message Deleted",
+        description: "The contact submission has been removed.",
+      });
+    },
   });
 
   return (

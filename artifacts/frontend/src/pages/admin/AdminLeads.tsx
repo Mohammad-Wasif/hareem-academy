@@ -1,17 +1,26 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminApi } from "@/lib/adminApi";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import { Loader2, Trash2, ExternalLink } from "lucide-react";
 
 export default function AdminLeads() {
   const qc = useQueryClient();
+  const { toast } = useToast();
   const { data, isLoading } = useQuery({
     queryKey: ["admin", "leads"],
     queryFn: () => adminApi.listLeads(),
   });
   const delMut = useMutation({
     mutationFn: (id: number) => adminApi.deleteLead(id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin", "leads"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin", "leads"] });
+      qc.invalidateQueries({ queryKey: ["admin", "dashboard"] });
+      toast({
+        title: "Lead Deleted",
+        description: "The lead record has been removed.",
+      });
+    },
   });
 
   return (
